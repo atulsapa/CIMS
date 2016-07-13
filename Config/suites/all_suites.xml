@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Suites" parallel="tests" thread-count="1" verbose="1" >
+	<listeners>
+	<listener class-name="listner.TestListnerAdapter" />
+  </listeners>
+
+    <test name="CIMS Automation Execution">
+    	<classes>
+    		<class name="CIMS.CIMS_ClearTemp"/>
+			<class name="CIMS.CIMS_Company"/>
+    		<class name="CIMS.CIMS_Regression_Suite"/>
+			<class name="CIMS.CIMS_Left_Navigation"/>
+			<class name="CIMS.CIMS_General_Admin"/>
+			<class name="CIMS.CIMS_MainProject"/>
+        </classes>
+    </test>
+
+</suite>

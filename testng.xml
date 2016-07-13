@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test Suite" parallel="tests" thread-count="1" verbose="1" >
+	<listeners>
+	<listener class-name="listner.TestListnerAdapter" />
+  </listeners>
+    
+    <test name="CIMS Automation Report">
+    	<classes>
+			<class name="CIMS.CIMS_Company"/>
+			<class name="CIMS.CIMS_Regression_Suite"/>
+			<class name="CIMS.CIMS_Left_Navigation"/>
+			<class name="CIMS.CIMS_MainProject"/>
+        </classes>
+    </test> 
+
+    <test name="CIMS Automation Report using Dashboard">
+    	<classes>
+			<class name="CIMS.CIMS_Dashboard"/>
+        </classes>
+    </test> 
+
+	 
+</suite>

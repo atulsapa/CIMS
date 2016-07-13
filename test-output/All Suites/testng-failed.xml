@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="1" guice-stage="DEVELOPMENT" name="Failed suite [All Suites]" parallel="tests">
+  <listeners>
+    <listener class-name="listner.TestListnerAdapter"/>
+  </listeners>
+  <test name="CIMS Automation Execution(failed)" parallel="tests">
+    <classes>
+      <class name="CIMS.CIMS_General_Admin">
+        <methods>
+          <include name="CIMS_GeneralAdmin"/>
+          <include name="isSkipped"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_General_Admin -->
+      <class name="CIMS.CIMS_MainProject">
+        <methods>
+          <include name="closeBrowser"/>
+          <include name="isSkipped"/>
+          <include name="CIMSMain"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_MainProject -->
+      <class name="CIMS.CIMS_Company">
+        <methods>
+          <include name="isSkipped"/>
+          <include name="CIMSCompany"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_Company -->
+      <class name="CIMS.CIMS_Regression_Suite">
+        <methods>
+          <include name="isSkipped"/>
+          <include name="CIMSSingleProjectInitiation"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_Regression_Suite -->
+      <class name="CIMS.CIMS_Left_Navigation">
+        <methods>
+          <include name="isSkipped"/>
+          <include name="CIMSLeftNavigation"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_Left_Navigation -->
+      <class name="CIMS.CIMS_ClearTemp">
+        <methods>
+          <include name="Setter"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_ClearTemp -->
+    </classes>
+  </test> <!-- CIMS Automation Execution(failed) -->
+</suite> <!-- Failed suite [All Suites] -->

@@ -1,0 +1,33 @@
+<project name="testng-xslt" basedir=".">
+	<property name="main.dir" value=".."/>
+    <property name="src.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="test.dir" value="test"/>
+    <property name="version" value="1.1.1"/>
+
+    <path id="test.classpath">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+    </path>
+
+    <target name="test">
+        <antcall target="testcase">
+            <param name="dir" value="single"/>
+        </antcall>
+    </target>
+
+    <libfileset dir="${lib.dir}" includes="*.jar"/>
+
+    <target name="testcase">
+        <property name="dir" value=""/>
+
+        <mkdir dir="${test.dir}/${dir}/output"/>
+
+        <xslt in="${main.dir}/test-output/testng-results.xml" style="src/main/resources/testng-results.xsl"
+              out="${test.dir}/${dir}/output/index.html" classpathref="test.classpath" processor="SaxonLiaison">
+            <param name="testNgXslt.outputDir" expression="${basedir}/${test.dir}/${dir}/output/"/>
+            <param name="testNgXslt.sortTestCaseLinks" expression="true"/>
+            <param name="testNgXslt.testDetailsFilter" expression="FAIL,SKIP,PASS"/>
+        </xslt>
+    </target>
+
+</project>

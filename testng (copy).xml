@@ -1,0 +1,38 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test Suite" parallel="tests" thread-count="1">
+	<listeners>
+		<listener class-name="listner.TestListnerAdapter" />
+    </listeners>
+    
+    <test name="testscript1">
+    	<classes>
+			<class name="CIMS.CIMS_Company"/>
+
+        </classes>
+    </test> 
+     <test name="testscript2">
+    	<classes>
+			<class name="CIMS.CIMS_Regression_Suite"/>        
+			
+        </classes>
+    </test> 
+	 <test name="testscript3">
+    	<classes>
+			<class name="CIMS.CIMSEmail"/>  		
+        </classes>
+    </test> 
+      <test name="testscript4">
+    	<classes>
+			<class name="CIMS.CIMS_MainPrintView"/>        
+			
+        </classes>
+    </test> 
+      <test name="testscript5">
+    	<classes>
+			<class name="CIMS.CIMS_Printview"/>        
+			
+        </classes>
+    </test> 
+	
+	 
+</suite>

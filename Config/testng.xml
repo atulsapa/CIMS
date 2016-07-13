@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test Suite" parallel="tests" thread-count="1" verbose="1" >
+	<listeners>
+	<listener class-name="listner.TestListnerAdapter" />
+  </listeners>
+
+    <suite-files>
+    <suite-file path="suites/all_suites.xml" />
+    <suite-file path="suites/dashboard_email.xml" />
+    </suite-files>
+</suite>

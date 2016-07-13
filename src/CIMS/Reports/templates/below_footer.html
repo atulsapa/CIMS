@@ -1,0 +1,24 @@
+      ]);
+
+      var options = {
+        title: 'Pass and fail counter of Suite executed',
+        chartArea: {width: '70%'},
+        isStacked: true,
+        hAxis: {
+            title: 'Total number of Test cases',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'Suites'
+        }
+      };
+      var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+      
+    }
+</script>
+
+<div style="position: fixed; right: 2px; bottom: 2px;"> <span>&#8593;</span> <a style="" href="#top">Back to Top</a></div>
+
+</body>
+</html>

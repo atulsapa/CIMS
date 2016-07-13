@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Dashboard Report Suite" parallel="tests" thread-count="1" verbose="1" >
+	<listeners>
+	<listener class-name="listner.TestListnerAdapter" />
+  </listeners>
+
+	<test name="Cobalt Dashboard Report">
+    	<classes>
+			<class name="CIMS.CIMS_Dashboard"/>
+			<!--  class name="CIMS.CIMSEmail"/ -->
+        </classes>
+    </test>
+</suite>

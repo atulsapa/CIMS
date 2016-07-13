@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="1" guice-stage="DEVELOPMENT" name="Failed suite [Test Suite]" parallel="tests">
+  <listeners>
+    <listener class-name="listner.TestListnerAdapter"/>
+  </listeners>
+  <test name="CIMS Automation Report(failed)" parallel="tests">
+    <classes>
+      <class name="CIMS.CIMS_Dashboard">
+        <methods>
+          <include name="CIMS_Dashboard"/>
+          <include name="Setter"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_Dashboard -->
+      <class name="CIMS.CIMS_MainProject">
+        <methods>
+          <include name="closeBrowser"/>
+          <include name="isSkipped"/>
+          <include name="CIMSMain"/>
+        </methods>
+      </class> <!-- CIMS.CIMS_MainProject -->
+      <class name="CIMS.CIMSEmail">
+        <methods>
+          <include name="closeBrowser"/>
+          <include name="CIMSMain"/>
+          <include name="isSkipped"/>
+        </methods>
+      </class> <!-- CIMS.CIMSEmail -->
+    </classes>
+  </test> <!-- CIMS Automation Report(failed) -->
+</suite> <!-- Failed suite [Test Suite] -->
