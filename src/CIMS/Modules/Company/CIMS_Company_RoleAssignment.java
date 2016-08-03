@@ -113,7 +113,8 @@ public class CIMS_Company_RoleAssignment {
 
 							System.out.println("entering add mode for role assignment module");
 
-							String AddNewBtnXpath	=	"//a[contains(@class,'btn') and contains(text(),'Add New')]";
+							//String AddNewBtnXpath	=	"//a[contains(@class,'btn') and contains(text(),'Add New')]";
+							String AddNewBtnXpath	=	".//*[@id='panel-body']/tbody/tr/td/div/div[1]///a[contains(@class,'btn') and contains(text(),'Add New')]";
 							try {
 								Thread.sleep(1500);
 								utilfunc.waitForAnElementToLoad(AddNewBtnXpath, true);

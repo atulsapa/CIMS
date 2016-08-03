@@ -178,17 +178,22 @@ public class CIMS_Addional_Questionnaire_Module
 						 for(int count=1; count<=ObjCount; count++)
 						 {
 							 try{
+								 
 								 String NewRadio=Radio.replace("xx", Integer.toString(count));
-								 Thread.sleep(1000);
-								try{ utilfunc.MakeElement(NewRadio).click();
+								 utilfunc.MakeElement(NewRadio).click();
+								// Thread.sleep(1000);
 								 try{
 									 String NewTextbox=Textbox.replace("xx", Integer.toString(count));
 									 String Questionnaire="AddionalQuestionnairetextQ"+count;
 									 utilfunc.MakeElement(NewTextbox).clear();
 									 utilfunc.MakeElement(NewTextbox).sendKeys(Questionnaire);
-								 }catch(Exception f){}
-								}catch(Exception e){}
-							 }catch(Exception f){}
+								 }catch(Exception f){
+									 System.out.println("Exception1-->"+f);
+								 }
+								 
+							 }catch(Exception f){
+								 System.out.println("Exception2-->"+f);
+							 }
 		 
 						 }
 				 	}catch(Exception error){}

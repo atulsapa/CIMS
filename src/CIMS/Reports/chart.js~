@@ -1,0 +1,153 @@
+<section class=\"content\">
+      <div class=\"row\">
+        <div class=\"col-md-12 admin-content\" id=\"home\">
+          
+          
+          <div class=\"row\">
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-green\">
+                <div class=\"inner\">
+                  <h3>150</h3>
+                  <p>No of case Executed</p>
+                </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-lime\">
+                <div class=\"inner\">
+                  <h3>53<sup style="font-size: 20px\">%</sup></h3>
+                  <p>Total to Execute</p>
+                </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-green\">
+                <div class=\"inner\">
+                  <h3>44</h3>
+                  <p>No of Positive Test Cases</p>
+                </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-lime\">
+                <div class=\"inner\">
+                  <h3>65</h3>
+                  <p>No Of Negative Test Cases</p>
+                </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-green\">
+                <div class=\"inner\">
+                  <h3>65</h3>
+                  <p>(PASS) No Of Test Cases</p>
+                </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-red\">
+                <div class=\"inner\">
+                  <h3>65</h3>
+                  <p>(FAIL) No Of Test Cases</p>
+                </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info </a> </div>
+            </div>
+            
+          </div>
+          
+          
+        </div>
+        <div class=\"col-md-12  admin-content\" id=\"widgets\"> Widgets </div>
+        <div class=\"col-md-12  admin-content\" id=\"pages\">
+          
+          
+          <div class=\"row\">
+            <div class=\"col-lg-4 col-xs-6\">
+
+              <div class=\"small-box bg-lime\">
+                <div class=\"inner\">
+                  <h3>50000</h3>
+                  <p>No of case Executed</p>
+                </div>
+                <div class=\"icon\"> <i class=\"ion ion-person-add\"></i> </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info <i class=\"fa fa-arrow-circle-right\"></i> </a> </div>
+            </div>
+
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-green\">
+                <div class=\"inner\">
+                  <h3>53<sup style="font-size: 20px\">%</sup></h3>
+                  <p>Total to Execute</p>
+                </div>
+                <div class=\"icon\"> <i class=\"ion ion-person-add\"></i> </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info <i class=\"fa fa-arrow-circle-right\"></i> </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+            
+              <div class=\"small-box bg-green\">
+                <div class=\"inner\">
+                  <h3>44</h3>
+                  <p>No of Positive Test Cases</p>
+                </div>
+                <div class=\"icon\"> <i class=\"ion ion-person-add\"></i> </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info <i class=\"fa fa-arrow-circle-right\"></i> </a> </div>
+            </div>
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-lime\">
+                <div class=\"inner\">
+                  <h3>65</h3>
+                  <p>No Of Negative Test Cases</p>
+                </div>
+                <div class=\"icon\"> <i class=\"ion ion-person-add\"></i> </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info <i class=\"fa fa-arrow-circle-right\"></i> </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-green\">
+                <div class=\"inner\">
+                  <h3>65</h3>
+                  <p>(PASS) No Of Test Cases</p>
+                </div>
+                <div class=\"icon\"> <i class=\"ion ion-person-add\"></i> </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info <i class=\"fa fa-arrow-circle-right\"></i> </a> </div>
+            </div>
+            
+            <div class=\"col-lg-4 col-xs-6\">
+              
+              <div class=\"small-box bg-red\">
+                <div class=\"inner\">
+                  <h3>65</h3>
+                  <p>(FAIL) No Of Test Cases</p>
+                </div>
+                <div class=\"icon\"> <i class=\"ion ion-person-add\"></i> </div>
+                <a href=\"#\" class=\"small-box-footer\"> More info <i class=\"fa fa-arrow-circle-right\"></i> </a> </div>
+            </div>
+            
+          </div>
+          
+
+        </div>
+        <div class=\"col-md-12  admin-content\" id=\"charts\"> Charts </div>
+        <div class=\"col-md-12  admin-content\" id=\"table\"> Table </div>
+        <div class=\"col-md-12  admin-content\" id=\"forms\"> Forms </div>
+        <div class=\"col-md-12  admin-content\" id=\"calender\"> Calender </div>
+        <div class=\"col-md-12  admin-content\" id=\"library\"> Library </div>
+        <div class=\"col-md-9  admin-content\" id=\"applications\"> Applications </div>
+        <div class=\"col-md-9  admin-content\" id=\"settings\"> Settings </div>
+      </div>
+    </section>

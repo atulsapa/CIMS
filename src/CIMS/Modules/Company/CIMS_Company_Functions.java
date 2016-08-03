@@ -268,6 +268,7 @@ public class CIMS_Company_Functions {
 	public void addCompany(String fileName, String columnNameRM, String columnNameAction) throws AWTException, InterruptedException {
 
 
+
 		System.out.println("\n=== === ===\tWelcome\n=== === === ");
 
 		// setter
@@ -346,6 +347,7 @@ public class CIMS_Company_Functions {
 		int columnNumber_TabName		=0;
 		int columnNumber_CompanyName	=0;
 		
+		String 	Company					=		"Company";	//"Left Navigation" is the sheet name in "Test Left Navigation Data.xls" file.
 		
 		//Lokesh add these lines for get count of +ve and -ve test cases.
 		int PositiveScenarioCounter				=	0;
@@ -382,11 +384,16 @@ public class CIMS_Company_Functions {
 			System.out.println("Unable to find Employee name and using username instead");	
 		}
 		startTotalTime = System.currentTimeMillis();
+		
+		
 		for(int modCounter = 1;modCounter<AddCompanyRowCount;modCounter++){
 			
-			boolean passCounter			=	false;
-			boolean failCounter			=	false;
-			boolean notAssignedCounter	=	false;
+			boolean passCounter				=	false;
+			boolean failCounter				=	false;
+			boolean notAssignedCounter		=	false;
+			boolean negativePassCounter		=	false;
+			
+			
 			
 			Thread.sleep(1000);
 			
@@ -411,6 +418,7 @@ public class CIMS_Company_Functions {
 					TabName				=	UtilFunction.getCellData(fileName, AddCompanySheetName, columnNumber_TabName, modCounter);
 					ActionName			=	UtilFunction.getCellData(fileName, AddCompanySheetName, columnNumber_ACTION, modCounter);
 					//String companyName			=	UtilFunction.getCellData(fileName, AddCompanySheetName, columnNumber_CompanyName, modCounter);
+					String sheetName=TabName;
 					columnCount_RUNMODE	=	UtilFunction.getColumnWithCellData(fileName, TabName, "RUNMODE");
 					int Scenariocol	=	UtilFunction.getColumnWithCellData(fileName, TabName, "SCENARIO");
 					rowCount1	=	UtilFunction.usedRowCount(fileName,TabName);
@@ -455,6 +463,11 @@ public class CIMS_Company_Functions {
 					//Module Search
 					for(int count=1; count<=rowCount1; count++)
 					{
+						
+						passCounter				=	false;
+						failCounter				=	false;
+						notAssignedCounter		=	false;
+						negativePassCounter		=	false;
 
 						Thread.sleep(1000);
 						System.out.println("we are in loop current value of count is :"+count);
@@ -520,33 +533,42 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio,ActionName, obj_CIMS_Company_Communication.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio,ActionName, obj_CIMS_Company_Communication.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio, ActionName, obj_CIMS_Company_Communication.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio, ActionName, obj_CIMS_Company_Communication.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Communication.scenerio,ActionName,obj_CIMS_Company_Communication.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Communication.scenerio,ActionName,obj_CIMS_Company_Communication.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio, ActionName, obj_CIMS_Company_Communication.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio,ActionName, obj_CIMS_Company_Communication.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio,ActionName, obj_CIMS_Company_Communication.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Communication.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Communication.scenerio, ActionName, obj_CIMS_Company_Communication.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -560,35 +582,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio,ActionName, obj_CIMS_Company_VisaProfile.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio,ActionName, obj_CIMS_Company_VisaProfile.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													}
-													System.out.println("User has successfully saved data in "+TabName+" module");
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio, ActionName, obj_CIMS_Company_VisaProfile.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-						
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio, ActionName, obj_CIMS_Company_VisaProfile.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio, ActionName, obj_CIMS_Company_VisaProfile.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_VisaProfile.scenerio,ActionName,obj_CIMS_Company_VisaProfile.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_VisaProfile.scenerio,ActionName,obj_CIMS_Company_VisaProfile.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio,ActionName, obj_CIMS_Company_VisaProfile.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													//System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio,ActionName, obj_CIMS_Company_VisaProfile.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_VisaProfile.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_VisaProfile.scenerio, ActionName, obj_CIMS_Company_VisaProfile.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+											
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -602,32 +632,42 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio,ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio,ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio, ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio, ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio, ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CompanyBatchRecruitment.scenerio,ActionName,obj_CIMS_Company_CompanyBatchRecruitment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CompanyBatchRecruitment.scenerio,ActionName,obj_CIMS_Company_CompanyBatchRecruitment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio,ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio,ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_CompanyBatchRecruitment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CompanyBatchRecruitment.scenerio, ActionName, obj_CIMS_Company_CompanyBatchRecruitment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -641,32 +681,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio,ActionName, obj_CIMS_Company_RoleAssignment.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio,ActionName, obj_CIMS_Company_RoleAssignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio, ActionName, obj_CIMS_Company_RoleAssignment.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio, ActionName, obj_CIMS_Company_RoleAssignment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio, ActionName, obj_CIMS_Company_RoleAssignment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RoleAssignment.scenerio,ActionName,obj_CIMS_Company_RoleAssignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RoleAssignment.scenerio,ActionName,obj_CIMS_Company_RoleAssignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio,ActionName, obj_CIMS_Company_RoleAssignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio,ActionName, obj_CIMS_Company_RoleAssignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_RoleAssignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RoleAssignment.scenerio, ActionName, obj_CIMS_Company_RoleAssignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -680,33 +731,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio,ActionName, obj_CIMS_Company_Entity.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio,ActionName, obj_CIMS_Company_Entity.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio, ActionName, obj_CIMS_Company_Entity.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio, ActionName, obj_CIMS_Company_Entity.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Entity.scenerio,ActionName,obj_CIMS_Company_Entity.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Entity.scenerio,ActionName,obj_CIMS_Company_Entity.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio, ActionName, obj_CIMS_Company_Entity.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio,ActionName, obj_CIMS_Company_Entity.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio,ActionName, obj_CIMS_Company_Entity.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Entity.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Entity.scenerio, ActionName, obj_CIMS_Company_Entity.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -720,33 +781,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio,ActionName, obj_CIMS_Company_Notes.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio,ActionName, obj_CIMS_Company_Notes.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio, ActionName, obj_CIMS_Company_Notes.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio, ActionName, obj_CIMS_Company_Notes.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Notes.scenerio,ActionName,obj_CIMS_Company_Notes.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Notes.scenerio,ActionName,obj_CIMS_Company_Notes.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio, ActionName, obj_CIMS_Company_Notes.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio,ActionName, obj_CIMS_Company_Notes.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio,ActionName, obj_CIMS_Company_Notes.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Notes.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notes.scenerio, ActionName, obj_CIMS_Company_Notes.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -760,33 +831,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio,ActionName, obj_CIMS_Company_CountryList.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio,ActionName, obj_CIMS_Company_CountryList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio, ActionName, obj_CIMS_Company_CountryList.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio, ActionName, obj_CIMS_Company_CountryList.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CountryList.scenerio,ActionName,obj_CIMS_Company_CountryList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CountryList.scenerio,ActionName,obj_CIMS_Company_CountryList.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio, ActionName, obj_CIMS_Company_CountryList.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio,ActionName, obj_CIMS_Company_CountryList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio,ActionName, obj_CIMS_Company_CountryList.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_CountryList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CountryList.scenerio, ActionName, obj_CIMS_Company_CountryList.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -800,33 +881,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio,ActionName, obj_CIMS_Company_Subscribed_Services.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio,ActionName, obj_CIMS_Company_Subscribed_Services.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio, ActionName, obj_CIMS_Company_Subscribed_Services.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio, ActionName, obj_CIMS_Company_Subscribed_Services.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Subscribed_Services.scenerio,ActionName,obj_CIMS_Company_Subscribed_Services.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Subscribed_Services.scenerio,ActionName,obj_CIMS_Company_Subscribed_Services.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio, ActionName, obj_CIMS_Company_Subscribed_Services.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio,ActionName, obj_CIMS_Company_Subscribed_Services.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio,ActionName, obj_CIMS_Company_Subscribed_Services.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Subscribed_Services.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Subscribed_Services.scenerio, ActionName, obj_CIMS_Company_Subscribed_Services.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -840,33 +931,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio,ActionName, obj_CIMS_Company_General_Info.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio,ActionName, obj_CIMS_Company_General_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio, ActionName, obj_CIMS_Company_General_Info.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio, ActionName, obj_CIMS_Company_General_Info.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_General_Info.scenerio,ActionName,obj_CIMS_Company_General_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_General_Info.scenerio,ActionName,obj_CIMS_Company_General_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio, ActionName, obj_CIMS_Company_General_Info.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio,ActionName, obj_CIMS_Company_General_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio,ActionName, obj_CIMS_Company_General_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_General_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_General_Info.scenerio, ActionName, obj_CIMS_Company_General_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -880,33 +981,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio,ActionName, obj_CIMS_Organization_Info.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio,ActionName, obj_CIMS_Organization_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio, ActionName, obj_CIMS_Organization_Info.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio, ActionName, obj_CIMS_Organization_Info.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw,obj_CIMS_Organization_Info.scenerio,ActionName,obj_CIMS_Organization_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw,obj_CIMS_Organization_Info.scenerio,ActionName,obj_CIMS_Organization_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio, ActionName, obj_CIMS_Organization_Info.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio,ActionName, obj_CIMS_Organization_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-							    						obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-							    						failCounter	= true;
-						    						}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio,ActionName, obj_CIMS_Organization_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Organization_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Organization_Info.scenerio, ActionName, obj_CIMS_Organization_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -920,34 +1031,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio,ActionName, obj_CIMS_Company_Locations.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio,ActionName, obj_CIMS_Company_Locations.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio, ActionName, obj_CIMS_Company_Locations.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio, ActionName, obj_CIMS_Company_Locations.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Locations.scenerio,ActionName,obj_CIMS_Company_Locations.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Locations.scenerio,ActionName,obj_CIMS_Company_Locations.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio, ActionName, obj_CIMS_Company_Locations.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio,ActionName, obj_CIMS_Company_Locations.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
 
-													// fail dashboard report..
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio,ActionName, obj_CIMS_Company_Locations.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio,ActionName, obj_CIMS_Company_Locations.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Locations.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Locations.scenerio, ActionName, obj_CIMS_Company_Locations.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -960,36 +1080,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio, ActionName, obj_CIMS_Company_CustomLabels.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CustomLabels.scenerio,ActionName,obj_CIMS_Company_CustomLabels.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio, ActionName, obj_CIMS_Company_CustomLabels.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio, ActionName, obj_CIMS_Company_CustomLabels.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CustomLabels.scenerio,ActionName,obj_CIMS_Company_CustomLabels.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_CustomLabels.scenerio,ActionName,obj_CIMS_Company_CustomLabels.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio, ActionName, obj_CIMS_Company_CustomLabels.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
-												else
-												{
+												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio,ActionName, obj_CIMS_Company_CustomLabels.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
 
-													// fail dashboard report..
-												    if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+													utilfunc.TestngReportFail1(obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio,ActionName, obj_CIMS_Company_CustomLabels.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-												 try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio,ActionName, obj_CIMS_Company_CustomLabels.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_CustomLabels.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_CustomLabels.scenerio, ActionName, obj_CIMS_Company_CustomLabels.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("Some error occured in : "+ TabName);
 											}
@@ -1001,35 +1130,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if(Page_flag){
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio,ActionName, obj_CIMS_Company_PurposeCategories.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio,ActionName, obj_CIMS_Company_PurposeCategories.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio, ActionName, obj_CIMS_Company_PurposeCategories.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio, ActionName, obj_CIMS_Company_PurposeCategories.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_PurposeCategories.scenerio,ActionName,obj_CIMS_Company_PurposeCategories.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_PurposeCategories.scenerio,ActionName,obj_CIMS_Company_PurposeCategories.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio, ActionName, obj_CIMS_Company_PurposeCategories.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio,ActionName, obj_CIMS_Company_PurposeCategories.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio,ActionName, obj_CIMS_Company_PurposeCategories.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio,ActionName, obj_CIMS_Company_PurposeCategories.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_PurposeCategories.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PurposeCategories.scenerio, ActionName, obj_CIMS_Company_PurposeCategories.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1046,33 +1185,44 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio,ActionName, obj_CIMS_Company_Add_Business_Units.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio,ActionName, obj_CIMS_Company_Add_Business_Units.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													}
-													System.out.println("User has successfully saved data in "+TabName+" module");
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio, ActionName, obj_CIMS_Company_Add_Business_Units.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio, ActionName, obj_CIMS_Company_Add_Business_Units.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio, ActionName, obj_CIMS_Company_Add_Business_Units.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Add_Business_Units.scenerio,ActionName,obj_CIMS_Company_Add_Business_Units.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Add_Business_Units.scenerio,ActionName,obj_CIMS_Company_Add_Business_Units.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio,ActionName, obj_CIMS_Company_Add_Business_Units.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													System.out.println("User is Getting an Error Message while saving Information in "+TabName + " module");
-													
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio,ActionName, obj_CIMS_Company_Add_Business_Units.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Add_Business_Units.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Add_Business_Units.scenerio, ActionName, obj_CIMS_Company_Add_Business_Units.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1088,34 +1238,46 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio, ActionName, obj_CIMS_Company_Statistics.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Statistics.scenerio,ActionName,obj_CIMS_Company_Statistics.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio, ActionName, obj_CIMS_Company_Statistics.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio, ActionName, obj_CIMS_Company_Statistics.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Statistics.scenerio,ActionName,obj_CIMS_Company_Statistics.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Statistics.scenerio,ActionName,obj_CIMS_Company_Statistics.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio, ActionName, obj_CIMS_Company_Statistics.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio,ActionName, obj_CIMS_Company_Statistics.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio,ActionName, obj_CIMS_Company_Statistics.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio,ActionName, obj_CIMS_Company_Statistics.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Statistics.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Statistics.scenerio, ActionName, obj_CIMS_Company_Statistics.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1128,35 +1290,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio, ActionName, obj_CIMS_Company_Report_List.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Report_List.scenerio,ActionName,obj_CIMS_Company_Report_List.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio, ActionName, obj_CIMS_Company_Report_List.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio, ActionName, obj_CIMS_Company_Report_List.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Report_List.scenerio,ActionName,obj_CIMS_Company_Report_List.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Report_List.scenerio,ActionName,obj_CIMS_Company_Report_List.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio, ActionName, obj_CIMS_Company_Report_List.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio,ActionName, obj_CIMS_Company_Report_List.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio,ActionName, obj_CIMS_Company_Report_List.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio,ActionName, obj_CIMS_Company_Report_List.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Report_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Report_List.scenerio, ActionName, obj_CIMS_Company_Report_List.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1168,35 +1340,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio, ActionName, obj_CIMS_Company_Custom_Field.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Custom_Field.scenerio,ActionName,obj_CIMS_Company_Custom_Field.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio, ActionName, obj_CIMS_Company_Custom_Field.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio, ActionName, obj_CIMS_Company_Custom_Field.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Custom_Field.scenerio,ActionName,obj_CIMS_Company_Custom_Field.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Custom_Field.scenerio,ActionName,obj_CIMS_Company_Custom_Field.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio, ActionName, obj_CIMS_Company_Custom_Field.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio,ActionName, obj_CIMS_Company_Custom_Field.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio,ActionName, obj_CIMS_Company_Custom_Field.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio,ActionName, obj_CIMS_Company_Custom_Field.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Custom_Field.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Custom_Field.scenerio, ActionName, obj_CIMS_Company_Custom_Field.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("Some error occured in : "+ TabName);
 											}
@@ -1209,35 +1391,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio, ActionName, obj_CIMS_Company_Integration.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Integration.scenerio,ActionName,obj_CIMS_Company_Integration.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio, ActionName, obj_CIMS_Company_Integration.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio, ActionName, obj_CIMS_Company_Integration.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Integration.scenerio,ActionName,obj_CIMS_Company_Integration.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Integration.scenerio,ActionName,obj_CIMS_Company_Integration.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio, ActionName, obj_CIMS_Company_Integration.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio,ActionName, obj_CIMS_Company_Integration.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio,ActionName, obj_CIMS_Company_Integration.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio,ActionName, obj_CIMS_Company_Integration.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Integration.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Integration.scenerio, ActionName, obj_CIMS_Company_Integration.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("Some error occured in : "+ TabName);
 											}
@@ -1250,35 +1442,46 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio, ActionName, obj_CIMS_Company_Document.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Document.scenerio,ActionName,obj_CIMS_Company_Document.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio, ActionName, obj_CIMS_Company_Document.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio, ActionName, obj_CIMS_Company_Document.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Document.scenerio,ActionName,obj_CIMS_Company_Document.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Document.scenerio,ActionName,obj_CIMS_Company_Document.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio, ActionName, obj_CIMS_Company_Document.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio,ActionName, obj_CIMS_Company_Document.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio,ActionName, obj_CIMS_Company_Document.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio,ActionName, obj_CIMS_Company_Document.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Document.scenerio, ActionName, obj_CIMS_Company_Document.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1291,36 +1494,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio, ActionName, obj_CIMS_Company_RelocationCompanySetup.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RelocationCompanySetup.scenerio,ActionName,obj_CIMS_Company_RelocationCompanySetup.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio, ActionName, obj_CIMS_Company_RelocationCompanySetup.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio, ActionName, obj_CIMS_Company_RelocationCompanySetup.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RelocationCompanySetup.scenerio,ActionName,obj_CIMS_Company_RelocationCompanySetup.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RelocationCompanySetup.scenerio,ActionName,obj_CIMS_Company_RelocationCompanySetup.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio, ActionName, obj_CIMS_Company_RelocationCompanySetup.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
-												else
-												{
+												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio,ActionName, obj_CIMS_Company_RelocationCompanySetup.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio,ActionName, obj_CIMS_Company_RelocationCompanySetup.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio,ActionName, obj_CIMS_Company_RelocationCompanySetup.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_RelocationCompanySetup.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RelocationCompanySetup.scenerio, ActionName, obj_CIMS_Company_RelocationCompanySetup.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1333,36 +1545,46 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName+" - "+obj_CIMS_Company_PrimaryCompanyRoles.Primary_Company_Roles+" - ", Employee_namecheck, timer);
 												System.out.println("Page Flag:"+Page_flag);
-												if (Page_flag)
-												{
+												
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio, ActionName, obj_CIMS_Company_PrimaryCompanyRoles.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_PrimaryCompanyRoles.scenerio,ActionName,obj_CIMS_Company_PrimaryCompanyRoles.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio, ActionName, obj_CIMS_Company_PrimaryCompanyRoles.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio, ActionName, obj_CIMS_Company_PrimaryCompanyRoles.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_PrimaryCompanyRoles.scenerio,ActionName,obj_CIMS_Company_PrimaryCompanyRoles.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_PrimaryCompanyRoles.scenerio,ActionName,obj_CIMS_Company_PrimaryCompanyRoles.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio, ActionName, obj_CIMS_Company_PrimaryCompanyRoles.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
-												else
-												{
+												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio,ActionName, obj_CIMS_Company_PrimaryCompanyRoles.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio,ActionName, obj_CIMS_Company_PrimaryCompanyRoles.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio,ActionName, obj_CIMS_Company_PrimaryCompanyRoles.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_PrimaryCompanyRoles.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_PrimaryCompanyRoles.scenerio, ActionName, obj_CIMS_Company_PrimaryCompanyRoles.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1375,36 +1597,45 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio, ActionName, obj_CIMS_Company_NetworkPartnerContracts.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_NetworkPartnerContracts.scenerio,ActionName,obj_CIMS_Company_NetworkPartnerContracts.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio, ActionName, obj_CIMS_Company_NetworkPartnerContracts.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio, ActionName, obj_CIMS_Company_NetworkPartnerContracts.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_NetworkPartnerContracts.scenerio,ActionName,obj_CIMS_Company_NetworkPartnerContracts.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_NetworkPartnerContracts.scenerio,ActionName,obj_CIMS_Company_NetworkPartnerContracts.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio, ActionName, obj_CIMS_Company_NetworkPartnerContracts.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 												}
-												else
-												{
+												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio,ActionName, obj_CIMS_Company_NetworkPartnerContracts.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio,ActionName, obj_CIMS_Company_NetworkPartnerContracts.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio,ActionName, obj_CIMS_Company_NetworkPartnerContracts.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_NetworkPartnerContracts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_NetworkPartnerContracts.scenerio, ActionName, obj_CIMS_Company_NetworkPartnerContracts.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}												
+	
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 												ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
@@ -1422,32 +1653,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio,ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio,ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio, ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio, ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
-
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio, ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Perm_Posting_Notice.scenerio,ActionName,obj_CIMS_Company_Perm_Posting_Notice.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Perm_Posting_Notice.scenerio,ActionName,obj_CIMS_Company_Perm_Posting_Notice.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													
 												}
 												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
+
 													utilfunc.TestngReportFail1(obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio,ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio,ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Perm_Posting_Notice.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Perm_Posting_Notice.scenerio, ActionName, obj_CIMS_Company_Perm_Posting_Notice.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1460,34 +1702,46 @@ public class CIMS_Company_Functions {
 												timer = getTimeTakenByModule(startTime);
 												utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
 
-												if (Page_flag)
-												{
+												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals(""))
+													
+													if(UtilFunction.globalerrormessage.equals(""))
 													{
-														utilfunc.TestngReportPass(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.testcasedescription, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Contacts.scenerio,ActionName,obj_CIMS_Company_Contacts.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														utilfunc.TestngReportPass(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Contacts.scenerio,ActionName,obj_CIMS_Company_Contacts.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Contacts.scenerio,ActionName,obj_CIMS_Company_Contacts.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.testcasedescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-												}else{
+												}
+												else{
 													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio,ActionName, obj_CIMS_Company_Contacts.testcasedescription, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio,ActionName, obj_CIMS_Company_Contacts.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
 													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio,ActionName, obj_CIMS_Company_Contacts.testcasedescription, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
-												}	
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 												ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
@@ -1504,31 +1758,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio,ActionName, obj_CIMS_Company_Notifications.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio,ActionName, obj_CIMS_Company_Notifications.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio, ActionName, obj_CIMS_Company_Notifications.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio, ActionName, obj_CIMS_Company_Notifications.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Notifications.scenerio,ActionName,obj_CIMS_Company_Notifications.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Notifications.scenerio,ActionName,obj_CIMS_Company_Notifications.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio, ActionName, obj_CIMS_Company_Notifications.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-												}else{
-													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio,ActionName, obj_CIMS_Company_Notifications.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
-													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
-													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio,ActionName, obj_CIMS_Company_Notifications.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
 												}
+												else{
+													status="FAIL";failTestCaseCounter++;
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio,ActionName, obj_CIMS_Company_Notifications.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Notifications.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Notifications.scenerio, ActionName, obj_CIMS_Company_Notifications.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1542,31 +1808,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio,ActionName, obj_CIMS_Company_ReferenceList.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio,ActionName, obj_CIMS_Company_ReferenceList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-													}
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio, ActionName, obj_CIMS_Company_ReferenceList.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-												}else{
-													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio,ActionName, obj_CIMS_Company_ReferenceList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
-													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio, ActionName, obj_CIMS_Company_ReferenceList.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio, ActionName, obj_CIMS_Company_ReferenceList.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio,ActionName, obj_CIMS_Company_ReferenceList.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_ReferenceList.scenerio,ActionName,obj_CIMS_Company_ReferenceList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_ReferenceList.scenerio,ActionName,obj_CIMS_Company_ReferenceList.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													
 												}
+												else{
+													status="FAIL";failTestCaseCounter++;
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio,ActionName, obj_CIMS_Company_ReferenceList.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_ReferenceList.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_ReferenceList.scenerio, ActionName, obj_CIMS_Company_ReferenceList.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1580,31 +1858,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio,ActionName, obj_CIMS_Company_Company_Settings.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio,ActionName, obj_CIMS_Company_Company_Settings.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio, ActionName, obj_CIMS_Company_Company_Settings.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio, ActionName, obj_CIMS_Company_Company_Settings.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Company_Settings.scenerio,ActionName,obj_CIMS_Company_Company_Settings.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Company_Settings.scenerio,ActionName,obj_CIMS_Company_Company_Settings.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio, ActionName, obj_CIMS_Company_Company_Settings.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-												}else{
-													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio,ActionName, obj_CIMS_Company_Company_Settings.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
-													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
-													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio,ActionName, obj_CIMS_Company_Company_Settings.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
 												}
+												else{
+													status="FAIL";failTestCaseCounter++;
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio,ActionName, obj_CIMS_Company_Company_Settings.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Company_Settings.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Settings.scenerio, ActionName, obj_CIMS_Company_Company_Settings.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1618,31 +1908,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio, ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio, ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName,obj_CIMS_Company_Company_Job_Catalog.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName,obj_CIMS_Company_Company_Job_Catalog.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio, ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-												}else{
-													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
-													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
-													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
 												}
+												else{
+													status="FAIL";failTestCaseCounter++;
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio,ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Company_Job_Catalog.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Company_Job_Catalog.scenerio, ActionName, obj_CIMS_Company_Company_Job_Catalog.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1657,31 +1959,43 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio, ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio, ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName,obj_CIMS_Company_RequestAccesstoCompany.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName,obj_CIMS_Company_RequestAccesstoCompany.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio, ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-												}else{
-													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
-													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
-													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
 												}
+												else{
+													status="FAIL";failTestCaseCounter++;
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio,ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_RequestAccesstoCompany.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_RequestAccesstoCompany.scenerio, ActionName, obj_CIMS_Company_RequestAccesstoCompany.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
@@ -1695,87 +2009,89 @@ public class CIMS_Company_Functions {
 
 												if (Page_flag){
 													status="PASS";passTestCaseCounter++;
-													if(utilfunc.globalerrormessage.equals("")|utilfunc.globalerrormessage.contains("Success!")){
-														utilfunc.TestngReportPass(obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName, obj_CIMS_Company_Network_Partner_Info.description, status);
-													}else{
-														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													
+													if(UtilFunction.globalerrormessage.equals(""))
+													{
+														utilfunc.TestngReportPass(obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio, ActionName, obj_CIMS_Company_Network_Partner_Info.description, status);
+														// now write it in a pass file..
+														if(passCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Pass");} catch (Exception e) {}
+															passCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardPassReport(Company, Employee_namecheck, obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio, ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
+													}
+													else
+													{
+														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName,obj_CIMS_Company_Network_Partner_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														// now write it in a negative pass dashboard file..
+														if(negativePassCounter==false){
+															try {	obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Negative Pass");} catch (Exception e) {}
+															negativePassCounter=true;
+														}
+														try {obj_Report_Dashboard.writeDashBoardNegativePassReport(Company, Employee_namecheck, obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName,obj_CIMS_Company_Network_Partner_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+														catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
 													}
 													
-													// pass dashboard report..
-													if(passCounter==false){
-														 try {	obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Pass");} catch (Exception e) {}
-														 passCounter=true;
-													 }
-													try {obj_Report_Dashboard.writeDashBoardPassReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio, ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+TabName);}
-													//System.out.println("User has successfully saved data in "+TabName+" module");
-												}else{
-													status="FAIL";failTestCaseCounter++;
-													//utilfunc.TakeScreenshot();
-													utilfunc.TestngReportFail1(obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												
-													// fail dashboard report..
-													if(failCounter==false){
-													obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Fail");
-													failCounter	= true;
-													}
-													try {obj_Report_Dashboard.writeDashBoardFailReport(AddCompanySheetName, Employee_namecheck, obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
 												}
+												else{
+													status="FAIL";failTestCaseCounter++;
+
+													utilfunc.TestngReportFail1(obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio,ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative fail dashboard file..
+													if(failCounter==false){
+														obj_Report_Dashboard.writeReportHeader(Company, sheetName,"Fail");
+														failCounter	= true;
+													}
+													try {obj_Report_Dashboard.writeDashBoardFailReport(Company, Employee_namecheck, obj_CIMS_Company_Network_Partner_Info.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Network_Partner_Info.scenerio, ActionName, obj_CIMS_Company_Network_Partner_Info.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+TabName);}
+													
+													}
+												
 											}catch(Exception s){
 												System.out.println("some error occured in : "+ TabName);
 											}
 										}
 									}	//if(VisitModule_flag==true) ends here
-									else{	
+									else{
 
-										//	utilfunc.ErrorMessage1="";
-										//	utilfunc.ErrorMessage2="";
-										//	utilfunc.ErrorMessage4="";
-										//	utilfunc.ErrorMessage5="";
-										//	utilfunc.globalerrormessage="";
+										try{
+											Thread.sleep(3000);
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											status="PASS";
+											passTestCaseCounter++;
+											String Errormessage="";
+											String NotAssignTestCaseID="";
+											String NotAssignScenerio="";
+											String NotAssignTestCaseDescription="";
+											int columnNumber_TCID;
+											int columnNumber_Scenario;
+											int columnNumber_TestCaseDescription;
 
-										//If user is not assigned to the user
-										Thread.sleep(3000);
+											utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
+											Errormessage=""+TabName+" is not assigned to "+Employee_namecheck+" User";
+											System.out.println(Errormessage);
 
-										status="PASS";
-										String Errormessage="";
-										String NotAssignTestCaseID="";
-										String NotAssignScenerio="";
-										String NotAssignTestCaseDescription="";
+											columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+											columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "SCENARIO");
+											columnNumber_TestCaseDescription		=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
 
-										int columnNumber_TCID=-1;
-										int columnNumber_Scenario=-1;
-										int columnNumber_TestCaseDescription=-1;
+											NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, columnNumber_TCID, count);
+											NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, columnNumber_Scenario, count);
+											NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, columnNumber_TestCaseDescription, count);
 
-										timer = getTimeTakenByModule(startTime);
-										utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
-										Errormessage=""+TabName+" is not assigned to "+Employee_namecheck+" User";
+											utilfunc.TestngReportFail(NotAssignTestCaseID, utilfunc.Actualbrw, NotAssignScenerio,ActionName,NotAssignTestCaseDescription,status,Errormessage);
+											
+											NumberOfNotAssignModule.add(TabName);
 
-										//System.out.println(Errormessage);
-										//System.out.println("fileName:"+fileName);
-										//System.out.println("AddCompanySheetName:"+AddCompanySheetName);
+											if(notAssignedCounter==false){
+												obj_Report_Dashboard.writeReportHeader(Company, TabName,"Not Assigned");
+												notAssignedCounter=true;
 
-										try {	columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, AddCompanySheetName, "TCID");} catch (Exception e) {}
-										try {	columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, AddCompanySheetName, "SCENARIO");} catch (Exception e) {}
-										try {	columnNumber_TestCaseDescription		=		UtilFunction.getColumnWithCellData(fileName, AddCompanySheetName, "Test Case Description");} catch (Exception e) {}
+												NotAssignedModuleCounter++;
+											}
+											try {obj_Report_Dashboard.writeDashBoardNotAssignedReport(Company, Employee_namecheck, NotAssignTestCaseID, utilfunc.Actualbrw, NotAssignScenerio, ActionName, NotAssignTestCaseDescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard not assigned report for : "+TabName);}
 
-										System.out.println("columnNumber_TCID is: "+columnNumber_TCID);
-										System.out.println("columnNumber_Scenario is: "+columnNumber_Scenario);
-										System.out.println("columnNumber_TestCaseDescripton is: "+columnNumber_TestCaseDescription);
-										
-										try{	NotAssignTestCaseID=UtilFunction.getCellData(fileName, TabName, columnNumber_TCID, count);} catch (Exception e) {}
-										try{	NotAssignScenerio=UtilFunction.getCellData(fileName, TabName, columnNumber_Scenario, count);} catch (Exception e) {}
-										try{	NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, TabName, columnNumber_TestCaseDescription, count);} catch (Exception e) {}
-
-										utilfunc.TestngReportFail(NotAssignTestCaseID, utilfunc.Actualbrw, NotAssignScenerio,ActionName,NotAssignTestCaseDescription,status,Errormessage);
-										NotAssignedModuleCounter++;
-
-										NumberOfNotAssignModule.add(TabName);
-
-										if(notAssignedCounter==false){
-											 obj_Report_Dashboard.writeReportHeader(AddCompanySheetName, TabName,"Not Assigned");
-											 notAssignedCounter=true;
-										 }
-										try {obj_Report_Dashboard.writeDashBoardNotAssignedReport(AddCompanySheetName, Employee_namecheck, NotAssignTestCaseID, utilfunc.Actualbrw, NotAssignScenerio, ActionName, NotAssignTestCaseDescription, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard not assigned report for : "+TabName);}
+										}catch(Exception error){}
+									
 									}
 
 
@@ -1836,6 +2152,7 @@ public class CIMS_Company_Functions {
 		}catch(Exception e){
 			System.out.println("unable to call & generate dashboard report..");
 		}
+		
 	}
 
 

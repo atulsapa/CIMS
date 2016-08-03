@@ -54,16 +54,18 @@ public class CIMS_Secure_Messaging {
 			
 			
 			String BeneficiaryAccessFlag					    =			UtilFunction.getCellData(filename, sheetName, 8, ColumnCounter);
-			String Subject							            =			UtilFunction.getCellData(filename, sheetName, 9, ColumnCounter);
-			String MessageBody							        =			UtilFunction.getCellData(filename, sheetName, 10, ColumnCounter);
-			String DocumentToBeUploaded							=			UtilFunction.getCellData(filename, sheetName, 11, ColumnCounter);
-			String SearchTypeBal							    =			UtilFunction.getCellData(filename, sheetName, 12, ColumnCounter);
-			String RadioButtonvalue							    =			UtilFunction.getCellData(filename, sheetName, 13, ColumnCounter);
-			String Status							            =			UtilFunction.getCellData(filename, sheetName, 14, ColumnCounter);
+			String NetworkPartnerAccessFlag					    =			UtilFunction.getCellData(filename, sheetName, 9, ColumnCounter);
+			
+			String Subject							            =			UtilFunction.getCellData(filename, sheetName, 10, ColumnCounter);
+			String MessageBody							        =			UtilFunction.getCellData(filename, sheetName, 11, ColumnCounter);
+			String DocumentToBeUploaded							=			UtilFunction.getCellData(filename, sheetName, 12, ColumnCounter);
+			String SearchTypeBal							    =			UtilFunction.getCellData(filename, sheetName, 13, ColumnCounter);
+			String RadioButtonvalue							    =			UtilFunction.getCellData(filename, sheetName, 14, ColumnCounter);
+			String Status							            =			UtilFunction.getCellData(filename, sheetName, 15, ColumnCounter);
 			
 			
 			
-			String ExpectedErrorMessage							=			UtilFunction.getCellData(filename, sheetName, 15, ColumnCounter);
+			String ExpectedErrorMessage							=			UtilFunction.getCellData(filename, sheetName, 16, ColumnCounter);
 			
 
 			testcaseid=TestcaseID;
@@ -72,8 +74,8 @@ public class CIMS_Secure_Messaging {
 			
 			
 			if(TestcaseRunMode.equals("Y")){
-				String FormFieldXpath		=	"//*[@id='form1']//*[contains(@class,'control-group')][xx]//div//.[contains(@class,'controls')]//*[@name and not(@type='hidden')]";
-				String FormFieldsCounterXpath		=	"//*[@id='form1']//*[contains(@class,'control-group')]//div//.[contains(@class,'controls')]";
+				String FormFieldXpath		=	"//*[@id='form1']//*[contains(@class,'control-group')][xx]//.[contains(@class,'controls')]//*[@name and not(@type='hidden')]";
+				String FormFieldsCounterXpath			=	"//*[@id='form1']//*[contains(@class,'control-group')]//.[contains(@class,'controls')]";
 				String I_FrameXpath =".//*[contains(@id,'tinymce-14')]//*[@id='txtMessage_ifr']";
 				String uploadDocFormBtnXPath	=	"//*[@id='form1']//*[@id='btnShowDocUpload']";
 				String selectAFileBtnXPath		=	".//*[@id='DocUploadModal']//*[@class='controls']//button[1]";
@@ -83,6 +85,19 @@ public class CIMS_Secure_Messaging {
 			    String AttributeName;
 			    int NoOfRow =0;
 			    int NoOfcol=0;
+			    
+
+				String BackLink=".//*[@id='panel-body']//a[contains(@class,'back-bg')]";
+				
+				String AttrLink ="";
+				try {
+					AttrLink = utilfunc.MakeElement(BackLink).getAttribute("href");
+				} catch (Exception e1) {
+					System.out.println("Unable to  find the link");
+				}
+				
+							
+				System.out.println("AttrLink"+""+AttrLink);
 				
 				
 			
@@ -148,31 +163,31 @@ public class CIMS_Secure_Messaging {
 //				    }
 //				    }
 //					
-					String BalNumberXpath=".//*[@id='BalNumberSearch']";
-				    String fullNameXpath=".//*[@id='fullName']";
-				    String searchxpath =".//*[@id='btnSearch']";
-				    String FirstrecordXpath=".//*[@id='dvCaseList']//div//tbody//tr[1]//td[1]//input//.[@name='GetCaseNumber']";
-				   try {
-					utilfunc.MakeElement(BalNumberXpath).clear();
-					   utilfunc.MakeElement(BalNumberXpath).sendKeys(BalNumberSearch);
-				} catch (Exception e1) {System.out.println("Unable to enter the BalNumber");}
-				   
-				   utilfunc.MakeElement(fullNameXpath).clear();
-				   
-				   try {
-					utilfunc.MakeElement(fullNameXpath).sendKeys(fullName);
-				} catch (Exception e1) {System.out.println("Unable to enter the fullname");}
-				   
-				  try {
-					  Thread.sleep(3000);
-					utilfunc.MakeElement(searchxpath).click();
-					Thread.sleep(3000);
-				} catch (Exception e1) {System.out.println("Unable to click on the search button");}
-				  
-				  try {
-					utilfunc.MakeElement(FirstrecordXpath).click();
-				} catch (Exception e1) {System.out.println("Unable to select the record");}
-				   Thread.sleep(2000);
+//					String BalNumberXpath=".//*[@id='BalNumberSearch']";
+//				    String fullNameXpath=".//*[@id='fullName']";
+//				    String searchxpath =".//*[@id='btnSearch']";
+//				    String FirstrecordXpath=".//*[@id='dvCaseList']//div//tbody//tr[1]//td[1]//input//.[@name='GetCaseNumber']";
+//				   try {
+//					utilfunc.MakeElement(BalNumberXpath).clear();
+//					   utilfunc.MakeElement(BalNumberXpath).sendKeys(BalNumberSearch);
+//				} catch (Exception e1) {System.out.println("Unable to enter the BalNumber");}
+//				   
+//				   utilfunc.MakeElement(fullNameXpath).clear();
+//				   
+//				   try {
+//					utilfunc.MakeElement(fullNameXpath).sendKeys(fullName);
+//				} catch (Exception e1) {System.out.println("Unable to enter the fullname");}
+//				   
+//				  try {
+//					  Thread.sleep(3000);
+//					utilfunc.MakeElement(searchxpath).click();
+//					Thread.sleep(3000);
+//				} catch (Exception e1) {System.out.println("Unable to click on the search button");}
+//				  
+//				  try {
+//					utilfunc.MakeElement(FirstrecordXpath).click();
+//				} catch (Exception e1) {System.out.println("Unable to select the record");}
+//				   Thread.sleep(2000);
 				    
 			
 					int resultCount			=	utilfunc.GetObjectCount(FormFieldsCounterXpath);
@@ -198,57 +213,72 @@ public class CIMS_Secure_Messaging {
 									
 								}else if(AttributeName.equals("NotificationList")){
 									
-									String ChkBoxXpath ="//*[@class='checkbox'][nn]//*[@name='NotificationList']";
-									String ChkboxCounterXpath ="//*[@class='checkbox']//*[@name='NotificationList']";
 									
-									int chkboxcount = utilfunc.GetObjectCount(ChkboxCounterXpath);
 									
-									for(int c=1; c<=chkboxcount; c++){
-										Thread.sleep(2000);		
-										//check the checkbox if its value is yes for this test case..
-										String NewChkBoxXpath	=	ChkBoxXpath.replace("nn", Integer.toString(c));
-										try {
-											String ChkBxValue		=	utilfunc.MakeElement(NewChkBoxXpath).getAttribute("value");
-//										utilfunc.MakeElement(NewChkBoxXpath).clear();
-											System.out.println("ChkBxValue - " + ChkBxValue);
-											
-											if(ChkBxValue.equals("1829")){
-												
-												if(NotificationListcheckbox_first.equals("Yes")){
-													try {
-														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, true);
-													} catch (Exception e) {}
-													
-												}else{
-													try {
-														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, false);
-													} catch (Exception e) {}
-												}
-												
-												
-												
-											}else if(ChkBxValue.equals("2168")){
-												if(NotificationListcheckbox_scnd.equals("Yes")){
-													try {
-														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, true);
-													} catch (Exception e) {}
-													
-												}else{
-													try {
-														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, false);
-													} catch (Exception e) {}
-												}
-												
-											}else{
-												System.out.println("please select the check box");
-											}
-										} catch (Exception e) {System.out.println("Check box not found");}
+                                             if(NotificationListcheckbox_first.equals("Yes")){
 										
-									}
+										try {
+											Thread.sleep(1000);
+											utilfunc.enableOrDisableCheckbox(NewXpath, true);
+										} catch (Exception e) {}
+										
+									}else{
+										try {
+											utilfunc.enableOrDisableCheckbox(NewXpath, false);
+										} catch (Exception e) {}
+									
+									
+//									String ChkBoxXpath ="//*[@class='checkbox'][nn]//*[@name='NotificationList']";
+//									String ChkboxCounterXpath ="//*[@class='checkbox']//*[@name='NotificationList']";
+//									
+//									int chkboxcount = utilfunc.GetObjectCount(ChkboxCounterXpath);
+									
+//									for(int c=1; c<=chkboxcount; c++){
+//										Thread.sleep(2000);		
+//										//check the checkbox if its value is yes for this test case..
+//										String NewChkBoxXpath	=	ChkBoxXpath.replace("nn", Integer.toString(c));
+//										try {
+//											String ChkBxValue		=	utilfunc.MakeElement(NewChkBoxXpath).getAttribute("value");
+////										utilfunc.MakeElement(NewChkBoxXpath).clear();
+//											System.out.println("ChkBxValue - " + ChkBxValue);
+//											
+//											if(ChkBxValue.equals("1829")){
+//												
+//												if(NotificationListcheckbox_first.equals("Yes")){
+//													try {
+//														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, true);
+//													} catch (Exception e) {}
+//													
+//												}else{
+//													try {
+//														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, false);
+//													} catch (Exception e) {}
+//												}
+//												
+//												
+//												
+//											}else if(ChkBxValue.equals("2168")){
+//												if(NotificationListcheckbox_scnd.equals("Yes")){
+//													try {
+//														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, true);
+//													} catch (Exception e) {}
+//													
+//												}else{
+//													try {
+//														utilfunc.enableOrDisableCheckbox(NewChkBoxXpath, false);
+//													} catch (Exception e) {}
+//												}
+//												
+//											}else{
+//												System.out.println("please select the check box");
+//											}
+//										} catch (Exception e) {System.out.println("Check box not found");}
+//										
+//									}
 									
 									
 									
-								}else if(AttributeName.equals("BeneficiaryAccessFlag")){
+									}}else if(AttributeName.equals("BeneficiaryAccessFlag")){
 									
 									if(BeneficiaryAccessFlag.equals("Yes")){
 										
@@ -263,7 +293,33 @@ public class CIMS_Secure_Messaging {
 										} catch (Exception e) {}
 									}
 									
-								}else if(AttributeName.equals("Subject")){
+									
+								}else if(AttributeName.equals("NetworkPartnerAccessFlag")){
+									
+									if(NetworkPartnerAccessFlag.equals("Yes")){
+										
+										try {
+											Thread.sleep(2000);
+											utilfunc.enableOrDisableCheckbox(NewXpath, true);
+											Thread.sleep(2000);
+										} catch (Exception e) {
+											System.out.println("Unable to click on ");
+										}
+										
+									}else{
+										try {
+											Thread.sleep(2000);
+											utilfunc.enableOrDisableCheckbox(NewXpath, false);
+											Thread.sleep(2000);
+										} catch (Exception e) {
+											System.out.println("Unable to click on no");
+										}
+									}
+									
+									
+								}
+								
+								else if(AttributeName.equals("Subject")){
 									
 									utilfunc.MakeElement(NewXpath).clear();
 									
@@ -306,36 +362,36 @@ public class CIMS_Secure_Messaging {
 						
 						}
 						
-						if(DocumentToBeUploaded==null){
+						if(DocumentToBeUploaded=="Yes"){
 							
 						}else{
 
 		                   	   System.out.println("Upload The document ");
-					   try{
-					   Thread.sleep(1000);
-					
-					   utilfunc.MakeElement(uploadDocFormBtnXPath).click();
-					   }catch(Exception e){
-					 	  System.out.println("unable to click on upload document button");
-					   }
-					   
-						  try{
-							  Thread.sleep(3000);
-						  utilfunc.MakeElement(selectAFileBtnXPath).click();
-						  System.out.println("yes clicked on button to upload files...");
-						  Thread.sleep(3000);
-						  }catch(Exception e){ System.out.println("unable to clcik on 'Select a file to upload' buuton"); }
-						  
-						  try{
-							  Thread.sleep(3000);
-					
-					       utilfunc.uploadfile(DocumentToBeUploaded);
-						  utilfunc.MakeElement(uploadDocBtnXPath).click();
-						  System.out.println("Document has been uploaded.");	
-						  }catch(Exception e){
-							  System.out.println("Error" +e);
-						  }
-							   				  
+//					   try{
+//					   Thread.sleep(1000);
+//					
+//					   utilfunc.MakeElement(uploadDocFormBtnXPath).click();
+//					   }catch(Exception e){
+//					 	  System.out.println("unable to click on upload document button");
+//					   }
+//					   
+//						  try{
+//							  Thread.sleep(3000);
+//						  utilfunc.MakeElement(selectAFileBtnXPath).click();
+//						  System.out.println("yes clicked on button to upload files...");
+//						  Thread.sleep(3000);
+//						  }catch(Exception e){ System.out.println("unable to clcik on 'Select a file to upload' buuton"); }
+//						  
+//						  try{
+//							  Thread.sleep(3000);
+//					
+//					       utilfunc.uploadfile(DocumentToBeUploaded);
+//						  utilfunc.MakeElement(uploadDocBtnXPath).click();
+//						  System.out.println("Document has been uploaded.");	
+//						  }catch(Exception e){
+//							  System.out.println("Error" +e);
+//						  }
+//							   				  
 												
 											}
 											
@@ -476,7 +532,7 @@ public class CIMS_Secure_Messaging {
 							 }
 							
 							 
-							 if(DocumentToBeUploaded==null){
+							 if(DocumentToBeUploaded=="Yes"){
 									
 								}else{
 
@@ -521,6 +577,7 @@ public class CIMS_Secure_Messaging {
 			
 				
 				
+				
 				try{
 					 // save button after saving all data..
 					String sendBtn	=	".//a[contains(@class,'btn') and text()='Send']";
@@ -530,17 +587,38 @@ public class CIMS_Secure_Messaging {
 				try{
 					System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
 					String error_flag=utilfunc.ErrorMessagehandlerExperiment();
-					ExpectedErrorMessage=ExpectedErrorMessage.trim();
+					//ExpectedErrorMessage=ExpectedErrorMessage.trim();
 					System.out.println("==="+ExpectedErrorMessage+"===");
 					System.out.println("==="+error_flag+"===");
-					
+					 String Secure_Messaging_Xpath=".//*[@id='nav-parent']//*[@class='pull-right']//a[@id='nav-messages']";
 					 if (error_flag.equals(ExpectedErrorMessage)){
 						 Flag=true;
 						 utilfunc.TakeScreenshot();
 					 }else if (error_flag.equals("")){
 						 Flag=true;
+						 
+						
+						 
+						 try {
+							 Thread.sleep(1000);
+							utilfunc.MakeElement(Secure_Messaging_Xpath).click();
+							Thread.sleep(1000);
+						 } catch (Exception e) {
+							System.out.println("Unable to click on the button");
+							
+						}
+						 webdriver.navigate().to(AttrLink);
 					 }else if (error_flag.contains("Success!")){
 						 Flag=true;
+						 try {
+							 Thread.sleep(1000);
+							utilfunc.MakeElement(Secure_Messaging_Xpath).click();
+							Thread.sleep(1000);
+						 } catch (Exception e) {
+							System.out.println("Unable to click on the button");
+							
+						}
+						 webdriver.navigate().to(AttrLink);
 					 }else if(error_flag.equals("Server Error in '/' Application.")){
 						 Flag=false;
 						 webdriver.navigate().back();
@@ -553,6 +631,8 @@ public class CIMS_Secure_Messaging {
 					System.out.println("Data is not saved because all fields are not set in the form.");
 				}	
 			}
+			
+		
 			return Flag;
 			}
 

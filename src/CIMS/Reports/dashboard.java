@@ -263,26 +263,6 @@ catch(Exception e){}
 					throws InterruptedException, IOException, AWTException 
     {
 
-		System.out.println("--------");
-		//Code for assign default values if it have null or empty 
-		try{
-			if(numberOfPass.equals(""))
-			{
-				numberOfPass="0";
-			}
-			if(NumberOfFail.equals(""))
-			{
-				NumberOfFail="0";
-			}
-			if(timeInvolved.equals(""))
-			{
-				timeInvolved="00:00:00";
-			}
-			
-		}
-		catch(Exception error){}
-		
-		
 		try{
 
 			//define a HTML String Builder
@@ -522,22 +502,18 @@ catch(Exception e){}
 
 
 			// before adding data to main dashboard, let us get counter & other details..
-			
 			// total pass cases..
 			passCounter				=		ReadFromFile(passCounterFilePath);
 			// total number of fail counters
 			failCounter				=		ReadFromFile(failCounterFilePath);
 			// not assigned module counter
 			moduleNACounter			=		ReadFromFile(moduleNotAssignedCounterFilePath);
+
 			// total time
 			totalTime				=		ReadFromFile(totalTimeFilePath);
-			
-			int pass=Integer.parseInt(passCounter);
-			int fail=Integer.parseInt(failCounter);
-			
-			numberOfTotalCases= Integer.toString(pass+fail);
-			System.out.println("p: "+passCounter + "\tf: "+ failCounter + "\t na: "+moduleNACounter + "\t t:"+totalTime);
 
+			System.out.println("p: "+passCounter + "\tf: "+ failCounter + "\t na: "+moduleNACounter + "\t t:"+totalTime);
+			
 			// add main content for dash board..
 			try {
 				Thread.sleep(800);
@@ -809,8 +785,6 @@ catch(Exception e){}
 
 		String Content	=	"";
 
-		//numberofPositive=ReadFromFile();
-		
 //		String TestNgReportLink		=	System.getProperty("user.dir") + File.separator + "test-output" + File.separator + "index.html#reports";
 		String TestNgReportLink		=	"#\" data-target-id=\"report\"" ;
 
@@ -1011,17 +985,11 @@ catch(Exception e){}
 
 		for(int m=0;m<ModuleLists.length;m++){
 			//updated for regression suite
-			if(ModuleLists[m].equals("Immigration Status")){
-				ModuleLists[m] = "Immigration Status and Document";
-        	}
-			else if(ModuleLists[m].equals("Document")){
-				continue;
-			}
-			/*if(ModuleLists[m].equals("Regression Suites")){
+			if(ModuleLists[m].equals("Regression Suites")){
 				navigation	+=	"<li><a href=\"#\" data-target-id=\"old-initiation\">Old Initiation</a></li>\n";
-			}else{*/
+			}else{
 				navigation	+=	"<li><a href=\"#\" data-target-id=\""+ ModuleLists[m].toLowerCase().replace(" ", "-") +"\">"+ ModuleLists[m].toString() +"</a></li>\n";
-//			}
+			}
 			
 		}
 		
@@ -1043,7 +1011,7 @@ catch(Exception e){}
 			} catch (Exception e) {
 				System.out.println("unable to reader "+ passReportFilePath +" file");
 			}
-        	content				+=	"<tr><td class=\"td-heading\" colspan=\"10\">"+ moduleName.toString().replace("_", " ") +"</td></tr>" +
+        	content				+=	"<tr><td class=\"td-heading\" colspan=\"10\">"+ moduleName.toString() +"</td></tr>" +
         							"\n";
 			WriteToFile(content, passReportFilePath);
 		} catch (Exception e) {
@@ -1067,7 +1035,7 @@ catch(Exception e){}
 			} catch (Exception e) {
 				System.out.println("unable to reader "+ passReportFilePath +" file");
 			}
-        	content				+=	"<tr><td class=\"td-heading\" colspan=\"10\">"+ moduleName.toString().replace("_", " ") +"</td></tr>" +"\n";
+        	content				+=	"<tr><td class=\"td-heading\" colspan=\"10\">"+ moduleName.toString() +"</td></tr>" +"\n";
 			WriteToFile(content, passReportFilePath);
 		} catch (Exception e) {
 			System.out.println("unable to write sub heading of module: "+moduleName+ " :: Suite Name: "+SuiteName);
@@ -1397,7 +1365,7 @@ catch(Exception e){}
     
     public String convertSecondsInHourMinuteSeconds(String secondsStr){
     	
-    	System.out.println("we got "+secondsStr+" second to convert.");
+    	System.out.println("we got "+secondsStr+"second to convert.");
     	
     	// now splitting it with decimal value..
 

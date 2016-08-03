@@ -141,6 +141,7 @@ public class CIMS_Company_Add_Business_Units {
             	      
   					  String FormFieldXpath		=	"//*[@id='form1']//*[@class='control-group'][xx]//*[@name]";
   					  String FormFieldsCounterXpath		=	"//*[@id='form1']//*[@class='control-group']";
+  					 
   					  int resultCount			=	utilfunc.GetObjectCount(FormFieldsCounterXpath);
   					
   					      for(int i=1; i<=resultCount; i++){
@@ -188,9 +189,18 @@ public class CIMS_Company_Add_Business_Units {
   						
   						
   					}
-  				
+  					      
+  					   Thread.sleep(1000);
+  					      String BusinessUnitName_xpath="//*[@id='BusinessUnitName']";
+  					    String AttributeName1=utilfunc.MakeElement(BusinessUnitName_xpath).getAttribute("id");
             	      
-            	
+  					    if(AttributeName1.equals("BusinessUnitName")){
+  					    	try{
+  					    		utilfunc.MakeElement(BusinessUnitName_xpath).clear();
+  					    		utilfunc.MakeElement(BusinessUnitName_xpath).sendKeys(EditBusinessUnitName);
+  					    	}catch(Exception Error){}
+  					    }
+  					  
             	
             		   
             		  

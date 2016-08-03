@@ -205,7 +205,8 @@ public class CIMS_Role_Admin {
 						
 							
 						
-		
+						
+					
 					
 					
 				}
@@ -223,7 +224,7 @@ public class CIMS_Role_Admin {
 				
 				try{
 					System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
-					String error_flag=utilfunc.RoleAdminErrorMessageHandler();
+					String error_flag=utilfunc.PoclassificationErrorMessageHandler();
 					ExpectedErrorMessage=ExpectedErrorMessage.trim();
 					System.out.println("==="+ExpectedErrorMessage+"===");
 					System.out.println("==="+error_flag+"===");

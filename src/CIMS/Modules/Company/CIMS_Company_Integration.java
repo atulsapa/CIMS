@@ -37,7 +37,7 @@ public class CIMS_Company_Integration {
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	public CIMS_Company_Integration(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -68,7 +68,7 @@ public class CIMS_Company_Integration {
 		{
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 
 			if((mode.equalsIgnoreCase("Edit"))||(mode.equalsIgnoreCase("New")))
 			{

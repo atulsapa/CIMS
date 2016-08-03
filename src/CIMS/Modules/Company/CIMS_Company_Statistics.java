@@ -38,7 +38,7 @@ public class CIMS_Company_Statistics {
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 
 	public CIMS_Company_Statistics(WebDriver driver,UtilFunction utilfunc) 
@@ -74,7 +74,7 @@ public class CIMS_Company_Statistics {
 		{
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 			if((mode.equalsIgnoreCase("Edit"))||(mode.equalsIgnoreCase("New")))
 			{
 				String xpath1		=		".//*[@id='form1']//*[@class='control-group']";

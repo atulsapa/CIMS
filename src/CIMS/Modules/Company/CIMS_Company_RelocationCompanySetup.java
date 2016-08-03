@@ -38,7 +38,7 @@ public class CIMS_Company_RelocationCompanySetup {
 	
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	public CIMS_Company_RelocationCompanySetup(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -63,7 +63,7 @@ public class CIMS_Company_RelocationCompanySetup {
 		{
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 			
 			if((mode.equalsIgnoreCase("New"))||(mode.equalsIgnoreCase("Edit")))
 			{

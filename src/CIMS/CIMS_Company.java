@@ -108,6 +108,7 @@ public class CIMS_Company {
 					else {
 						Reporter.log("Opened the Application URL Successfully");
 						}
+					
 					}
 				}
 			
@@ -115,6 +116,7 @@ public class CIMS_Company {
 	
 	@AfterMethod
 	public void closeBrowser() {
+		
 		Reporter.log("Closing Opened Browser");
 		boolean CloaseBrowserFlag = utilfunc.closeWebDriver();		
 		if(!CloaseBrowserFlag){

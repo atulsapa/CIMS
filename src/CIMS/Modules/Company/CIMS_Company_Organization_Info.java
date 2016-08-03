@@ -110,10 +110,10 @@ public class CIMS_Company_Organization_Info {
 		//			 System.out.println("Attribute name "+count+"is : "+AttributeName);
 	
 					 if(AttributeName.equalsIgnoreCase("CompanyName")){
-						 if(mode.equalsIgnoreCase("new")){
+						 
 						 utilfunc.MakeElement(NewXpath).clear();
 						 utilfunc.MakeElement(NewXpath).sendKeys(OrgnizationInfoCompanyName);
-						 }
+						 
 				     }else if(AttributeName.equalsIgnoreCase("CompanyNickname")){
 				    	 utilfunc.MakeElement(NewXpath).clear();
 				    	 utilfunc.MakeElement(NewXpath).sendKeys(OrgnizationInfoOrganizationNickname);

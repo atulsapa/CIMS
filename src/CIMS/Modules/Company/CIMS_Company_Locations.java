@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import listner.ErrorUtil;
 
 import org.junit.experimental.categories.Categories;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,6 +27,7 @@ import com.gargoylesoftware.htmlunit.javascript.host.Element;
 import com.sun.corba.se.spi.orbutil.fsm.Action;
 import com.sun.org.apache.bcel.internal.classfile.Attribute;
 import com.thoughtworks.selenium.Selenium;
+import com.thoughtworks.selenium.webdriven.commands.IsAlertPresent;
 
 import util.UtilFunction;
 
@@ -160,7 +162,13 @@ try{
 								utilfunc.MakeElement(AddNewBtnXpath).click();
 								System.out.println("User is now about to add location");
 							}catch(Exception e){
-								System.out.println("User unable to click on add button");
+								try{
+									String AddNewBtnXpath=".//*[@id='panel-body']/tbody/tr/td/div/div[1]/a[@class='btn' And contains(text(),'Add New Location')]";
+									utilfunc.MakeElement(AddNewBtnXpath).click();
+								}catch(Exception e1){
+									System.out.println("User unable to click on add button");
+								}
+								
 							}
 							
 						}else if(mode.equals("Edit") || mode.equals("Delete")){
@@ -309,7 +317,15 @@ try{
 										Thread.sleep(1000);
 									}
 									// now full address is placed in field and let us select first record
-									utilfunc.selectFirstResultFromAutoSuggestion(AddressLookUp);
+									try{
+										utilfunc.selectFirstResultFromAutoSuggestion(AddressLookUp);
+										boolean alertflag=utilfunc.isAlertPresent();
+										if(alertflag==true)
+										{
+											Alert alt= webdriver.switchTo().alert();
+									     	alt.accept();
+										}
+									}catch(Exception e){}
 									
 									int innerCount						=		utilfunc.GetObjectCount(InnerFormFieldCounterXPath);
 	
@@ -320,6 +336,12 @@ try{
 										String AttributeName		=		utilfunc.MakeElement(NewFieldXPath).getAttribute("name");
 
 										System.out.println(AttributeName);
+										
+										try{
+											if(AttributeName.equals("CompanyOfficeCountryCode")){
+											utilfunc.Selectdropdownvaluebytext(NewFieldXPath, CompanyOfficeCountryCode);
+											}
+											}catch(Exception e){}
 
 										if(AttributeName.equals("OfficeName")){
 											utilfunc.MakeElement(NewFieldXPath).clear();
@@ -333,10 +355,7 @@ try{
 												utilfunc.MakeElement(NewFieldXPath+RadioFalseSufix).click();
 											}
 										}
-//										else if(AttributeName.equals("CompanyOfficeCountryCode")){
-//											utilfunc.Selectdropdownvaluebyvalue(NewFieldXPath, CompanyOfficeCountryCode);
-//
-//										}
+
 										else if(AttributeName.equals("StreetAddress1") || AttributeName.equals("StreetAddress2") || 
 												AttributeName.equals("City") || AttributeName.equals("PostalCode") || AttributeName.equals("CompanyOfficeCountryCode") ||
 												AttributeName.equals("StateOrProvince") || AttributeName.equals("StreetAddress2")){
@@ -435,6 +454,7 @@ try{
 												utilfunc.enableOrDisableCheckbox(NewFieldXPath, false);
 											}
 										}
+										
 									
 									}
 
@@ -495,6 +515,11 @@ try{
 										String AttributeName		=		utilfunc.MakeElement(NewFieldXPath).getAttribute("name");
 
 										System.out.println(AttributeName);
+										try{
+											if(AttributeName.equals("CompanyOfficeCountryCode")){
+											utilfunc.Selectdropdownvaluebytext(NewFieldXPath, CompanyOfficeCountryCode);
+											}
+											}catch(Exception e){}
 										
 										if(AttributeName.equals("OfficeName")){
 											utilfunc.MakeElement(NewFieldXPath).clear();

@@ -138,8 +138,8 @@ public class CIMS_Company_General_Info {
 				//	}
 						utilfunc.MakeElement(CompanyCodeXpath).sendKeys(CompanyCode);
 						utilfunc.MakeElement(CompanyNumberXpath).sendKeys(CompanyNumber);
-						utilfunc.MakeElement(LogoDataXpath).click();
-						utilfunc.uploadfile(LogoImage); //MakeElement(LogoDataXpath).sendKeys(LogoImage);
+						//utilfunc.MakeElement(LogoDataXpath).click();
+						//utilfunc.uploadfile(LogoImage); //MakeElement(LogoDataXpath).sendKeys(LogoImage);
 				try{
 					Alert alert = webdriver.switchTo().alert();
 					   // if present dismiss the alert,
@@ -237,6 +237,7 @@ public class CIMS_Company_General_Info {
 //						ExpectedErrorMessage=ExpectedErrorMessage.trim();
 						System.out.println("---"+ExpectedErrorMessage+"---");
 						System.out.println("---"+error_flag+"---");
+						System.out.println("---"+utilfunc.globalerrormessage+"---");
 						 if (error_flag.equals(ExpectedErrorMessage)){
 							 Flag=true;
 							 utilfunc.TakeScreenshot();

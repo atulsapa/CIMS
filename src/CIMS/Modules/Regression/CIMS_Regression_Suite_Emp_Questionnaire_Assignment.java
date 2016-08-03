@@ -108,13 +108,11 @@ public class CIMS_Regression_Suite_Emp_Questionnaire_Assignment {
 				    	Thread.sleep(1000);
 						utilfunc.Selectdropdownvaluebytext(EmployerDropDownXpath, QuestionnaireEmployerContactId);
 						
-						Thread.sleep(3000);
+						Thread.sleep(1000);
 						
 						try {
-							Thread.sleep(3000);
 							utilfunc.MakeElement(QuesEmployerAddmoreBtnXpath).click();
 							int Count=0;
-							Thread.sleep(3000);
 							int element_row=utilfunc.GetObjectCount(FieldXpath);
 						    System.out.println("Print The Result Count:" +element_row);
 							
@@ -128,20 +126,16 @@ public class CIMS_Regression_Suite_Emp_Questionnaire_Assignment {
 									if(MyAttrName.equals("CategoryId")){
 										Thread.sleep(1000);
 										try {
-											Thread.sleep(1000);
 											utilfunc.Selectdropdownvaluebytext(New_RowXpath, CategoryId);
-											Thread.sleep(1000);
 											System.out.println("Vlaue has been select from" +MyAttrName);
 										} catch (Exception e) {
 											System.out.println("Unable to select the value from dropdown" +MyAttrName);
 										}
 										
 									}else if(MyAttrName.equals("ClassificationId")){
-										
+										Thread.sleep(1000);
 										try {
-											Thread.sleep(1000);
 											utilfunc.Selectdropdownvaluebytext(New_RowXpath, ClassificationId);
-											Thread.sleep(1000);
 											System.out.println("Unable to select the value from dropdown" +MyAttrName);
 										} catch (Exception e) {
 											System.out.println("Unable to select the value from dropdown" +MyAttrName);
@@ -149,9 +143,7 @@ public class CIMS_Regression_Suite_Emp_Questionnaire_Assignment {
 									}else if (MyAttrName.equals("ContactId")){
 										Thread.sleep(1000);
 										try {
-											Thread.sleep(1000);
 											utilfunc.Selectdropdownvaluebytext(New_RowXpath, ContactId);
-											Thread.sleep(1000);
 											System.out.println("Unable to select the value from dropdown" +MyAttrName);
 										} catch (Exception e) {
 											System.out.println("Unable to select the value from dropdown" +MyAttrName);
@@ -168,7 +160,6 @@ public class CIMS_Regression_Suite_Emp_Questionnaire_Assignment {
 								
 							}	if(!EmprQUestionnaireName.isEmpty()){
 
-								
 
 								String CheckboxcounterXpath="//*[@class='table-rec-container']/table/tbody/tr/td[1]//*[@type='checkbox']";
 							    String CheckboxXpath="//*[@class='table-rec-container']/table/tbody/tr[xx]/td[1]//*[@type='checkbox']";
@@ -179,22 +170,20 @@ public class CIMS_Regression_Suite_Emp_Questionnaire_Assignment {
 
 							    for(int i=1;i<=ResultCount;i++){
 
-							    	Thread.sleep(3000);
+							    	Thread.sleep(1000);
 
 							    	// now let us find  out the questionnaire title
 							    	String NewTextXpath		=			QuestionaireNameXpath.replace("xx",Integer.toString(i));
 
 							        String QuestionnaireText=utilfunc.MakeElement(NewTextXpath).getText();
-							      
+							        
 							        // now match the title questionnaire with provided questionnaire 
 							        if(EmprQUestionnaireName.equals(QuestionnaireText)){
 							        
 							        	// now click on check against questionnaire title matched
 								    	String NewChkXpath=CheckboxXpath.replace("xx",Integer.toString(i));
 								        try {
-								        	Thread.sleep(3000);
-											utilfunc.MakeElement(NewChkXpath).click();
-											Thread.sleep(3000);
+											utilfunc.MakeElement(NewChkXpath).click();;
 										} catch (Exception e) {
 											System.out.println("issue occured while clicking on checkbox..");
 										}
@@ -223,14 +212,12 @@ public class CIMS_Regression_Suite_Emp_Questionnaire_Assignment {
 
 
 			}
-			  utilfunc.scrollToBottom();
 			try{
 				 // save button after saving all data..
 				String saveBtn	=	".//a[contains(@class,'btn')]//*[contains(@class,'icon-white')]";
-				Thread.sleep(4000);
 	        	utilfunc.MakeElement(saveBtn).click();
 	        	Thread.sleep(1000);
-	       // 	utilfunc.isAlertPresent();
+	        	utilfunc.isAlertPresent();
 	        	
 
 	        	Thread.sleep(3000);

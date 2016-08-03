@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -35,9 +32,6 @@ import com.thoughtworks.selenium.Wait;
 
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-
-
-
 
 
 
@@ -93,6 +87,15 @@ public class CIMS_Regression_Suite {
 	private CIMS_Regression_ProcessAndQuestionnaire_contact obj_CIMS_Regression_ProcessAndQuestionnaire_contact;
 
 
+	private CIMS_MostRecent_project   obj_CIMS_MostRecent_project;
+	private CIMS_MostRecentTopTen_project   obj_CIMS_MostRecentTopTen_project;
+	private CIMS_Project_Detail  obj_CIMS_Project_Detail;
+	
+	//Code by dharam -26-july-2016
+	private CIMS_Project_Summary obj_CIMS_Project_Summary;
+	private CIMS_Assessment_Summary obj_CIMS_Assessment_Summary;
+	
+	private CIMS_Project_List obj_CIMS_Project_List;
 
 	//file name that takes dynamically in all modules.
 	public static String ExcelFileName="Test Regression Suite Data.xls";
@@ -102,14 +105,11 @@ public class CIMS_Regression_Suite {
 	public static String osbit=System.getProperty("sun.arch.data.model");
 	public static String moduleName="";
 	public static String Employee_namecheck=null;
-	public static String  loginusername=null;
-	public static String  Employee_Profilename=null;
-	public static String empSheetName	=	"";
 	public static String questionarie_name1="";
 	public static String timer;
 	private String columnNameRM="RUNMODE";
 	private String columnNameAction="ACTION";
-	public static String SuiteNameEmpProfile		=	"";
+
 
 	public static String SelectQuestionnairetype	=		"";
 
@@ -118,11 +118,10 @@ public class CIMS_Regression_Suite {
 	static int instanceCounter = 0;
 	static int instanceCounter1 = 0;
 	static int counter1 = 0;
-	static String TotalTime_ImmigrationStatusandDoc="Immigration Status and Document";
-	static String ProcessQuestionnaireAssignmentExecutionTime="ProcessQuestionnaireAssignment";
+
+
 	//timer
 	StopWatch pageLoad = new StopWatch();
-
 
 	//Initiate the class Before TEST method
 
@@ -181,6 +180,13 @@ public class CIMS_Regression_Suite {
 			/**
 			 * code added by Brij, ends here   
 			 */
+			setobj_CIMS_MostRecent_project(new CIMS_MostRecent_project (webdriver,utilfunc));
+			setobj_CIMS_Project_Detail(new CIMS_Project_Detail (webdriver,utilfunc));
+			setobj_CIMS_MostRecentTopTen_project(new CIMS_MostRecentTopTen_project(webdriver,utilfunc));
+            setobj_CIMS_Project_Summary(new CIMS_Project_Summary(webdriver,utilfunc));
+            setobj_CIMS_Assessment_Summary(new CIMS_Assessment_Summary(webdriver,utilfunc));
+            setobj_CIMS_Project_List(new CIMS_Project_List(webdriver,utilfunc));
+            
 
 
 			if(UtilFunction.Actualbrw.equals("IE")){
@@ -205,6 +211,11 @@ public class CIMS_Regression_Suite {
 			}
 		}
 	}
+
+
+
+
+	
 
 
 
@@ -263,10 +274,9 @@ public class CIMS_Regression_Suite {
 			try{
 				utilfunc.MakeElement("//*[@id='user-profile']").click();
 				Employee_namecheck				=	utilfunc.MakeElement(".//*[@id='user-name']").getText();
-				loginusername					=	utilfunc.MakeElement(".//*[@id='user-name']").getText();
 				Thread.sleep(400);
 				utilfunc.MakeElement("//*[@id='user-profile']").click();
-				//System.out.println(Employee_namecheck);
+				System.out.println(Employee_namecheck);
 			}catch(Exception e){
 				System.out.println("Unable to find Employee name and using username instead");	
 			}
@@ -277,7 +287,6 @@ public class CIMS_Regression_Suite {
 			 */
 
 			//initialize variables that will be used..
-			System.out.print("Wait few seconds...");
 
 			boolean visitSPILink					=	false;
 			boolean	openSuite						=	false;
@@ -289,7 +298,9 @@ public class CIMS_Regression_Suite {
 			String MenuLink								=	"";
 			boolean employeeSearchFlag				=	false;
 			String IdentifyIE						=	"";
-			String []	EmpDependantSuiteName		=	{"Immigration Status","Employee Profile","Document","ProcessQuestionnaire Assignment"};
+			//String []	EmpDependantSuiteName		=	{"Immigration Status","Employee Profile","Document","ProcessQuestionnaire Assignment"};
+			String []	EmpDependantSuiteName		=	{"Immigration Status","Employee Profile","Document","ProcessQuestionnaire Assignment","Most Recent","Project Detail","Assessment Summary","Secure Messaging","Project List"};
+			
 			long startTotalTime						=	0;
 			String TotalTime						=	"";
 
@@ -401,94 +412,65 @@ public class CIMS_Regression_Suite {
 			int SecureMessaging_failTestCaseCounter			=	0;
 			int SecureMessaging_NotAssignedModuleCounter	=	0;
 			int SecureMessaging_ModuleCounter				=	1;
+			
+			//for project Messaging
+			int Projectdetail_PositiveScenarioCounter		=	0;
+			int Projectdetail_NegativeScenarioCounter		=	0;
+			int Projectdetail_TotalTestCaseCounter		=	0;
+			int Projectdetail_passTestCaseCounter			=	0;
+			int Projectdetail_failTestCaseCounter			=	0;
+			int Projectdetail_NotAssignedModuleCounter	=	0;
+			int Projectdetail_ModuleCounter				=	1;
+			
+			//for Most recent 
+			
+			
+			int Mostrecent_PositiveScenarioCounter		=	0;
+			int Mostrecent_NegativeScenarioCounter		=	0;
+			int Mostrecent_TotalTestCaseCounter		=	0;
+			int Mostrecent_passTestCaseCounter			=	0;
+			int Mostrecent_failTestCaseCounter			=	0;
+			int Mostrecent_NotAssignedModuleCounter	=	0;
+			int Mostrecent_ModuleCounter				=	1;
+			
+			// code for project summary 
+			
 
-			//for Employee Profile
-			int EmployeeProfile_PositiveScenarioCounter	=	0;
-			int EmployeeProfile_NegativeScenarioCounter	=	0;
-			int EmployeeProfile_TotalTestCaseCounter		=	0;
-			int EmployeeProfile_passTestCaseCounter		=	0;
-			int EmployeeProfile_failTestCaseCounter		=	0;
-			int EmployeeProfile_NotAssignedModuleCounter	=	0;
-			int EmployeeProfile_ModuleCounter				=	1;
+            int Projectsummary_PositiveScenarioCounter		=	0;
+            int Projectsummary_NegativeScenarioCounter		=	0;
+            int Projectsummary_TotalTestCaseCounter		    =	0;
+            int Projectsummary_passTestCaseCounter			=	0;
+            int Projectsummary_failTestCaseCounter			=	0;
+            int Projectsummary_NotAssignedModuleCounter	    =	0;
+            int Projectsummary_ModuleCounter				=	1;
+            
+            
+            // code for project summary 
+			
 
-			boolean passCounter	=	false;
-			boolean failCounter	=	false;
-			boolean notAssignedCounter	=	false;
-			boolean negativePassCounter=false;
+            int Assessmentsummary_PositiveScenarioCounter		=	0;
+            int Assessmentsummary_NegativeScenarioCounter		=	0;
+            int Assessmentsummary_TotalTestCaseCounter		    =	0;
+            int Assessmentsummary_passTestCaseCounter			=	0;
+            int Assessmentsummary_failTestCaseCounter			=	0;
+            int Assessmentsummary_NotAssignedModuleCounter	    =	0;
+            int Assessmentsummary_ModuleCounter				    =	1;
+            
+            // code for project list 
+            
+            int ProjectList_PositiveScenarioCounter		        =	0;
+			int ProjectList_NegativeScenarioCounter		        =	0;
+			int ProjectList_TotalTestCaseCounter		        =	0;
+			int ProjectList_passTestCaseCounter			        =	0;
+			int ProjectList_failTestCaseCounter			        =	0;
+			int ProjectList_NotAssignedModuleCounter            =	0;
+			int ProjectList_ModuleCounter				        =	1;
 
-			//Flags used for AdvanceSearchProject Module
-			boolean AdvanceSearchProject_NotAssignFlag=false;
-			boolean AdvanceSearchProject_PassFlag=false;
-			boolean AdvanceSearchProject_FailFlag=false;
-			boolean AdvanceSearchProject_NegativePassFlag=false;
 
-			//Flags used for AdvanceSearchEmployee Module
-			boolean AdvanceSearchEmployee_NotassignFlag=false;
-			boolean AdvanceSearchEmployee_PassFlag=false;
-			boolean AdvanceSearchEmployee_FailFlag=false;
-			boolean AdvanceSearchEmployee_NegativePassFlag=false;
 
-			//Flags used for News Module
-			boolean News_NotassignFlag=false;
-			boolean News_PassFlag=false;
-			boolean News_FailFlag=false;
-			boolean News_NegativePassFlag=false;
 
-			//Flags used for ProcessQuestionnaire Assignment Module
-			boolean ProcessQuestionnaireAssignment_NotassignFlag=false;
-			boolean ProcessQuestionnaireAssignment_PassFlag1=false;
-			boolean ProcessQuestionnaireAssignment_PassFlag2=false;
-			boolean ProcessQuestionnaireAssignment_PassFlag3=false;
-			boolean ProcessQuestionnaireAssignment_PassFlag4=false;
-			boolean ProcessQuestionnaireAssignment_FailFlag1=false;
-			boolean ProcessQuestionnaireAssignment_FailFlag2=false;
-			boolean ProcessQuestionnaireAssignment_FailFlag3=false;
-			boolean ProcessQuestionnaireAssignment_FailFlag4=false;
-			boolean ProcessQuestionnaireAssignment_NegativePassFlag1=false;
-			boolean ProcessQuestionnaireAssignment_NegativePassFlag2=false;
-			boolean ProcessQuestionnaireAssignment_NegativePassFlag3=false;
-			boolean ProcessQuestionnaireAssignment_NegativePassFlag4=false;
-			boolean ProcessQuestionnaireAssignment_PassFlag1FINALREPORT=false;
-			boolean ProcessQuestionnaireAssignment_FailFlag1FINALREPORT=false;
 
-			//Flags used for GCP_NewQuery Module
-			boolean GCP_NewQuery_NotassignFlag=false;
-			boolean GCP_NewQuery_PassFlag=false;
-			boolean GCP_NewQuery_FailFlag=false;
-			boolean GCP_NewQuery_NegativePassFlag=false;
 
-			//Flags used for GCP_TravelHistory Module
-			boolean GCP_TravelHistory_NotassignFlag=false;
-			boolean GCP_TravelHistory_PassFlag=false;
-			boolean GCP_TravelHistory_FailFlag=false;
-			boolean GCP_TravelHistory_NegativePassFlag=false;
-
-			//Flags used for Initiate Single project Module
-			boolean InitiateSingleproject_NotassignFlag=false;
-			boolean InitiateSingleproject_PassFlag=false;
-			boolean InitiateSingleproject_FailFlag=false;
-			boolean InitiateSingleproject_NegativePassFlag=false;
-
-			//Flags used for Initiate Multiple Projects Module
-			boolean InitiateMultipleProjects_NotassignFlag=false;
-			boolean InitiateMultipleProjects_PassFlag=false;
-			boolean InitiateMultipleProjects_FailFlag=false;
-			boolean InitiateMultipleProjects_NegativePassFlag=false;
-
-			//Flags used for Immigration Status And Doc Module
-			boolean ImmigrationStatusAndDoc_NotassignFlag=false;
-			boolean ImmigrationStatusAndDoc_STATUS_PassFlag=false;
-			boolean ImmigrationStatusAndDoc_STATUS_FailFlag=false;
-			boolean ImmigrationStatusAndDoc_STATUS_NegativePassFlag=false;
-			boolean ImmigrationStatusAndDoc_DOC_PassFlag=false;
-			boolean ImmigrationStatusAndDoc_DOC_FailFlag=false;
-			boolean ImmigrationStatusAndDoc_DOC_NegativePassFlag=false;
-
-			//Flags used for Immigration Status And Doc Module
-			boolean Securemessaging_NotassignFlag=false;
-			boolean Securemessaging_PassFlag=false;
-			boolean Securemessaging_FailFlag=false;
-			boolean Securemessaging_NegativePassFlag=false;
 
 
 
@@ -498,105 +480,150 @@ public class CIMS_Regression_Suite {
 			int columnNumber_RUNMODE				=		UtilFunction.getColumnWithCellData(fileName, RegressionSuites, columnNameRM);
 			int columnNumber_ACTION					=		UtilFunction.getColumnWithCellData(fileName, RegressionSuites, columnNameAction);
 			int columnNumber_SuiteName				=		UtilFunction.getColumnWithCellData(fileName, RegressionSuites, "Suite Name");
-			System.out.println("We are ready...");
 
-			//for generate dashboard report
-			Set<String> hs = new HashSet<>();
-			ArrayList<String> al=new ArrayList<String>();
 
 			startTotalTime = System.currentTimeMillis();
 			// loop running for regression suites
 			for(int modCounter = 1;modCounter<RowCount;modCounter++){
-				Thread.sleep(300);
+
 				try{
+
+					boolean passCounter	=	false;
+					boolean failCounter	=	false;
+					boolean notAssignedCounter	=	false;
+					boolean negativePassCounter=false;
+
+					//Flags used for AdvanceSearchProject Module
+					boolean AdvanceSearchProject_NotAssignFlag=false;
+					boolean AdvanceSearchProject_PassFlag=false;
+					boolean AdvanceSearchProject_FailFlag=false;
+					boolean AdvanceSearchProject_NegativePassFlag=false;
+
+					//Flags used for AdvanceSearchEmployee Module
+					boolean AdvanceSearchEmployee_NotassignFlag=false;
+					boolean AdvanceSearchEmployee_PassFlag=false;
+					boolean AdvanceSearchEmployee_FailFlag=false;
+					boolean AdvanceSearchEmployee_NegativePassFlag=false;
+
+					//Flags used for News Module
+					boolean News_NotassignFlag=false;
+					boolean News_PassFlag=false;
+					boolean News_FailFlag=false;
+					boolean News_NegativePassFlag=false;
+
+					//Flags used for ProcessQuestionnaire Assignment Module
+					boolean ProcessQuestionnaireAssignment_NotassignFlag=false;
+					boolean ProcessQuestionnaireAssignment_PassFlag1=false;
+					boolean ProcessQuestionnaireAssignment_PassFlag2=false;
+					boolean ProcessQuestionnaireAssignment_PassFlag3=false;
+					boolean ProcessQuestionnaireAssignment_PassFlag4=false;
+					boolean ProcessQuestionnaireAssignment_FailFlag1=false;
+					boolean ProcessQuestionnaireAssignment_FailFlag2=false;
+					boolean ProcessQuestionnaireAssignment_FailFlag3=false;
+					boolean ProcessQuestionnaireAssignment_FailFlag4=false;
+					boolean ProcessQuestionnaireAssignment_NegativePassFlag1=false;
+					boolean ProcessQuestionnaireAssignment_NegativePassFlag2=false;
+					boolean ProcessQuestionnaireAssignment_NegativePassFlag3=false;
+					boolean ProcessQuestionnaireAssignment_NegativePassFlag4=false;
+					boolean ProcessQuestionnaireAssignment_PassFlag1FINALREPORT=false;
+					boolean ProcessQuestionnaireAssignment_FailFlag1FINALREPORT=false;
 					
-					passCounter	=	false;
-					failCounter	=	false;
-					notAssignedCounter	=	false;
-					negativePassCounter=false;
+					//Flags used for GCP_NewQuery Module
+					boolean GCP_NewQuery_NotassignFlag=false;
+					boolean GCP_NewQuery_PassFlag=false;
+					boolean GCP_NewQuery_FailFlag=false;
+					boolean GCP_NewQuery_NegativePassFlag=false;
 
-					AdvanceSearchProject_NotAssignFlag=false;
-					AdvanceSearchProject_PassFlag=false;
-					AdvanceSearchProject_FailFlag=false;
-					AdvanceSearchProject_NegativePassFlag=false;
+					//Flags used for GCP_TravelHistory Module
+					boolean GCP_TravelHistory_NotassignFlag=false;
+					boolean GCP_TravelHistory_PassFlag=false;
+					boolean GCP_TravelHistory_FailFlag=false;
+					boolean GCP_TravelHistory_NegativePassFlag=false;
 
-					AdvanceSearchEmployee_NotassignFlag=false;
-					AdvanceSearchEmployee_PassFlag=false;
-					AdvanceSearchEmployee_FailFlag=false;
-					AdvanceSearchEmployee_NegativePassFlag=false;
+					//Flags used for News Module
+					boolean InitiateSingleproject_NotassignFlag=false;
+					boolean InitiateSingleproject_PassFlag=false;
+					boolean InitiateSingleproject_FailFlag=false;
+					boolean InitiateSingleproject_NegativePassFlag=false;
 
-					News_NotassignFlag=false;
-					News_PassFlag=false;
-					News_FailFlag=false;
-					News_NegativePassFlag=false;
+					//Flags used for News Module
+					boolean InitiateMultipleProjects_NotassignFlag=false;
+					boolean InitiateMultipleProjects_PassFlag=false;
+					boolean InitiateMultipleProjects_FailFlag=false;
+					boolean InitiateMultipleProjects_NegativePassFlag=false;
 
-					ProcessQuestionnaireAssignment_NotassignFlag=false;
-					ProcessQuestionnaireAssignment_PassFlag1=false;
-					ProcessQuestionnaireAssignment_PassFlag2=false;
-					ProcessQuestionnaireAssignment_PassFlag3=false;
-					ProcessQuestionnaireAssignment_PassFlag4=false;
-					ProcessQuestionnaireAssignment_FailFlag1=false;
-					ProcessQuestionnaireAssignment_FailFlag2=false;
-					ProcessQuestionnaireAssignment_FailFlag3=false;
-					ProcessQuestionnaireAssignment_FailFlag4=false;
-					ProcessQuestionnaireAssignment_NegativePassFlag1=false;
-					ProcessQuestionnaireAssignment_NegativePassFlag2=false;
-					ProcessQuestionnaireAssignment_NegativePassFlag3=false;
-					ProcessQuestionnaireAssignment_NegativePassFlag4=false;
-					ProcessQuestionnaireAssignment_PassFlag1FINALREPORT=false;
-					ProcessQuestionnaireAssignment_FailFlag1FINALREPORT=false;
+					//Flags used for Immigration Status And Doc Module
+					boolean ImmigrationStatusAndDoc_NotassignFlag=false;
+					boolean ImmigrationStatusAndDoc_STATUS_PassFlag=false;
+					boolean ImmigrationStatusAndDoc_STATUS_FailFlag=false;
+					boolean ImmigrationStatusAndDoc_STATUS_NegativePassFlag=false;
+					boolean ImmigrationStatusAndDoc_DOC_PassFlag=false;
+					boolean ImmigrationStatusAndDoc_DOC_FailFlag=false;
+					boolean ImmigrationStatusAndDoc_DOC_NegativePassFlag=false;
 
-					GCP_NewQuery_NotassignFlag=false;
-					GCP_NewQuery_PassFlag=false;
-					GCP_NewQuery_FailFlag=false;
-					GCP_NewQuery_NegativePassFlag=false;
+					//Flags used for Immigration Status And Doc Module
+					boolean Securemessaging_NotassignFlag=false;
+					boolean Securemessaging_PassFlag=false;
+					boolean Securemessaging_FailFlag=false;
+					boolean Securemessaging_NegativePassFlag=false;
 
-					GCP_TravelHistory_NotassignFlag=false;
-					GCP_TravelHistory_PassFlag=false;
-					GCP_TravelHistory_FailFlag=false;
-					GCP_TravelHistory_NegativePassFlag=false;
-
-					InitiateSingleproject_NotassignFlag=false;
-					InitiateSingleproject_PassFlag=false;
-					InitiateSingleproject_FailFlag=false;
-					InitiateSingleproject_NegativePassFlag=false;
-
-					InitiateMultipleProjects_NotassignFlag=false;
-					InitiateMultipleProjects_PassFlag=false;
-					InitiateMultipleProjects_FailFlag=false;
-					InitiateMultipleProjects_NegativePassFlag=false;
-
-					ImmigrationStatusAndDoc_NotassignFlag=false;
-					ImmigrationStatusAndDoc_STATUS_PassFlag=false;
-					ImmigrationStatusAndDoc_STATUS_FailFlag=false;
-					ImmigrationStatusAndDoc_STATUS_NegativePassFlag=false;
-					ImmigrationStatusAndDoc_DOC_PassFlag=false;
-					ImmigrationStatusAndDoc_DOC_FailFlag=false;
-					ImmigrationStatusAndDoc_DOC_NegativePassFlag=false;
-
-					Securemessaging_NotassignFlag=false;
-					Securemessaging_PassFlag=false;
-					Securemessaging_FailFlag=false;
-					Securemessaging_NegativePassFlag=false;
-					System.out.println("All Flags are set to false at loop\'s "+modCounter+"Value.");
+					
+					//Flags used for Project detail
+					boolean Projectdetail_NotassignFlag=false;
+					boolean Projectdetail_PassFlag=false;
+					boolean Projectdetail_FailFlag=false;
+					boolean Projectdetail_NegativePassFlag=false;
+					
+					//Flags used for Project summary
+					boolean Projectsummary_NotassignFlag=false;
+					boolean Projectsummary_PassFlag=false;
+					boolean Projectsummary_FailFlag=false;
+					boolean Projectsummary_NegativePassFlag=false;
+					
+					//Flags used for Project summary
+					boolean Assessmentsummary_NotassignFlag=false;
+					boolean Assessmentsummary_PassFlag=false;
+					boolean Assessmentsummary_FailFlag=false;
+					boolean Assessmentsummary_NegativePassFlag=false;
+					
+					//Flags used for most recent And Doc Module
+					boolean Mostrecent_NotassignFlag=false;
+					boolean Mostrecent_PassFlag=false;
+					boolean Mostrecent_FailFlag=false;
+					boolean Mostrecent_NegativePassFlag=false;
+					
+					boolean Mostrecent_PassFlag2=false;
+					boolean Mostrecent_FailFlag2=false;
+					boolean Mostrecent_NegativePassFlag2=false;
+					boolean Mostrecent_FailFlag1FINALREPORT=false;
+					boolean Mostrecent_PassFlag1FINALREPORT=false;
+					
+					//Flag used for Project list 
+					
+					boolean ProjectList_NotassignFlag=false;
+					boolean ProjectList_PassFlag=false;
+					boolean ProjectList_FailFlag=false;
+					boolean ProjectList_NegativePassFlag=false;
+					
 
 
 					// check if current suite name is set to runmode Y..
 					if(UtilFunction.getCellData(fileName, RegressionSuites, columnNumber_RUNMODE, modCounter).equals("Y")){
 						ModuleCounter=ModuleCounter+1;
-
 						// now pick the name of regression suite, action, etc that is set to runmode Y
+
 						String SuiteName				=		UtilFunction.getCellData(fileName, RegressionSuites, columnNumber_SuiteName, modCounter);
 						String ActionName				=		UtilFunction.getCellData(fileName, RegressionSuites, columnNumber_ACTION, modCounter);
-						al.add(SuiteName);
-						System.out.println("=======================================\nSheet selected to pull data is: "	+ SuiteName	+	" and with Action: "	+	ActionName+"\n=======================================");
+
+
+						System.out.println("Sheet selected to pull data is: "	+ SuiteName	+	" and with Action: "	+	ActionName);
 
 						// let uss search for employee for modules like Immigration status, document, profile.. etc
 						if(Arrays.asList(EmpDependantSuiteName).contains(SuiteName)){
-							//if suitename is depend on employee search then Employee name will be chnaged with the name of employee search
 
-							empSheetName				=		"Employee Profile";
+							String empSheetName				=		"Employee Profile";
 							String Employee_search			=		"";
+
 							int rowCountemployeesearch		=		UtilFunction.usedRowCount(fileName,empSheetName);
 							int RUNMODEemployeesearch		=		UtilFunction.getColumnWithCellData(fileName, empSheetName, "RUNMODE");
 							String columnNameEN				=		"EMPLOYEE NAME";
@@ -606,36 +633,38 @@ public class CIMS_Regression_Suite {
 							String columnNameSQT			=		"QUESTIONNAIRE TYPE";
 							int Questionnairetype			=		UtilFunction.getColumnWithCellData(fileName, empSheetName, columnNameSQT);
 
-							for(int j = 1;j<rowCountemployeesearch;j++){
-								try{
-									if(UtilFunction.getCellData(fileName, empSheetName, RUNMODEemployeesearch,j).equals("Y") && employeeSearchFlag==false){
 
-										System.out.println("second loop ran for "+j+" time");
-										try{
-											Thread.sleep(3000);
-											Employee_namecheck			=			UtilFunction.getCellData(fileName, empSheetName, Employee_name, j);		
-											Employee_Profilename		=			UtilFunction.getCellData(fileName, empSheetName, Employee_name, j);		
-											Employee_search				=			UtilFunction.getCellData(fileName, empSheetName, Employee_search_name, j);
-											SelectQuestionnairetype		=			UtilFunction.getCellData(fileName, empSheetName, Questionnairetype, j);
-											System.out.println("Employee Searched for "+Employee_namecheck+ " for "+SuiteName+" Module with "+SelectQuestionnairetype);
-											try {
-												obj_CIMS_Login.searchemployee(Employee_namecheck, Employee_search);
-												/*System.out.println("current url"+utilfunc.getPageUrl());
+							for(int j = 1;j<rowCountemployeesearch;j++){
+
+								if(UtilFunction.getCellData(fileName, empSheetName, RUNMODEemployeesearch,j).equals("Y") && employeeSearchFlag==false){
+
+
+
+									System.out.println("second loop ran for "+j+" time");
+
+									try{
+										Thread.sleep(3000);
+										Employee_namecheck			=			UtilFunction.getCellData(fileName, empSheetName, Employee_name, j);
+										Employee_search				=			UtilFunction.getCellData(fileName, empSheetName, Employee_search_name, j);
+										SelectQuestionnairetype		=			UtilFunction.getCellData(fileName, empSheetName, Questionnairetype, j);
+
+										try {
+											obj_CIMS_Login.searchemployee(Employee_namecheck, Employee_search);
+											/*System.out.println("current url"+utilfunc.getPageUrl());
 									if(utilfunc.getPageUrl().contains("Profile")){
 										employeeSearchFlag	=	true;
 									}*/
-											} catch (Exception e){}
-
-										}catch(Exception e){
-											System.out.println("employee search falied.."+ e);
+										} catch (Exception e) {
+											// TODO: handle exception
 										}
+
+									}catch(Exception e){
+										System.out.println("employee search falied.."+ e);
 									}
-								}catch(Exception error){}
+								}
 							}				
 							// code for employee profile
 							if(SuiteName.equals("Employee Profile")){
-								SuiteNameEmpProfile=SuiteName;
-								//System.out.println("\n================\n================\n\tEmployee Profile\n================\n================\n\t"+Employee_namecheck);
 								// lets click on profile button and run all modules that are enabled for profile
 								try{
 									if(SelectQuestionnairetype.equals("PROFILE")){
@@ -658,48 +687,47 @@ public class CIMS_Regression_Suite {
 
 								// call all profile modules..'
 
-								String sheetName				=	"Questionnaires";	//String ExcelSheetname			=	"Test Data.xls";
-								String ExcelSheetname			=	"Test Regression Suite Data.xls";
+								String sheetName				=	"Questionnaires";
+								String ExcelSheetname			=	"Test Data.xls";
 								int rowCount					=	UtilFunction.usedRowCount(ExcelSheetname,sheetName);
 								int columnNumber_emp_RUNMODE	=	UtilFunction.getColumnWithCellData(ExcelSheetname, sheetName, columnNameRM);
 								int columnNumber_emp_ACTION		=	UtilFunction.getColumnWithCellData(ExcelSheetname, sheetName, columnNameAction);
-								String columnName1				=	"Questionnaire Name";
-
+//								ArrayList NumberOfNotAssignModule = new ArrayList();
+								//questionnaire label
+								String columnName1="Questionnaire Name";
 								int questionnarie_name=UtilFunction.getColumnWithCellData(ExcelSheetname, sheetName, columnName1);
 								for(int in=1;in<=rowCount;in++){
 									int counter=0;
 									//Below condition is used to check the RUNMODE for the Questionnaire modules
 									if(UtilFunction.getCellData(ExcelSheetname, sheetName, columnNumber_emp_RUNMODE, in).equals("Y")){
 
-										/*Questionnaire action mode(New,Edit, Delete)*/
+										//Questionnaire action mode(New,Edit, Delete)
 										String QUESTIONNAIR_ACTION				=		UtilFunction.getCellData(ExcelSheetname, sheetName, columnNumber_emp_ACTION, in);
-										/*Questionnaire module name*/
+
+										//Questionnaire module name 
 										String questionnarie_name1				=		UtilFunction.getCellData(ExcelSheetname, sheetName, questionnarie_name, in);
 
-										ExcelSheetname="Test Data.xls";
+										//		    					String sheetName1						=		questionnarie_name1;		
+										//		    					String column_ques_Name						=		"RUNMODE";
+										//String columnName5="ACTION";
 										int columnNumber_RUNMODE1	=	UtilFunction.getColumnWithCellData(ExcelSheetname, questionnarie_name1, columnNameRM);
 										int rowCount1	=	UtilFunction.usedRowCount(ExcelSheetname,questionnarie_name1);
 
 										try{
 											Thread.sleep(2500);
-											startTime = System.currentTimeMillis();
-											obj_CIMS_Regression_Suite_Employee_Profile.Employee_Profile(questionnarie_name1, QUESTIONNAIR_ACTION, ExcelSheetname, questionnarie_name1, columnNumber_RUNMODE1, rowCount1, Employee_Profilename, SuiteName,NumberOfNotAssignModule);
-											timer = utilfunc.getTimeTakenByModule(startTime);
-											utilfunc.updateModuleDataForReportGeneration(sheetName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-											ExcelSheetname			=	"Test Regression Suite Data.xls";
+											//obj_CIMS_Regression_Suite_Employee_Profile.Employee_Profile(questionnarie_name1, QUESTIONNAIR_ACTION, ExcelSheetname, questionnarie_name1, columnNumber_RUNMODE1, rowCount1, Employee_namecheck, SuiteName,NumberOfNotAssignModule);
+											obj_CIMS_Regression_Suite_Employee_Profile.Employee_Profile(questionnarie_name1, QUESTIONNAIR_ACTION, ExcelSheetname, questionnarie_name1, columnNumber_RUNMODE1, rowCount1, Employee_namecheck, SuiteName);
 										}catch(Exception e){ 
 											System.out.println("unable to process employee profile");
 										}
 									}
+
 								}
+
 							}
+
 						}
-						else
-						{//if suitename is not depend on employee search then Employee name will be the name of login user
-							Employee_namecheck=loginusername;
-							System.out.println("Employee Searched for "+Employee_namecheck+ " for "+SuiteName+" Module.");
-						}
+
 
 						// now check module run modes with Y.. and call module objects..
 
@@ -805,11 +833,8 @@ public class CIMS_Regression_Suite {
 
 															principal1_spouse1_child1_firstRecord="";
 															firstRecord="";
-															String  gettext="";
 															String Xpath_GetPrincipalText=".//*[@id='tblFamilyList']/tbody/tr["+ImmigrationstatusAndDoc_i+"]/td[2]";
-															gettext=utilfunc.MakeElement(Xpath_GetPrincipalText).getText();
-															System.out.println("Getext is:"+gettext);
-															Thread.sleep(1000);
+															String  gettext=utilfunc.MakeElement(Xpath_GetPrincipalText).getText();
 															String ExcelSheetName	=	SuiteName;
 
 
@@ -843,12 +868,13 @@ public class CIMS_Regression_Suite {
 																	Thread.sleep(5000);
 																	suiteLink=Immigration_Status_Document(SuiteName,ActionName);
 																}catch(Exception e){
-																	System.out.println("unable to click for principal record "+SuiteName+" row number: " + ImmigrationstatusAndDoc_i);
+																	System.out
+																	.println("unable to click for principal record "+SuiteName+" row number: " + ImmigrationstatusAndDoc_i);
 																}
 
 																try{
 																	openSuite =	utilfunc.waitForAnElementToLoad(suiteLink, true);
-																	utilfunc.MakeElement(suiteLink).click();Thread.sleep(1000);
+																	utilfunc.MakeElement(suiteLink).click();
 																}catch(Exception e){
 																	System.out.println("clicked on tab for : "+SuiteName);
 																}
@@ -867,7 +893,6 @@ public class CIMS_Regression_Suite {
 
 																			timer = utilfunc.getTimeTakenByModule(startTime);
 																			utilfunc.updateModuleDataForReportGeneration(ExcelSheetName, Employee_namecheck, timer);
-																			utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(TotalTime_ImmigrationStatusandDoc);
 																			if (Page_flag)
 																			{
 																				status="PASS";
@@ -878,14 +903,14 @@ public class CIMS_Regression_Suite {
 																					utilfunc.TestngReportPass(obj_CIMS_Regression_Suite_Immigration_Status.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Immigration_Status.scenerio, ActionName, obj_CIMS_Regression_Suite_Immigration_Status.description, status);
 																					// now write it in a pass file START...
 																					if(ImmigrationStatusAndDoc_STATUS_PassFlag==false){
-																						try {	obj_Report_Dashboard.writeReportHeader(TotalTime_ImmigrationStatusandDoc, ExcelSheetName, "Pass");
+																						try {	obj_Report_Dashboard.writeReportHeader(SuiteName, ExcelSheetName, "Pass");
 																						}catch(Exception e){}
 																						ImmigrationStatusAndDoc_STATUS_PassFlag=true;
 																					}// now write it in a pass file ENDS...
 
 																					//Write Positive Pass dashboard report 
 																					try { 
-																						obj_Report_Dashboard.writeDashBoardPassReport(TotalTime_ImmigrationStatusandDoc, Employee_namecheck, obj_CIMS_Regression_Suite_Immigration_Status.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Immigration_Status.scenerio, ActionName, obj_CIMS_Regression_Suite_Immigration_Status.description, status, timer);
+																						obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Immigration_Status.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Immigration_Status.scenerio, ActionName, obj_CIMS_Regression_Suite_Immigration_Status.description, status, timer);
 																					}catch(Exception e){
 																						System.out.println("unable to write dasboard pass report for : "+ExcelSheetName);}
 																				}
@@ -894,14 +919,14 @@ public class CIMS_Regression_Suite {
 																					utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_Suite_Immigration_Status.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Immigration_Status.scenerio,ActionName,obj_CIMS_Regression_Suite_Immigration_Status.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																					// now write it in a negative pass dashboard file START...
 																					if(ImmigrationStatusAndDoc_STATUS_NegativePassFlag==false){
-																						try {	obj_Report_Dashboard.writeReportHeader(TotalTime_ImmigrationStatusandDoc, ExcelSheetName,"Negative Pass");
+																						try {	obj_Report_Dashboard.writeReportHeader(SuiteName, ExcelSheetName,"Negative Pass");
 																						}catch(Exception e){}
 																						ImmigrationStatusAndDoc_STATUS_NegativePassFlag=true;
 																					}// now write it in a negative pass dashboard file ENDS...
 
 																					//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
 																					try {
-																						obj_Report_Dashboard.writeDashBoardNegativePassReport(TotalTime_ImmigrationStatusandDoc,Employee_namecheck,obj_CIMS_Regression_Suite_Immigration_Status.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Immigration_Status.scenerio,ActionName,obj_CIMS_Regression_Suite_Immigration_Status.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+																						obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_Suite_Immigration_Status.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Immigration_Status.scenerio,ActionName,obj_CIMS_Regression_Suite_Immigration_Status.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																					} catch (Exception e) {
 																						System.out.println("unable to write dasboard negative pass report for : "+ ExcelSheetName);}
 																				}
@@ -921,12 +946,12 @@ public class CIMS_Regression_Suite {
 
 																				// now write it in a fail dashboard file START...
 																				if(ImmigrationStatusAndDoc_STATUS_FailFlag==false){
-																					try{ obj_Report_Dashboard.writeReportHeader(TotalTime_ImmigrationStatusandDoc, ExcelSheetName,"Fail");
+																					try{ obj_Report_Dashboard.writeReportHeader(SuiteName, ExcelSheetName,"Fail");
 																					}catch(Exception e){}
 																					ImmigrationStatusAndDoc_STATUS_FailFlag	= true;
 																				}// now write it in a fail dashboard file ENDS...
 																				try {
-																					obj_Report_Dashboard.writeDashBoardFailReport(TotalTime_ImmigrationStatusandDoc, Employee_namecheck, obj_CIMS_Regression_Suite_Immigration_Status.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Immigration_Status.scenerio,ActionName, obj_CIMS_Regression_Suite_Immigration_Status.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+																					obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Immigration_Status.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Immigration_Status.scenerio,ActionName, obj_CIMS_Regression_Suite_Immigration_Status.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																				} catch (Exception e) {
 																					System.out.println("unable to write dasboard fail report for : "+SuiteName);}
 
@@ -950,7 +975,6 @@ public class CIMS_Regression_Suite {
 																		//utilfunc.zoomOut(1);
 																		// now call modules according to enable modules
 																		//	System.out.println("calling "+SuiteName+" module..");
-																		Thread.sleep(1000);
 																		try{
 																			startTime = System.currentTimeMillis();
 																			try{
@@ -958,7 +982,6 @@ public class CIMS_Regression_Suite {
 																			}catch(Exception e){}
 																			timer = utilfunc.getTimeTakenByModule(startTime);
 																			utilfunc.updateModuleDataForReportGeneration(ExcelSheetName, Employee_namecheck, timer);
-																			utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(TotalTime_ImmigrationStatusandDoc);
 																			if (Page_flag)
 																			{
 																				status="PASS";
@@ -969,14 +992,14 @@ public class CIMS_Regression_Suite {
 																					utilfunc.TestngReportPass(obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw,obj_CIMS_Immigration_Document.scenerio, ActionName,obj_CIMS_Immigration_Document.description, status);
 																					// now write it in a pass file START...
 																					if(ImmigrationStatusAndDoc_DOC_PassFlag==false){
-																						try {	obj_Report_Dashboard.writeReportHeader(TotalTime_ImmigrationStatusandDoc, ExcelSheetName, "Pass");
+																						try {	obj_Report_Dashboard.writeReportHeader(SuiteName, ExcelSheetName, "Pass");
 																						}catch(Exception e){}
 																						ImmigrationStatusAndDoc_DOC_PassFlag=true;
 																					}// now write it in a pass file ENDS...
 
 																					//Write Positive Pass dashboard report 
 																					try {
-																						obj_Report_Dashboard.writeDashBoardPassReport(TotalTime_ImmigrationStatusandDoc, Employee_namecheck, obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Immigration_Document.scenerio, ActionName, obj_CIMS_Immigration_Document.description, status, timer);
+																						obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Immigration_Document.scenerio, ActionName, obj_CIMS_Immigration_Document.description, status, timer);
 																					}catch(Exception e){
 																						System.out.println("unable to write dasboard pass report for : "+ExcelSheetName);}
 																				}
@@ -985,14 +1008,14 @@ public class CIMS_Regression_Suite {
 																					utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw,obj_CIMS_Immigration_Document.scenerio,ActionName,obj_CIMS_Immigration_Document.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																					// now write it in a negative pass dashboard file START...
 																					if(ImmigrationStatusAndDoc_DOC_NegativePassFlag==false){
-																						try {	obj_Report_Dashboard.writeReportHeader(TotalTime_ImmigrationStatusandDoc, SuiteName,"Negative Pass");
+																						try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Negative Pass");
 																						}catch(Exception e){}
 																						ImmigrationStatusAndDoc_DOC_NegativePassFlag=true;
 																					}// now write it in a negative pass dashboard file ENDS...
 
 																					//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
 																					try {
-																						obj_Report_Dashboard.writeDashBoardNegativePassReport(TotalTime_ImmigrationStatusandDoc,Employee_namecheck,obj_CIMS_Immigration_Document.testcaseid,utilfunc.Actualbrw,obj_CIMS_Immigration_Document.scenerio,ActionName,obj_CIMS_Immigration_Document.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+																						obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Immigration_Document.testcaseid,utilfunc.Actualbrw,obj_CIMS_Immigration_Document.scenerio,ActionName,obj_CIMS_Immigration_Document.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																					} catch (Exception e) {
 																						System.out.println("unable to write dasboard negative pass report for : "+ ExcelSheetName);}
 																				}
@@ -1013,12 +1036,12 @@ public class CIMS_Regression_Suite {
 																				utilfunc.TestngReportFail1(obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw,obj_CIMS_Immigration_Document.scenerio,ActionName,obj_CIMS_Immigration_Document.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																				// now write it in a fail dashboard file START...
 																				if(ImmigrationStatusAndDoc_DOC_FailFlag==false){
-																					try{ obj_Report_Dashboard.writeReportHeader(TotalTime_ImmigrationStatusandDoc, ExcelSheetName,"Fail");
+																					try{ obj_Report_Dashboard.writeReportHeader(SuiteName, ExcelSheetName,"Fail");
 																					}catch(Exception e){}
 																					ImmigrationStatusAndDoc_DOC_FailFlag	= true;
 																				}// now write it in a fail dashboard file ENDS...
 																				try {
-																					obj_Report_Dashboard.writeDashBoardFailReport(TotalTime_ImmigrationStatusandDoc, Employee_namecheck, obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Immigration_Document.scenerio,ActionName, obj_CIMS_Immigration_Document.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+																					obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Immigration_Document.testcaseid, utilfunc.Actualbrw, obj_CIMS_Immigration_Document.scenerio,ActionName, obj_CIMS_Immigration_Document.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 																				} catch (Exception e) {
 																					System.out.println("unable to write dasboard fail report for : "+ExcelSheetName);}
 																				/*if(failCounter==false){
@@ -1072,9 +1095,6 @@ public class CIMS_Regression_Suite {
 													int ImmigrationStatusandDoc_NA_columnNumber_TestCaseDescription;
 
 													utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-													utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(TotalTime_ImmigrationStatusandDoc);
-
-
 													ImmigrationStatusandDoc_NA_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 													System.out.println(ImmigrationStatusandDoc_NA_Errormessage);
 
@@ -1099,7 +1119,8 @@ public class CIMS_Regression_Suite {
 													} catch (InterruptedException e) {
 														System.out.println("unable to write Not Assign report");
 													}
-													}
+
+												}
 												catch(Exception e){}
 											}
 										} catch (Exception e) 
@@ -1156,8 +1177,6 @@ public class CIMS_Regression_Suite {
 
 											timer = utilfunc.getTimeTakenByModule(startTime);
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 											if (Page_flag)
 											{
 												status="PASS";
@@ -1246,7 +1265,6 @@ public class CIMS_Regression_Suite {
 										int GCP_NewQuery_columnNumber_TestCaseDescription;
 
 										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
 										GCP_NewQuery_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 										System.out.println(GCP_NewQuery_Errormessage);
 
@@ -1303,8 +1321,6 @@ public class CIMS_Regression_Suite {
 											Page_flag	=	obj_CIMS_Travel_History.Travel_History(fileName,sheetName,count,ActionName);
 											timer = utilfunc.getTimeTakenByModule(startTime);
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 											if (Page_flag)
 											{
 												status="PASS";
@@ -1384,7 +1400,6 @@ public class CIMS_Regression_Suite {
 										Thread.sleep(3000);
 										timer = utilfunc.getTimeTakenByModule(startTime);
 										status="PASS";
-										GCP_TravelHistory_passTestCaseCounter++;
 										String GCP_TravelHistory_Errormessage="";
 										String GCP_TravelHistory_NotAssignTestCaseID="";
 										String GCP_TravelHistory_NotAssignScenerio="";
@@ -1394,7 +1409,6 @@ public class CIMS_Regression_Suite {
 										int GCP_TravelHistory_columnNumber_TestCaseDescription;
 
 										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
 										GCP_TravelHistory_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 										System.out.println(GCP_TravelHistory_Errormessage);
 
@@ -1490,15 +1504,10 @@ public class CIMS_Regression_Suite {
 
 									String NewsSectionisAssignedorNot_gettext="";
 									String NewsSectionisAssignedorNot_Xpath=".//*[@id='panel-header' and contains(text(),'News')]"; 
-									Thread.sleep(1000);
-									utilfunc.scrollToBottom();
 									try{
 										NewsSectionisAssignedorNot_gettext=utilfunc.MakeElement(NewsSectionisAssignedorNot_Xpath).getText();
-										System.out.println("NewsSectionisAssignedorNot_gettext:"+NewsSectionisAssignedorNot_gettext);
-									}catch(Exception error){
-										System.out.println("\nError is:"+error);
-									}
-									utilfunc.scrollToTop();
+									}catch(Exception error){}
+
 									startTime = System.currentTimeMillis();
 
 									//check News is assigned to the user or not.
@@ -1511,7 +1520,6 @@ public class CIMS_Regression_Suite {
 
 											timer = utilfunc.getTimeTakenByModule(startTime);
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
 											if (Page_flag)
 											{
 												status="PASS";
@@ -1543,12 +1551,18 @@ public class CIMS_Regression_Suite {
 														News_NegativePassFlag=true;
 													}// now write it in a negative pass dashboard file ENDS...
 
-													//Write negative pass dashboard report 
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
 													try {
 														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_Suite_News.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_News.scenerio,ActionName,obj_CIMS_Regression_Suite_News.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 													} catch (Exception e) {
 														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName);}
 												}
+												/*if(passCounter==false){
+													try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+													passCounter=true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_News.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_News.scenerio, ActionName, obj_CIMS_Regression_Suite_News.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
 											}
 											else
 											{
@@ -1597,7 +1611,6 @@ public class CIMS_Regression_Suite {
 										int News_columnNumber_TestCaseDescription;
 
 										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
 										News_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 										System.out.println(News_Errormessage);
 
@@ -1623,7 +1636,7 @@ public class CIMS_Regression_Suite {
 											System.out.println("unable to write Not Assign report");
 										}
 									}
-									System.out.println("news module ends here");
+
 								}
 
 								//LOKESH append this code for "ALL MY TASKS" on welcome page on 11-April-2016 ===END HERE===
@@ -1645,8 +1658,8 @@ public class CIMS_Regression_Suite {
 
 										String InitiationLink		=		"//*[contains(@id,'divis')]";
 										//	    					String InitiateLinkXPath	=		"SinglepageInitiation"; // this is used to get the link of enabled(display: none is missing) link
-										int InitiationLinkGetObjCounter=0;
-										InitiationLinkGetObjCounter=utilfunc.GetObjectCount(InitiationLink);
+												int InitiationLinkGetObjCounter=0;
+												InitiationLinkGetObjCounter=utilfunc.GetObjectCount(InitiationLink);
 										for(int w=1;w<=InitiationLinkGetObjCounter;w++){
 											Thread.sleep(2500);
 
@@ -2692,8 +2705,7 @@ public class CIMS_Regression_Suite {
 												}catch(Exception error){}
 
 												timer = utilfunc.getTimeTakenByModule(startTime);
-												utilfunc.updateModuleDataForReportGeneration(SuiteName+" - Final Report", Employee_namecheck, timer);
-												utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+												utilfunc.updateModuleDataForReportGeneration(SuiteName+" Final Report", Employee_namecheck, timer);
 
 												//								}else{
 
@@ -2707,7 +2719,7 @@ public class CIMS_Regression_Suite {
 														utilfunc.TestngReportPass(obj_CIMS_Single_Project_Initiation.testcaseid, utilfunc.Actualbrw, obj_CIMS_Single_Project_Initiation.scenerio, ActionName, obj_CIMS_Single_Project_Initiation.description, status);
 														// now write it in a pass file START...
 														if(InitiateSingleproject_PassFlag==false){
-															try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Final Report", "Pass");
+															try {	obj_Report_Dashboard.writeReportHeader(SuiteName+" Final Report", SuiteName, "Pass");
 															}catch(Exception e){}
 															InitiateSingleproject_PassFlag=true;
 														}// now write it in a pass file ENDS...
@@ -2723,7 +2735,7 @@ public class CIMS_Regression_Suite {
 														utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Single_Project_Initiation.testcaseid, utilfunc.Actualbrw,obj_CIMS_Single_Project_Initiation.scenerio,ActionName,obj_CIMS_Single_Project_Initiation.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 														// now write it in a negative pass dashboard file START...
 														if(InitiateSingleproject_NegativePassFlag==false){
-															try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Final Report","Negative Pass");
+															try {	obj_Report_Dashboard.writeReportHeader(SuiteName+" Final Report", SuiteName,"Negative Pass");
 															}catch(Exception e){}
 															InitiateSingleproject_NegativePassFlag=true;
 														}// now write it in a negative pass dashboard file ENDS...
@@ -2750,7 +2762,7 @@ public class CIMS_Regression_Suite {
 													utilfunc.TestngReportFail1(obj_CIMS_Single_Project_Initiation.testcaseid, utilfunc.Actualbrw, obj_CIMS_Single_Project_Initiation.scenerio,ActionName, obj_CIMS_Single_Project_Initiation.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 													// now write it in a fail dashboard file START...
 													if(InitiateSingleproject_FailFlag==false){
-														try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Final Report","Fail");
+														try{ obj_Report_Dashboard.writeReportHeader(SuiteName+" Final Report", SuiteName,"Fail");
 														}catch(Exception e){}
 														InitiateSingleproject_FailFlag=true;
 													}// now write it in a fail dashboard file ENDS...
@@ -2778,8 +2790,6 @@ public class CIMS_Regression_Suite {
 												int InitiateSingleproject_columnNumber_TestCaseDescription;
 
 												utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-												utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 												InitiateSingleproject_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 												System.out.println(InitiateSingleproject_Errormessage);
 
@@ -2836,7 +2846,7 @@ public class CIMS_Regression_Suite {
 											timer = utilfunc.getTimeTakenByModule(startTime);
 
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
 											if (Page_flag)
 											{
 												status="PASS";
@@ -2922,8 +2932,6 @@ public class CIMS_Regression_Suite {
 											int InitiateMultipleProjects_columnNumber_TestCaseDescription;
 
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 											InitiateMultipleProjects_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 											System.out.println(InitiateMultipleProjects_Errormessage);
 
@@ -3010,7 +3018,6 @@ public class CIMS_Regression_Suite {
 
 											timer = utilfunc.getTimeTakenByModule(startTime);
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
 											if (Page_flag)
 											{
 												status="PASS";
@@ -3096,8 +3103,6 @@ public class CIMS_Regression_Suite {
 										int AdvanceSearchProject_columnNumber_TestCaseDescription;
 
 										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 										AdvanceSearchProject_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 										System.out.println(AdvanceSearchProject_Errormessage);
 
@@ -3150,7 +3155,7 @@ public class CIMS_Regression_Suite {
 
 									startTime = System.currentTimeMillis();
 
-									//check AdvSEmpisAssignedorNot is assigned to the user or not.
+									//check News is assigned to the user or not.
 									if(AdvSEmpisAssignedorNot_gettext.equalsIgnoreCase("Employees"))
 									{
 										// click on link
@@ -3165,8 +3170,6 @@ public class CIMS_Regression_Suite {
 											}catch(Exception e){}
 											timer = utilfunc.getTimeTakenByModule(startTime);
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 											if (Page_flag)
 											{
 												status="PASS";
@@ -3258,7 +3261,6 @@ public class CIMS_Regression_Suite {
 										int AdvanceSearchEmployee_columnNumber_TestCaseDescription;
 
 										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
 										AdvanceSearchEmployee_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 										System.out.println(AdvanceSearchEmployee_Errormessage);
 
@@ -3303,19 +3305,50 @@ public class CIMS_Regression_Suite {
 									SecureMessaging_TotalTestCaseCounter++;
 
 									boolean SecureMessagingAllocatedorNot=false;
-									String Secure_Messaging_Xpath=".//*[@id='nav-parent']//*[@class='pull-right']//a[@id='nav-messages']";
+									String BalNoXpath="//*[contains(@class,'table-rec-container')]//tbody//tr[1]//td[2]";
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(BalNoXpath).click();
+									} catch (Exception e1) {
+										System.out.println("==Unable to click on the bal no==");
+									}
 
-									SecureMessagingAllocatedorNot=utilfunc.waitForAnElementToLoad(Secure_Messaging_Xpath, true);
+//									String sidebarxpath=".//*[@id='slider-icon']";
+//									try {
+//										Thread.sleep(1500);
+//										utilfunc.MakeElement(sidebarxpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on slider icon==");
+//
+//									}
+
+									String MessagelinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Message')]";
+//									boolean ProjectDetailIsAssignOrNot=false;
+//									try {
+//										Thread.sleep(1500);
+//										utilfunc.MakeElement(MessagelinkXpath).click();
+//										ProjectDetailIsAssignOrNot=true;
+//									} catch (Exception e1) {
+//
+//										System.out.println("==Unable to click on the process and questionnaire==");
+//
+//									}
+
+
+									SecureMessagingAllocatedorNot=utilfunc.waitForAnElementToLoad(MessagelinkXpath, true);
 
 									if(SecureMessagingAllocatedorNot==true)
 									{//Allocated
 										// click on link
-										try{
-											Thread.sleep(1000);
-											utilfunc.MakeElement(Secure_Messaging_Xpath).click();
-											Thread.sleep(1000);
-										}catch(Exception e){
-											System.out.println("unable to click on employee icons");
+										try {
+											Thread.sleep(1500);
+											utilfunc.MakeElement(MessagelinkXpath).click();
+											//ProjectDetailIsAssignOrNot=true;
+										} catch (Exception e1) {
+
+											System.out.println("==Unable to click on the process and questionnaire==");
+
 										}
 										try{
 
@@ -3325,8 +3358,6 @@ public class CIMS_Regression_Suite {
 
 											timer = utilfunc.getTimeTakenByModule(startTime);
 											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-											utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 											if (Page_flag)
 											{
 												status="PASS";
@@ -3412,8 +3443,6 @@ public class CIMS_Regression_Suite {
 										int SecureMessaging_columnNumber_TestCaseDescription;
 
 										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
-
 										SecureMessaging_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
 										System.out.println(SecureMessaging_Errormessage);
 
@@ -3442,482 +3471,1562 @@ public class CIMS_Regression_Suite {
 
 								}
 								// secure messaging ends here //
+								
+								
+//Project detail code start here 
+								
+								else if(SuiteName.equals("Project Detail")){
+									
+
+									System.out.println("Execution of Project Detail module start here...");
+									String ProjectDetail_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
+
+									if(ProjectDetail_Scenariotext.equals("Positive") || ProjectDetail_Scenariotext.contains("sitive") || ProjectDetail_Scenariotext.contains("Pos")){
+										Projectdetail_PositiveScenarioCounter++;
+									}else if(ProjectDetail_Scenariotext.equals("Negative") || ProjectDetail_Scenariotext.contains("gative") || ProjectDetail_Scenariotext.contains("gavtive") ){
+										Projectdetail_NegativeScenarioCounter++;
+									}
+									Projectdetail_TotalTestCaseCounter++;
+									
+									String BalNoXpath="//*[contains(@class,'table-rec-container')]//tbody//tr[1]//td[2]";
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(BalNoXpath).click();
+									} catch (Exception e1) {
+										System.out.println("==Unable to click on the bal no==");
+									}
+
+//									String sidebarxpath=".//*[@id='slider-icon']";
+//									try {
+//										Thread.sleep(1500);
+//										utilfunc.MakeElement(sidebarxpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on slider icon==");
+//
+//									}
+
+									String ProjectdetaillinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Project Detail')]";
+									boolean ProjectDetailIsAssignOrNot=false;
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(ProjectdetaillinkXpath).click();
+										ProjectDetailIsAssignOrNot=true;
+									} catch (Exception e1) {
+
+										System.out.println("==Unable to click on the process and questionnaire==");
+
+									}
+
+
+									if(ProjectDetailIsAssignOrNot==true)
+									{//Allocated
+										// click on link
+										
+										try{
+
+											try{
+												Page_flag	=	obj_CIMS_Project_Detail.Project_Detail(fileName,SuiteName,count,ActionName);
+											}catch(Exception e){}
+
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//		utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+											if (Page_flag)
+											{
+												status="PASS";
+												Projectdetail_passTestCaseCounter++;
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Detail.scenerio, ActionName, obj_CIMS_Project_Detail.description, status);
+													// now write it in a pass file START...
+													if(Projectdetail_PassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName, "Pass");
+														}catch(Exception e){}
+														Projectdetail_PassFlag=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Detail.scenerio, ActionName, obj_CIMS_Project_Detail.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw,obj_CIMS_Project_Detail.scenerio,ActionName,obj_CIMS_Project_Detail.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative pass dashboard file START...
+													if(Projectdetail_NegativePassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Negative Pass");
+														}catch(Exception e){}
+														Projectdetail_NegativePassFlag=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Project_Detail.testcaseid,utilfunc.Actualbrw,obj_CIMS_Project_Detail.scenerio,ActionName,obj_CIMS_Project_Detail.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName);}
+												}
+												/*											if(passCounter==false){
+													try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+													passCounter=true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Detail.scenerio, ActionName, obj_CIMS_Project_Detail.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												Projectdetail_failTestCaseCounter++;
+												//									utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Detail.scenerio,ActionName, obj_CIMS_Project_Detail.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												// now write it in a fail dashboard file START...
+												if(Projectdetail_FailFlag==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Fail");
+													}catch(Exception e){}
+													Projectdetail_FailFlag= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Detail.scenerio,ActionName, obj_CIMS_Project_Detail.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												/*										if(failCounter==false){
+													obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+													failCounter	= true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Project_Detail.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Detail.scenerio,ActionName, obj_CIMS_Project_Detail.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+									}else{//not assigned to the user
+										timer = utilfunc.getTimeTakenByModule(startTime);
+										status="PASS";
+										String Projectdetail_Errormessage="";
+										String Projectdetail_NotAssignTestCaseID="";
+										String Projectdetail_NotAssignScenerio="";
+										String Projectdetail_NotAssignTestCaseDescription="";
+										int Projectdetail_columnNumber_TCID;
+										int Projectdetail_columnNumber_Scenario;
+										int Projectdetail_columnNumber_TestCaseDescription;
+
+										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//	utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+										Projectdetail_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
+										System.out.println(Projectdetail_Errormessage);
+
+										Projectdetail_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+										Projectdetail_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Scenario");
+										Projectdetail_columnNumber_TestCaseDescription		=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
+
+										Projectdetail_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, Projectdetail_columnNumber_TCID, count);
+										Projectdetail_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, Projectdetail_columnNumber_Scenario, count);
+										Projectdetail_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, Projectdetail_columnNumber_TestCaseDescription, count);
+
+										utilfunc.TestngReportFail(Projectdetail_NotAssignTestCaseID, utilfunc.Actualbrw, Projectdetail_NotAssignScenerio,ActionName,Projectdetail_NotAssignTestCaseDescription,status,Projectdetail_Errormessage);
+										//now write it in a notAssign file START...
+										if(Projectdetail_NotassignFlag==false){
+											try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
+											}catch(Exception e){}
+											Projectdetail_NotassignFlag=true;
+										}//now write it in a notAssign file ENDS...
+										Projectdetail_NotAssignedModuleCounter=1;	
+										try {
+											obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, Projectdetail_NotAssignTestCaseID, utilfunc.Actualbrw, Projectdetail_NotAssignScenerio, ActionName, Projectdetail_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
+										} catch (InterruptedException e) {
+											System.out.println("unable to write Not Assign report");
+										}
+									}
+
+								
+									
+									
+								}
+								
+								
+								
+								//Project detail code end here 
+								
+								// Project summary code start here
+								
+								else if (SuiteName.equals("Project Summary")){
+									
+
+									System.out.println("Execution of Project Detail module start here...");
+									String Projectsummary_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
+
+									if(Projectsummary_Scenariotext.equals("Positive") || Projectsummary_Scenariotext.contains("sitive") || Projectsummary_Scenariotext.contains("Pos")){
+										Projectsummary_PositiveScenarioCounter++;
+									}else if(Projectsummary_Scenariotext.equals("Negative") || Projectsummary_Scenariotext.contains("gative") || Projectsummary_Scenariotext.contains("gavtive") ){
+										Projectsummary_NegativeScenarioCounter++;
+									}
+									Projectsummary_TotalTestCaseCounter++;
+									
+									String UserprofileXpath =".//*[@id='user-profile']";
+									
+									String MyProjectXpath=".//*[contains(@class,'pull-right')]//*[contains(@class,'dropdown-menu')]//*[text()='My Projects']";
+
+//									
+//									try {
+//										Thread.sleep(3000);
+//										utilfunc.MakeElement(UserprofileXpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("unable to click on the link ");
+//									}
+//									
+									try {
+										Thread.sleep(3000);
+										utilfunc.MakeElement(MyProjectXpath).click();
+										Thread.sleep(3000);
+									} catch (Exception e) {
+										System.out.println("Unable to click on the my profile link");
+										}
+									
+                                        String ProjectNoXpath=".//*[@class='table table-item-list']//tbody/tr[1]//td[1]//*[@class='desc4']";
+									
+									try {
+										Thread.sleep(3000);
+										utilfunc.MakeElement(ProjectNoXpath).click();
+										Thread.sleep(3000);
+									} catch (Exception e2) {
+										System.out.println("Unable to click on the project no");
+									}
+
+//									String sidebarxpath=".//*[@id='slider-icon']";
+//									try {
+//										Thread.sleep(3000);
+//										utilfunc.MakeElement(sidebarxpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on slider icon==");
+//
+//									}
+									
+									
+
+									String ProjectdetaillinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Project Summary')]";
+									boolean ProjectsummaryIsAssignOrNot=false;
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(ProjectdetaillinkXpath).click();
+										ProjectsummaryIsAssignOrNot=true;
+									} catch (Exception e1) {
+
+										System.out.println("==Unable to click on the project summary==");
+
+									}
+
+
+									if(ProjectsummaryIsAssignOrNot==true)
+									{//Allocated
+										// click on link
+										
+										try{
+
+											try{
+												Page_flag	=	obj_CIMS_Project_Summary.Project_Summary(fileName,SuiteName,count,ActionName);
+											}catch(Exception e){}
+
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//		utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+											if (Page_flag)
+											{
+												status="PASS";
+												Projectsummary_passTestCaseCounter++;
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Summary.scenerio, ActionName, obj_CIMS_Project_Summary.description, status);
+													// now write it in a pass file START...
+													if(Projectsummary_PassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName, "Pass");
+														}catch(Exception e){}
+														Projectsummary_PassFlag=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Summary.scenerio, ActionName, obj_CIMS_Project_Summary.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw,obj_CIMS_Project_Summary.scenerio,ActionName,obj_CIMS_Project_Summary.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative pass dashboard file START...
+													if(Projectsummary_NegativePassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Negative Pass");
+														}catch(Exception e){}
+														Projectsummary_NegativePassFlag=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Project_Summary.testcaseid,utilfunc.Actualbrw,obj_CIMS_Project_Summary.scenerio,ActionName,obj_CIMS_Project_Summary.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName);}
+												}
+												/*											if(passCounter==false){
+													try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+													passCounter=true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Summary.scenerio, ActionName, obj_CIMS_Project_Summary.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												Projectsummary_failTestCaseCounter++;
+												//									utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Summary.scenerio,ActionName, obj_CIMS_Project_Summary.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												// now write it in a fail dashboard file START...
+												if(Projectsummary_FailFlag==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Fail");
+													}catch(Exception e){}
+													Projectsummary_FailFlag= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Summary.scenerio,ActionName, obj_CIMS_Project_Summary.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												/*										if(failCounter==false){
+													obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+													failCounter	= true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Project_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_Summary.scenerio,ActionName, obj_CIMS_Project_Summary.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+									}else{//not assigned to the user
+										timer = utilfunc.getTimeTakenByModule(startTime);
+										status="PASS";
+										String Projectsummary_Errormessage="";
+										String Projectsummary_NotAssignTestCaseID="";
+										String Projectsummary_NotAssignScenerio="";
+										String Projectsummary_NotAssignTestCaseDescription="";
+										int Projectsummary_columnNumber_TCID;
+										int Projectsummary_columnNumber_Scenario;
+										int Projectsummary_columnNumber_TestCaseDescription;
+
+										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//	utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+										Projectsummary_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
+										System.out.println(Projectsummary_Errormessage);
+
+										Projectsummary_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+										Projectsummary_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Scenario");
+										Projectsummary_columnNumber_TestCaseDescription		    =    		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
+
+										Projectsummary_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, Projectsummary_columnNumber_TCID, count);
+										Projectsummary_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, Projectsummary_columnNumber_Scenario, count);
+										Projectsummary_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, Projectsummary_columnNumber_TestCaseDescription, count);
+
+										utilfunc.TestngReportFail(Projectsummary_NotAssignTestCaseID, utilfunc.Actualbrw, Projectsummary_NotAssignScenerio,ActionName,Projectsummary_NotAssignTestCaseDescription,status,Projectsummary_Errormessage);
+										//now write it in a notAssign file START...
+										if(Projectsummary_NotassignFlag==false){
+											try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
+											}catch(Exception e){}
+											Projectsummary_NotassignFlag=true;
+										}//now write it in a notAssign file ENDS...
+										Projectsummary_NotAssignedModuleCounter=1;	
+										try {
+											obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, Projectsummary_NotAssignTestCaseID, utilfunc.Actualbrw, Projectsummary_NotAssignScenerio, ActionName, Projectsummary_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
+										} catch (InterruptedException e) {
+											System.out.println("unable to write Not Assign report");
+										}
+									}
+
+								
+									
+									
+								
+									
+									
+									
+								}
+
+								// Project summary code end here
+								
+								else if(SuiteName.equals("Assessment Summary")){
+
+									
+
+									System.out.println("Execution of Assessment Detail module start here...");
+									String Assessmentsummary_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
+
+									if(Assessmentsummary_Scenariotext.equals("Positive") || Assessmentsummary_Scenariotext.contains("sitive") || Assessmentsummary_Scenariotext.contains("Pos")){
+										Assessmentsummary_PositiveScenarioCounter++;
+									}else if(Assessmentsummary_Scenariotext.equals("Negative") || Assessmentsummary_Scenariotext.contains("gative") || Assessmentsummary_Scenariotext.contains("gavtive") ){
+										Assessmentsummary_NegativeScenarioCounter++;
+									}
+									Assessmentsummary_TotalTestCaseCounter++;
+									
+									String UserprofileXpath =".//*[@id='user-profile']";
+									
+									String MyProjectXpath=".//*[contains(@class,'pull-right')]//*[contains(@class,'dropdown-menu')]//*[text()='My Projects']";
+
+//									
+//									try {
+//										Thread.sleep(3000);
+//										utilfunc.MakeElement(UserprofileXpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("unable to click on the link ");
+//									}
+//									
+//									String sidebarxpath=".//*[@id='slider-icon']";
+//									try {
+//										Thread.sleep(3000);
+//										utilfunc.MakeElement(sidebarxpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on slider icon==");
+//
+//									}
+									
+									
+
+									String AssessmentSummarylinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Assessment Summary')]";
+									boolean AssessmentsummaryIsAssignOrNot=false;
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(AssessmentSummarylinkXpath).click();
+										AssessmentsummaryIsAssignOrNot=true;
+									} catch (Exception e1) {
+
+										System.out.println("==Unable to click on the project summary==");
+
+									}
+
+
+									if(AssessmentsummaryIsAssignOrNot==true)
+									{//Allocated
+										// click on link
+										
+										try{
+
+											try{
+												Page_flag	=	obj_CIMS_Assessment_Summary.Assessment_Summary(fileName,SuiteName,count,ActionName);
+											}catch(Exception e){}
+
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//		utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+											if (Page_flag)
+											{
+												status="PASS";
+												Assessmentsummary_passTestCaseCounter++;
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Assessment_Summary.scenerio, ActionName, obj_CIMS_Assessment_Summary.description, status);
+													// now write it in a pass file START...
+													if(Assessmentsummary_PassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName, "Pass");
+														}catch(Exception e){}
+														Assessmentsummary_PassFlag=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Assessment_Summary.scenerio, ActionName, obj_CIMS_Assessment_Summary.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw,obj_CIMS_Assessment_Summary.scenerio,ActionName,obj_CIMS_Assessment_Summary.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative pass dashboard file START...
+													if(Assessmentsummary_NegativePassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Negative Pass");
+														}catch(Exception e){}
+														Assessmentsummary_NegativePassFlag=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Assessment_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Assessment_Summary.testcaseid,utilfunc.Actualbrw,obj_CIMS_Assessment_Summary.scenerio,ActionName,obj_CIMS_Assessment_Summary.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName);}
+												}
+												/*											if(passCounter==false){
+													try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+													passCounter=true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Assessment_Summary.scenerio, ActionName, obj_CIMS_Assessment_Summary.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												Assessmentsummary_failTestCaseCounter++;
+												//									utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Assessment_Summary.scenerio,ActionName, obj_CIMS_Assessment_Summary.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												// now write it in a fail dashboard file START...
+												if(Assessmentsummary_FailFlag==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Fail");
+													}catch(Exception e){}
+													Assessmentsummary_FailFlag= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Assessment_Summary.scenerio,ActionName, obj_CIMS_Assessment_Summary.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												/*										if(failCounter==false){
+													obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+													failCounter	= true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Assessment_Summary.testcaseid, utilfunc.Actualbrw, obj_CIMS_Assessment_Summary.scenerio,ActionName, obj_CIMS_Assessment_Summary.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+									}else{//not assigned to the user
+										timer = utilfunc.getTimeTakenByModule(startTime);
+										status="PASS";
+										String Assessmentsummary_Errormessage="";
+										String Assessmentsummary_NotAssignTestCaseID="";
+										String Assessmentsummary_NotAssignScenerio="";
+										String Assessmentsummary_NotAssignTestCaseDescription="";
+										int Assessmentsummary_columnNumber_TCID;
+										int Assessmentsummary_columnNumber_Scenario;
+										int Assessmentsummary_columnNumber_TestCaseDescription;
+
+										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//	utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+										Assessmentsummary_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
+										System.out.println(Assessmentsummary_Errormessage);
+
+										Assessmentsummary_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+										Assessmentsummary_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Scenario");
+										Assessmentsummary_columnNumber_TestCaseDescription		    =    		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
+
+										Assessmentsummary_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, Assessmentsummary_columnNumber_TCID, count);
+										Assessmentsummary_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, Assessmentsummary_columnNumber_Scenario, count);
+										Assessmentsummary_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, Assessmentsummary_columnNumber_TestCaseDescription, count);
+
+										utilfunc.TestngReportFail(Assessmentsummary_NotAssignTestCaseID, utilfunc.Actualbrw, Assessmentsummary_NotAssignScenerio,ActionName,Assessmentsummary_NotAssignTestCaseDescription,status,Assessmentsummary_Errormessage);
+										//now write it in a notAssign file START...
+										if(Assessmentsummary_NotassignFlag==false){
+											try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
+											}catch(Exception e){}
+											Assessmentsummary_NotassignFlag=true;
+										}//now write it in a notAssign file ENDS...
+										Assessmentsummary_NotAssignedModuleCounter=1;	
+										try {
+											obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, Assessmentsummary_NotAssignTestCaseID, utilfunc.Actualbrw, Assessmentsummary_NotAssignScenerio, ActionName, Assessmentsummary_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
+										} catch (InterruptedException e) {
+											System.out.println("unable to write Not Assign report");
+										}
+									}
+
+								
+									
+									
+								
+									
+									
+									
+								
+								}
+								else if(SuiteName.equals("Project List")){
+									
+
+
+									
+
+									System.out.println("Execution of project list module start here...");
+									String ProjectList_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
+
+									if(ProjectList_Scenariotext.equals("Positive") || ProjectList_Scenariotext.contains("sitive") || ProjectList_Scenariotext.contains("Pos")){
+										ProjectList_PositiveScenarioCounter++;
+									}else if(ProjectList_Scenariotext.equals("Negative") || ProjectList_Scenariotext.contains("gative") || ProjectList_Scenariotext.contains("gavtive") ){
+										ProjectList_NegativeScenarioCounter++;
+									}
+									ProjectList_TotalTestCaseCounter++;
+									
+									String UserprofileXpath =".//*[@id='local-navigation']/ol/li[1]/div/a";
+									
+									String ProjectListXpath=".//*[@id='local-navigation']//*[@class='dropdown-menu']//*[@id='visaproject']//.[text()='Projects']";
+
+					
+									try {
+										Thread.sleep(3000);
+										utilfunc.MakeElement(UserprofileXpath).click();
+										Thread.sleep(3000);
+									} catch (Exception e1) {
+										System.out.println("unable to click on the link ");
+									}
+									
+									String sidebarxpath=".//*[@id='slider-icon']";
+//									try {
+//										Thread.sleep(3000);
+//										utilfunc.MakeElement(sidebarxpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on slider icon==");
+//
+//									}
+									
+									
+
+									//String ProjectListlinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Assessment Summary')]";
+									boolean ProjectListIsAssignOrNot=false;
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(ProjectListXpath).click();
+										ProjectListIsAssignOrNot=true;
+									} catch (Exception e1) {
+
+										System.out.println("==Unable to click on the project summary==");
+
+									}
+
+
+									if(ProjectListIsAssignOrNot==true)
+									{//Allocated
+										// click on link
+										
+										try{
+
+											try{
+												Page_flag	=	obj_CIMS_Project_List.Project_list(fileName,SuiteName,count,ActionName);
+											}catch(Exception e){}
+
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//		utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+											if (Page_flag)
+											{
+												status="PASS";
+												ProjectList_passTestCaseCounter++;
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_List.scenerio, ActionName, obj_CIMS_Project_List.description, status);
+													// now write it in a pass file START...
+													if(ProjectList_PassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName, "Pass");
+														}catch(Exception e){}
+														ProjectList_PassFlag=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_List.scenerio, ActionName, obj_CIMS_Project_List.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw,obj_CIMS_Project_List.scenerio,ActionName,obj_CIMS_Project_List.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative pass dashboard file START...
+													if(ProjectList_NegativePassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Negative Pass");
+														}catch(Exception e){}
+														ProjectList_NegativePassFlag=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Assessment_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Project_List.testcaseid,utilfunc.Actualbrw,obj_CIMS_Project_List.scenerio,ActionName,obj_CIMS_Project_List.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName);}
+												}
+												/*											if(passCounter==false){
+													try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+													passCounter=true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_List.scenerio, ActionName, obj_CIMS_Project_List.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												ProjectList_failTestCaseCounter++;
+												//									utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_List.scenerio,ActionName, obj_CIMS_Project_List.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												// now write it in a fail dashboard file START...
+												if(ProjectList_FailFlag==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Fail");
+													}catch(Exception e){}
+													ProjectList_FailFlag= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_List.scenerio,ActionName, obj_CIMS_Project_List.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												/*										if(failCounter==false){
+													obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+													failCounter	= true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Project_List.testcaseid, utilfunc.Actualbrw, obj_CIMS_Project_List.scenerio,ActionName, obj_CIMS_Project_List.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+									}else{//not assigned to the user
+										timer = utilfunc.getTimeTakenByModule(startTime);
+										status="PASS";
+										String ProjectList_Errormessage="";
+										String ProjectList_NotAssignTestCaseID="";
+										String ProjectList_NotAssignScenerio="";
+										String ProjectList_NotAssignTestCaseDescription="";
+										int ProjectList_columnNumber_TCID;
+										int ProjectList_columnNumber_Scenario;
+										int ProjectList_columnNumber_TestCaseDescription;
+
+										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//	utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+										ProjectList_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
+										System.out.println(ProjectList_Errormessage);
+
+										ProjectList_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+										ProjectList_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Scenario");
+										ProjectList_columnNumber_TestCaseDescription		    =    		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
+
+										ProjectList_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, ProjectList_columnNumber_TCID, count);
+										ProjectList_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, ProjectList_columnNumber_Scenario, count);
+										ProjectList_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, ProjectList_columnNumber_TestCaseDescription, count);
+
+										utilfunc.TestngReportFail(ProjectList_NotAssignTestCaseID, utilfunc.Actualbrw, ProjectList_NotAssignScenerio,ActionName,ProjectList_NotAssignTestCaseDescription,status,ProjectList_Errormessage);
+										//now write it in a notAssign file START...
+										if(ProjectList_NotassignFlag==false){
+											try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
+											}catch(Exception e){}
+											ProjectList_NotassignFlag=true;
+										}//now write it in a notAssign file ENDS...
+										ProjectList_NotAssignedModuleCounter=1;	
+										try {
+											obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, ProjectList_NotAssignTestCaseID, utilfunc.Actualbrw, ProjectList_NotAssignScenerio, ActionName, ProjectList_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
+										} catch (InterruptedException e) {
+											System.out.println("unable to write Not Assign report");
+										}
+									}
+
+								
+									
+									
+								
+									
+									
+									
+								
+								
+									
+								}
+								
+								
+								else if(SuiteName.equals("Most Recent")){
+									
+
+									System.out.println("Execution of Most Recent module start here...");
+									String MostRecent_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
+
+									if(MostRecent_Scenariotext.equals("Positive") || MostRecent_Scenariotext.contains("sitive") || MostRecent_Scenariotext.contains("Pos")){
+										Mostrecent_PositiveScenarioCounter++;
+									}else if(MostRecent_Scenariotext.equals("Negative") || MostRecent_Scenariotext.contains("gative") || MostRecent_Scenariotext.contains("gavtive") ){
+										Mostrecent_NegativeScenarioCounter++;
+									}
+									Mostrecent_TotalTestCaseCounter++;
+
+									boolean MostRecentAllocatedorNot=false;
+									String Mostrecent_Xpath=".//*[contains(@id,'quickLinkHeader')]//.[contains(text(),'Recent Queries')]";
+
+									MostRecentAllocatedorNot=utilfunc.waitForAnElementToLoad(Mostrecent_Xpath, true);
+
+									if(MostRecentAllocatedorNot==true)
+									{//Allocated
+										
+										boolean MostRecent_FlagStep1 = false;
+										boolean MostRecent_FlagStep2 = false;
+										
+										// click on link
+										try{
+											Thread.sleep(1000);
+											utilfunc.MakeElement(Mostrecent_Xpath).click();
+											Thread.sleep(1000);
+										}catch(Exception e){
+											System.out.println("unable to click on employee icons");
+										}
+										try{
+											
+											// Step 1 code Start here 
+
+											try{
+												MostRecent_FlagStep1	=	obj_CIMS_MostRecent_project.Most_Recent(fileName,SuiteName,count,ActionName);
+											}catch(Exception e){}
+
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName + "User", Employee_namecheck, timer);
+										//	utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+											if (MostRecent_FlagStep1)
+											{
+												status="PASS";
+												Mostrecent_passTestCaseCounter++;
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio, ActionName, obj_CIMS_MostRecent_project.description, status);
+													// now write it in a pass file START...
+													if(Mostrecent_PassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+ "User", "Pass");
+														}catch(Exception e){}
+														Mostrecent_PassFlag=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio, ActionName, obj_CIMS_MostRecent_project.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw,obj_CIMS_MostRecent_project.scenerio,ActionName,obj_CIMS_MostRecent_project.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative pass dashboard file START...
+													if(Mostrecent_NegativePassFlag==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Negative Pass");
+														}catch(Exception e){}
+														Mostrecent_NegativePassFlag=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_MostRecent_project.testcaseid,utilfunc.Actualbrw,obj_CIMS_MostRecent_project.scenerio,ActionName,obj_CIMS_MostRecent_project.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName);}
+												}
+												/*											if(passCounter==false){
+													try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+													passCounter=true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio, ActionName, obj_CIMS_MostRecent_project.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												Mostrecent_failTestCaseCounter++;
+												//									utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio,ActionName, obj_CIMS_MostRecent_project.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												// now write it in a fail dashboard file START...
+												if(Mostrecent_FailFlag==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+ "User","Fail");
+													}catch(Exception e){}
+													Mostrecent_FailFlag= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio,ActionName, obj_CIMS_MostRecent_project.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												/*										if(failCounter==false){
+													obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+													failCounter	= true;
+												}
+												try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio,ActionName, obj_CIMS_MostRecent_project.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+										
+										// Step 1 code end here
+										
+										
+										// Step 2 code Start here
+										
+//										try{
+//											Thread.sleep(1000);
+//											utilfunc.MakeElement(Mostrecent_Xpath).click();
+//											Thread.sleep(1000);
+//										}catch(Exception e){
+//											System.out.println("unable to click on employee icons");
+//										}
+										
+										Thread.sleep(3000);
+										startTime = System.currentTimeMillis();
+										try{
+											MostRecent_FlagStep2	=	obj_CIMS_MostRecentTopTen_project.Most_Recent(fileName,sheetName,count,ActionName);
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName+" Project", Employee_namecheck, timer);
+											if (MostRecent_FlagStep2)
+											{
+												status="PASS";
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecentTopTen_project.scenerio, ActionName, obj_CIMS_MostRecentTopTen_project.description, status);
+													// now write it in a pass file START...
+													if(Mostrecent_PassFlag2==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" Project", "Pass");
+														}catch(Exception e){}
+														Mostrecent_PassFlag2=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecentTopTen_project.scenerio, ActionName, obj_CIMS_MostRecentTopTen_project.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Questionnaires for Employee");}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw,obj_CIMS_MostRecentTopTen_project.scenerio,ActionName,obj_CIMS_MostRecentTopTen_project.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													// now write it in a negative pass dashboard file START...
+													if(Mostrecent_NegativePassFlag2==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" Project","Negative Pass");
+														}catch(Exception e){}
+														Mostrecent_NegativePassFlag2=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_MostRecentTopTen_project.testcaseid,utilfunc.Actualbrw,obj_CIMS_MostRecentTopTen_project.scenerio,ActionName,obj_CIMS_MostRecentTopTen_project.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Questionnaires for Employee");}
+												}
+												/*	if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+												passCounter=true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecentTopTen_project.scenerio, ActionName, obj_CIMS_MostRecentTopTen_project.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}*/
+											}
+											else
+											{
+												status="FAIL";
+												utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecentTopTen_project.scenerio,ActionName, obj_CIMS_MostRecentTopTen_project.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												// now write it in a fail dashboard file START...
+												if(Mostrecent_FailFlag2==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" Project","Fail");
+													}catch(Exception e){}
+													Mostrecent_FailFlag2= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecentTopTen_project.scenerio,ActionName, obj_CIMS_MostRecentTopTen_project.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Questionnaires for Employee");}
+												/*if(failCounter==false){
+												obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+												failCounter	= true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_MostRecentTopTen_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecentTopTen_project.scenerio,ActionName, obj_CIMS_MostRecentTopTen_project.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}*/
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+										
+										
+										
+										
+										// Step 2 code end here
+										
+										
+										//flag check to make testcase pass or fail
+										if(!MostRecent_FlagStep1 || !MostRecent_FlagStep2
+												){
+											Mostrecent_failTestCaseCounter++;
+																						
+											utilfunc.TestngReportFail1(obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio,ActionName, obj_CIMS_MostRecent_project.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+
+											// now write it in a fail dashboard file START...
+											if(Mostrecent_FailFlag1FINALREPORT==false){
+												try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Final Report","Fail");
+												}catch(Exception e){}
+												Mostrecent_FailFlag1FINALREPORT= true;
+											}// now write it in a fail dashboard file ENDS...
+											try {
+												obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio,ActionName, obj_CIMS_MostRecent_project.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+											} catch (Exception e) {
+												System.out.println("unable to write dasboard fail report for : "+SuiteName+" - Final Report");}
+
+										
+										}else{
+											Mostrecent_passTestCaseCounter++;
+											
+											utilfunc.TestngReportPass(obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio, ActionName, obj_CIMS_MostRecent_project.description, status);
+											// now write it in a pass file START...
+											if(Mostrecent_PassFlag1FINALREPORT==false){
+												try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Final Report ", "Pass");
+												}catch(Exception e){}
+												Mostrecent_PassFlag1FINALREPORT=true;
+											}
+											// now write it in a pass file ENDS...
+
+											//Write Positive Pass dashboard report 
+											try {
+												obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_MostRecent_project.testcaseid, utilfunc.Actualbrw, obj_CIMS_MostRecent_project.scenerio, ActionName, obj_CIMS_MostRecent_project.description, status, timer);
+											}catch(Exception e){
+												System.out.println("unable to write dasboard pass report for : "+SuiteName+" - Final Report");}
+											
+										}
+										
+										
+										///////////////////////Final Report END//////////////////////
+
+										
+										
+
+									}else{//not assigned to the user
+										timer = utilfunc.getTimeTakenByModule(startTime);
+										status="PASS";
+										String Mostrecent_Errormessage="";
+										String Mostrecent_NotAssignTestCaseID="";
+										String Mostrecent_NotAssignScenerio="";
+										String Mostrecent_NotAssignTestCaseDescription="";
+										int Mostrecent_columnNumber_TCID;
+										int Mostrecent_columnNumber_Scenario;
+										int Mostrecent_columnNumber_TestCaseDescription;
+
+										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									//	utilfunc.RegressionTotalTimeTakenbyModuleForDashboardReport(SuiteName);
+
+										Mostrecent_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
+										System.out.println(Mostrecent_Errormessage);
+
+										Mostrecent_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+										Mostrecent_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Scenario");
+										Mostrecent_columnNumber_TestCaseDescription		   =		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
+
+										Mostrecent_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, Mostrecent_columnNumber_TCID, count);
+										Mostrecent_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, Mostrecent_columnNumber_Scenario, count);
+										Mostrecent_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, Mostrecent_columnNumber_TestCaseDescription, count);
+
+										utilfunc.TestngReportFail(Mostrecent_NotAssignTestCaseID, utilfunc.Actualbrw, Mostrecent_NotAssignScenerio,ActionName,Mostrecent_NotAssignTestCaseDescription,status,Mostrecent_Errormessage);
+										//now write it in a notAssign file START...
+										if(Mostrecent_NotassignFlag==false){
+											try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
+											}catch(Exception e){}
+											Mostrecent_NotassignFlag=true;
+										}//now write it in a notAssign file ENDS...
+										Mostrecent_NotAssignedModuleCounter=1;	
+										try {
+											obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, Mostrecent_NotAssignTestCaseID, utilfunc.Actualbrw, Mostrecent_NotAssignScenerio, ActionName, Mostrecent_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
+										} catch (InterruptedException e) {
+											System.out.println("unable to write Not Assign report");
+										}
+									}
+
+								
+									
+									
+								
+								}
+								// secure messaging ends here //
+
 
 
 								// code start here for process and questionnaire 
 								else if(SuiteName.equals("ProcessQuestionnaire Assignment"))
-								{String ProcessQuestionnaireAssignment_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
-
-								if(ProcessQuestionnaireAssignment_Scenariotext.equals("Positive") || ProcessQuestionnaireAssignment_Scenariotext.contains("sitive") || ProcessQuestionnaireAssignment_Scenariotext.contains("Pos")){
-									ProcessQuestionnaireAssignment_PositiveScenarioCounter++;
-								}else if(ProcessQuestionnaireAssignment_Scenariotext.equals("Negative") || ProcessQuestionnaireAssignment_Scenariotext.contains("gative") || ProcessQuestionnaireAssignment_Scenariotext.contains("gavtive") ){
-									ProcessQuestionnaireAssignment_NegativeScenarioCounter++;
-								}
-								ProcessQuestionnaireAssignment_TotalTestCaseCounter++;
-
-								System.out.println(ProcessQuestionnaireAssignment_PositiveScenarioCounter);
-								System.out.println(ProcessQuestionnaireAssignment_NegativeScenarioCounter);
-								System.out.println(ProcessQuestionnaireAssignment_TotalTestCaseCounter);
-
-								String BalNoXpath="//*[contains(@class,'table-rec-container')]//tbody//tr[1]//td[2]";
-								try {
-									Thread.sleep(1500);
-									utilfunc.MakeElement(BalNoXpath).click();
-								} catch (Exception e1) {
-									System.out.println("==Unable to click on the bal no==");
-								}
-
-								String sidebarxpath=".//*[@id='slider-icon']";
-								try {
-									Thread.sleep(1500);
-									utilfunc.MakeElement(sidebarxpath).click();
-									Thread.sleep(3000);
-								} catch (Exception e1) {
-									System.out.println("==Unable to click on slider icon==");
-
-								}
-
-								String ProcessAndQuestionnairelinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Process')]";
-								boolean ProcessQuestionnaireAssignmentIsAssignOrNot=false;
-								try {
-									Thread.sleep(1500);
-									utilfunc.MakeElement(ProcessAndQuestionnairelinkXpath).click();
-									ProcessQuestionnaireAssignmentIsAssignOrNot=true;
-								} catch (Exception e1) {
-
-									System.out.println("==Unable to click on the process and questionnaire==");
-
-								}
-
-								if(ProcessQuestionnaireAssignmentIsAssignOrNot==true)
 								{
-									boolean ProcessQuestionnaireAssignment_FlagStep1 = false;
-									boolean ProcessQuestionnaireAssignment_FlagStep2 = false;
-									boolean ProcessQuestionnaireAssignment_FlagStep3 = false;
-									boolean ProcessQuestionnaireAssignment_FlagStep4 = false;
+									String ProcessQuestionnaireAssignment_Scenariotext	= 	UtilFunction.getCellData(fileName, sheetName, Scenariocol, count);
+
+									if(ProcessQuestionnaireAssignment_Scenariotext.equals("Positive") || ProcessQuestionnaireAssignment_Scenariotext.contains("sitive") || ProcessQuestionnaireAssignment_Scenariotext.contains("Pos")){
+										ProcessQuestionnaireAssignment_PositiveScenarioCounter++;
+									}else if(ProcessQuestionnaireAssignment_Scenariotext.equals("Negative") || ProcessQuestionnaireAssignment_Scenariotext.contains("gative") || ProcessQuestionnaireAssignment_Scenariotext.contains("gavtive") ){
+										ProcessQuestionnaireAssignment_NegativeScenarioCounter++;
+									}
+									ProcessQuestionnaireAssignment_TotalTestCaseCounter++;
+
+									System.out.println(ProcessQuestionnaireAssignment_PositiveScenarioCounter);
+									System.out.println(ProcessQuestionnaireAssignment_NegativeScenarioCounter);
+									System.out.println(ProcessQuestionnaireAssignment_TotalTestCaseCounter);
+
+//									String BalNoXpath="//*[contains(@class,'table-rec-container')]//tbody//tr[1]//td[2]";
+//									try {
+//										Thread.sleep(1500);
+//										utilfunc.MakeElement(BalNoXpath).click();
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on the bal no==");
+//									}
+//
+//									String sidebarxpath=".//*[@id='slider-icon']";
+//									try {
+//										Thread.sleep(1500);
+//										utilfunc.MakeElement(sidebarxpath).click();
+//										Thread.sleep(3000);
+//									} catch (Exception e1) {
+//										System.out.println("==Unable to click on slider icon==");
+//
+//									}
+
+									String ProcessAndQuestionnairelinkXpath="//*[contains(@id,'right-nav')]//*[contains(text(),'Process')]";
+									boolean ProcessQuestionnaireAssignmentIsAssignOrNot=false;
+									try {
+										Thread.sleep(1500);
+										utilfunc.MakeElement(ProcessAndQuestionnairelinkXpath).click();
+										ProcessQuestionnaireAssignmentIsAssignOrNot=true;
+									} catch (Exception e1) {
+
+										System.out.println("==Unable to click on the process and questionnaire==");
+
+									}
+
+									if(ProcessQuestionnaireAssignmentIsAssignOrNot==true)
+									{
+										boolean ProcessQuestionnaireAssignment_FlagStep1 = false;
+										boolean ProcessQuestionnaireAssignment_FlagStep2 = false;
+										boolean ProcessQuestionnaireAssignment_FlagStep3 = false;
+										boolean ProcessQuestionnaireAssignment_FlagStep4 = false;
 
 
-									//Step 1: Code process type
+										//Step 1: Code process type
 
-									startTime = System.currentTimeMillis();
-									try{
+										startTime = System.currentTimeMillis();
 										try{
-											ProcessQuestionnaireAssignment_FlagStep1	=	obj_CIMS_Processandquestionnaire_ProcessType.Process_Type(fileName,sheetName,count,ActionName);
-										}catch(Exception e){}
+											try{
+												ProcessQuestionnaireAssignment_FlagStep1	=	obj_CIMS_Processandquestionnaire_ProcessType.Process_Type(fileName,sheetName,count,ActionName);
+											}catch(Exception e){}
 
-										timer = utilfunc.getTimeTakenByModule(startTime);
-										utilfunc.updateModuleDataForReportGeneration(SuiteName + " - Process", Employee_namecheck, timer);
-										if (ProcessQuestionnaireAssignment_FlagStep1)
-										{
-											status="PASS";
-											if(utilfunc.globalerrormessage.equals(""))
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName + " - Process", Employee_namecheck, timer);
+											if (ProcessQuestionnaireAssignment_FlagStep1)
 											{
-												utilfunc.TestngReportPass(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status);
-												// now write it in a pass file START...
-												if(ProcessQuestionnaireAssignment_PassFlag1==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Process", "Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_PassFlag1=true;
-												}// now write it in a pass file ENDS...
+												status="PASS";
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status);
+													// now write it in a pass file START...
+													if(ProcessQuestionnaireAssignment_PassFlag1==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Process", "Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_PassFlag1=true;
+													}// now write it in a pass file ENDS...
 
-												//Write Positive Pass dashboard report 
-												try {
-													obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer);
-												}catch(Exception e){
-													System.out.println("unable to write dasboard pass report for : "+SuiteName+" - Process");}
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName+" - Process");}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw,obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName,obj_CIMS_Processandquestionnaire_ProcessType.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													// now write it in a negative pass dashboard file START...
+													if(ProcessQuestionnaireAssignment_NegativePassFlag1==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Process","Negative Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_NegativePassFlag1=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Processandquestionnaire_ProcessType.testcaseid,utilfunc.Actualbrw,obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName,obj_CIMS_Processandquestionnaire_ProcessType.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" - Process");}
+												}
+												/*if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+												passCounter=true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
 											}
 											else
 											{
-												utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw,obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName,obj_CIMS_Processandquestionnaire_ProcessType.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-												// now write it in a negative pass dashboard file START...
-												if(ProcessQuestionnaireAssignment_NegativePassFlag1==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Process","Negative Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_NegativePassFlag1=true;
-												}// now write it in a negative pass dashboard file ENDS...
+												status="FAIL";
+												utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
 
-												//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+												// now write it in a fail dashboard file START...
+												if(ProcessQuestionnaireAssignment_FailFlag1==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Process","Fail");
+													}catch(Exception e){}
+													ProcessQuestionnaireAssignment_FailFlag1= true;
+												}// now write it in a fail dashboard file ENDS...
 												try {
-													obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Processandquestionnaire_ProcessType.testcaseid,utilfunc.Actualbrw,obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName,obj_CIMS_Processandquestionnaire_ProcessType.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
 												} catch (Exception e) {
-													System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" - Process");}
+													System.out.println("unable to write dasboard fail report for : "+SuiteName+" - Process");}
+
+												/*if(failCounter==false){
+												obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+												failCounter	= true;
 											}
-											/*if(passCounter==false){
-											try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
-											passCounter=true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
-											*/
-										}
-										else
-										{
-											status="FAIL";
+											try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
 											utilfunc.TakeScreenshot();
-											utilfunc.TestngReportFail1(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+										}
+
+
+
+
+										// Step 2
+										// now call modules according to enable modules
+										//																System.out.println("calling "+SuiteName+" module..");
+										Thread.sleep(1500);
+										startTime = System.currentTimeMillis();
+										try{
+											ProcessQuestionnaireAssignment_FlagStep2	=	obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.Questionnaire_Assignment(fileName,sheetName,count,ActionName);
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName+"-Questionnaires for Employee", Employee_namecheck, timer);
+											if (ProcessQuestionnaireAssignment_FlagStep2)
+											{
+												status="PASS";
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status);
+													// now write it in a pass file START...
+													if(ProcessQuestionnaireAssignment_PassFlag2==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employee", "Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_PassFlag2=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Questionnaires for Employee");}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													// now write it in a negative pass dashboard file START...
+													if(ProcessQuestionnaireAssignment_NegativePassFlag2==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employee","Negative Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_NegativePassFlag2=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Questionnaires for Employee");}
+												}
+												/*	if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+												passCounter=true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}*/
+											}
+											else
+											{
+												status="FAIL";
+												utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												// now write it in a fail dashboard file START...
+												if(ProcessQuestionnaireAssignment_FailFlag2==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employee","Fail");
+													}catch(Exception e){}
+													ProcessQuestionnaireAssignment_FailFlag2= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Questionnaires for Employee");}
+												/*if(failCounter==false){
+												obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+												failCounter	= true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}*/
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+										// Step 3 - for questionnaire assignment for employer 
+										Thread.sleep(1500);
+										startTime = System.currentTimeMillis();
+										try{
+											ProcessQuestionnaireAssignment_FlagStep3	=	obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.Employer_Questionnaire(fileName,sheetName,count,ActionName);
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName+" -Questionnaires for Employer", Employee_namecheck, timer);
+											if (ProcessQuestionnaireAssignment_FlagStep3)
+											{
+												status="PASS";
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status);
+													// now write it in a pass file START...
+													if(ProcessQuestionnaireAssignment_PassFlag3==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employer", "Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_PassFlag3=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Questionnaires for Employer");}
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													// now write it in a negative pass dashboard file START...
+													if(ProcessQuestionnaireAssignment_NegativePassFlag3==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employer","Negative Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_NegativePassFlag3=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Questionnaires for Employer");}
+												}
+												/*if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+												passCounter=true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												// now write it in a fail dashboard file START...
+												if(ProcessQuestionnaireAssignment_FailFlag3==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employer","Fail");
+													}catch(Exception e){}
+													ProcessQuestionnaireAssignment_FailFlag3= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Questionnaires for Employer");}
+
+												/*if(failCounter==false){
+												obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+												failCounter	= true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+
+
+										// Code End here
+
+										// Step 4: Code start for contact assignment 
+										Thread.sleep(1500);
+
+										try{
+											ProcessQuestionnaireAssignment_FlagStep4	=	obj_CIMS_Regression_ProcessAndQuestionnaire_contact.Contact_Assignment(fileName,sheetName,count,ActionName,Employee_namecheck);
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											utilfunc.updateModuleDataForReportGeneration(SuiteName+" -Bal Contact Assignment", Employee_namecheck, timer);
+											if (ProcessQuestionnaireAssignment_FlagStep4)
+											{
+												status="PASS";
+												if(utilfunc.globalerrormessage.equals(""))
+												{
+													utilfunc.TestngReportPass(obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio, ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status);
+													// now write it in a pass file START...
+													if(ProcessQuestionnaireAssignment_PassFlag4==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Bal Contact Assignment", "Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_PassFlag4=true;
+													}// now write it in a pass file ENDS...
+
+													//Write Positive Pass dashboard report 
+													try {
+														obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio, ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer);
+													}catch(Exception e){
+														System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Bal Contact Assignment");}
+
+												}
+												else
+												{
+													utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													// now write it in a negative pass dashboard file START...
+													if(ProcessQuestionnaireAssignment_NegativePassFlag4==false){
+														try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Bal Contact Assignment","Negative Pass");
+														}catch(Exception e){}
+														ProcessQuestionnaireAssignment_NegativePassFlag4=true;
+													}// now write it in a negative pass dashboard file ENDS...
+
+													//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+													try {
+														obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+													} catch (Exception e) {
+														System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Bal Contact Assignment");}
+												}	
+
+												/*if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+												passCounter=true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio, ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+												 */
+											}
+											else
+											{
+												status="FAIL";
+												utilfunc.TakeScreenshot();
+												utilfunc.TestngReportFail1(obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												// now write it in a fail dashboard file START...
+												if(ProcessQuestionnaireAssignment_FailFlag4==false){
+													try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Bal Contact Assignment","Fail");
+													}catch(Exception e){}
+													ProcessQuestionnaireAssignment_FailFlag4= true;
+												}// now write it in a fail dashboard file ENDS...
+												try {
+													obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+												} catch (Exception e) {
+													System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Bal Contact Assignment");}
+
+												/*if(failCounter==false){
+												obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+												failCounter	= true;
+											}
+											try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+												 */
+											}
+
+										}catch(Exception e){
+											ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+											System.out.println("Script Failed");
+											utilfunc.assertion();			
+											utilfunc.TakeScreenshot();
+										}
+										//step4 ends here
+
+
+										///////////////////////Final Report START//////////////////////
+										
+										//flag check to make testcase pass or fail
+										if(!ProcessQuestionnaireAssignment_FlagStep1 || !ProcessQuestionnaireAssignment_FlagStep2
+												||!ProcessQuestionnaireAssignment_FlagStep3 || !ProcessQuestionnaireAssignment_FlagStep4){
+											ProcessQuestionnaireAssignment_failTestCaseCounter++;
+																						
+											utilfunc.TestngReportFail1(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 
 											// now write it in a fail dashboard file START...
-											if(ProcessQuestionnaireAssignment_FailFlag1==false){
+											if(ProcessQuestionnaireAssignment_FailFlag1FINALREPORT==false){
 												try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Process","Fail");
 												}catch(Exception e){}
-												ProcessQuestionnaireAssignment_FailFlag1= true;
+												ProcessQuestionnaireAssignment_FailFlag1FINALREPORT= true;
 											}// now write it in a fail dashboard file ENDS...
 											try {
-												obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+												obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 											} catch (Exception e) {
 												System.out.println("unable to write dasboard fail report for : "+SuiteName+" - Process");}
 
-											/*if(failCounter==false){
-											obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
-											failCounter	= true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
-											*/
-										}
-									}catch(Exception e){
-										ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
-										System.out.println("Script Failed");
-										utilfunc.assertion();			
-										utilfunc.TakeScreenshot();
-									}
-
-
-
-
-									// Step 2
-									// now call modules according to enable modules
-									//																System.out.println("calling "+SuiteName+" module..");
-									Thread.sleep(3000);
-									startTime = System.currentTimeMillis();
-									try{
-										ProcessQuestionnaireAssignment_FlagStep2	=	obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.Questionnaire_Assignment(fileName,sheetName,count,ActionName);
-										timer = utilfunc.getTimeTakenByModule(startTime);
-										utilfunc.updateModuleDataForReportGeneration(SuiteName+"-Questionnaires for Employee", Employee_namecheck, timer);
-										if (ProcessQuestionnaireAssignment_FlagStep2)
-										{
-											status="PASS";
-											if(utilfunc.globalerrormessage.equals(""))
-											{
-												utilfunc.TestngReportPass(obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status);
-												// now write it in a pass file START...
-												if(ProcessQuestionnaireAssignment_PassFlag2==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employee", "Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_PassFlag2=true;
-												}// now write it in a pass file ENDS...
-
-												//Write Positive Pass dashboard report 
-												try {
-													obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer);
-												}catch(Exception e){
-													System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Questionnaires for Employee");}
-											}
-											else
-											{
-												utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-												// now write it in a negative pass dashboard file START...
-												if(ProcessQuestionnaireAssignment_NegativePassFlag2==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employee","Negative Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_NegativePassFlag2=true;
-												}// now write it in a negative pass dashboard file ENDS...
-
-												//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
-												try {
-													obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-												} catch (Exception e) {
-													System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Questionnaires for Employee");}
-											}
-											/*	if(passCounter==false){
-											try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
-											passCounter=true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}*/
-										}
-										else
-										{
-											status="FAIL";
-											utilfunc.TakeScreenshot();
-											utilfunc.TestngReportFail1(obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-											// now write it in a fail dashboard file START...
-											if(ProcessQuestionnaireAssignment_FailFlag2==false){
-												try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employee","Fail");
-												}catch(Exception e){}
-												ProcessQuestionnaireAssignment_FailFlag2= true;
-											}// now write it in a fail dashboard file ENDS...
-											try {
-												obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-											} catch (Exception e) {
-												System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Questionnaires for Employee");}
-											/*if(failCounter==false){
-											obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
-											failCounter	= true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Process_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}*/
-										}
-									}catch(Exception e){
-										ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
-										System.out.println("Script Failed");
-										utilfunc.assertion();			
-										utilfunc.TakeScreenshot();
-									}
-
-									// Step 3 - for questionnaire assignment for employer 
-									Thread.sleep(3000);
-									startTime = System.currentTimeMillis();
-									try{
-										ProcessQuestionnaireAssignment_FlagStep3	=	obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.Employer_Questionnaire(fileName,sheetName,count,ActionName);
-										timer = utilfunc.getTimeTakenByModule(startTime);
-										utilfunc.updateModuleDataForReportGeneration(SuiteName+" -Questionnaires for Employer", Employee_namecheck, timer);
-										if (ProcessQuestionnaireAssignment_FlagStep3)
-										{
-											status="PASS";
-											if(utilfunc.globalerrormessage.equals(""))
-											{
-												utilfunc.TestngReportPass(obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status);
-												// now write it in a pass file START...
-												if(ProcessQuestionnaireAssignment_PassFlag3==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employer", "Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_PassFlag3=true;
-												}// now write it in a pass file ENDS...
-
-												//Write Positive Pass dashboard report 
-												try {
-													obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer);
-												}catch(Exception e){
-													System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Questionnaires for Employer");}
-											}
-											else
-											{
-												utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-												// now write it in a negative pass dashboard file START...
-												if(ProcessQuestionnaireAssignment_NegativePassFlag3==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employer","Negative Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_NegativePassFlag3=true;
-												}// now write it in a negative pass dashboard file ENDS...
-
-												//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
-												try {
-													obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName,obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-												} catch (Exception e) {
-													System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Questionnaires for Employer");}
-											}
-											/*if(passCounter==false){
-											try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
-											passCounter=true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio, ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
-											*/
-										}
-										else
-										{
-											status="FAIL";
-											utilfunc.TakeScreenshot();
-											utilfunc.TestngReportFail1(obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-											// now write it in a fail dashboard file START...
-											if(ProcessQuestionnaireAssignment_FailFlag3==false){
-												try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Questionnaires for Employer","Fail");
-												}catch(Exception e){}
-												ProcessQuestionnaireAssignment_FailFlag3= true;
-											}// now write it in a fail dashboard file ENDS...
-											try {
-												obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
-											} catch (Exception e) {
-												System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Questionnaires for Employer");}
-
-											/*if(failCounter==false){
-											obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
-											failCounter	= true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.scenerio,ActionName, obj_CIMS_Regression_Suite_Emp_Questionnaire_Assignment.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
-											*/
-										}
-									}catch(Exception e){
-										ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
-										System.out.println("Script Failed");
-										utilfunc.assertion();			
-										utilfunc.TakeScreenshot();
-									}
-
-
-									// Code End here
-
-									// Step 4: Code start for contact assignment 
-									Thread.sleep(3000);
-
-									try{
-										ProcessQuestionnaireAssignment_FlagStep4	=	obj_CIMS_Regression_ProcessAndQuestionnaire_contact.Contact_Assignment(fileName,sheetName,count,ActionName,Employee_namecheck);
-										timer = utilfunc.getTimeTakenByModule(startTime);
-										utilfunc.updateModuleDataForReportGeneration(SuiteName+" -Bal Contact Assignment", Employee_namecheck, timer);
-										if (ProcessQuestionnaireAssignment_FlagStep4)
-										{
-											status="PASS";
-											if(utilfunc.globalerrormessage.equals(""))
-											{
-												utilfunc.TestngReportPass(obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio, ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status);
-												// now write it in a pass file START...
-												if(ProcessQuestionnaireAssignment_PassFlag4==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Bal Contact Assignment", "Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_PassFlag4=true;
-												}// now write it in a pass file ENDS...
-
-												//Write Positive Pass dashboard report 
-												try {
-													obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio, ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer);
-												}catch(Exception e){
-													System.out.println("unable to write dasboard pass report for : "+SuiteName+" -Bal Contact Assignment");}
-
-											}
-											else
-											{
-												utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												// now write it in a negative pass dashboard file START...
-												if(ProcessQuestionnaireAssignment_NegativePassFlag4==false){
-													try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Bal Contact Assignment","Negative Pass");
-													}catch(Exception e){}
-													ProcessQuestionnaireAssignment_NegativePassFlag4=true;
-												}// now write it in a negative pass dashboard file ENDS...
-
-												//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
-												try {
-													obj_Report_Dashboard.writeDashBoardNegativePassReport(SuiteName,Employee_namecheck,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid,utilfunc.Actualbrw,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName,obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-												} catch (Exception e) {
-													System.out.println("unable to write dasboard negative pass report for : "+ SuiteName+" -Bal Contact Assignment");}
-											}	
-
-											/*if(passCounter==false){
-											try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
-											passCounter=true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio, ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
-											*/
-										}
-										else
-										{
-											status="FAIL";
-											utilfunc.TakeScreenshot();
-											utilfunc.TestngReportFail1(obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-											// now write it in a fail dashboard file START...
-											if(ProcessQuestionnaireAssignment_FailFlag4==false){
-												try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" -Bal Contact Assignment","Fail");
-												}catch(Exception e){}
-												ProcessQuestionnaireAssignment_FailFlag4= true;
-											}// now write it in a fail dashboard file ENDS...
-											try {
-												obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-											} catch (Exception e) {
-												System.out.println("unable to write dasboard fail report for : "+SuiteName+" -Bal Contact Assignment");}
-
-											/*if(failCounter==false){
-											obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
-											failCounter	= true;
-										}
-										try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.testcaseid, utilfunc.Actualbrw, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.scenerio,ActionName, obj_CIMS_Regression_ProcessAndQuestionnaire_contact.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
-											*/
-										}
-
-									}catch(Exception e){
-										ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
-										System.out.println("Script Failed");
-										utilfunc.assertion();			
-										utilfunc.TakeScreenshot();
-									}
-									//step4 ends here
-
-
-									///////////////////////Final Report START//////////////////////
-									
-									//flag check to make testcase pass or fail
-									if(!ProcessQuestionnaireAssignment_FlagStep1 || !ProcessQuestionnaireAssignment_FlagStep2
-											||!ProcessQuestionnaireAssignment_FlagStep3 || !ProcessQuestionnaireAssignment_FlagStep4){
-										ProcessQuestionnaireAssignment_failTestCaseCounter++;
-																					
-										utilfunc.TestngReportFail1(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-
-										// now write it in a fail dashboard file START...
-										if(ProcessQuestionnaireAssignment_FailFlag1FINALREPORT==false){
-											try{ obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Final Report","Fail");
-											}catch(Exception e){}
-											ProcessQuestionnaireAssignment_FailFlag1FINALREPORT= true;
-										}// now write it in a fail dashboard file ENDS...
-										try {
-											obj_Report_Dashboard.writeDashBoardFailReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio,ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
-										} catch (Exception e) {
-											System.out.println("unable to write dasboard fail report for : "+SuiteName+" - Final Report");}
-
-									
-									}else{
-										ProcessQuestionnaireAssignment_passTestCaseCounter++;
 										
-										utilfunc.TestngReportPass(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status);
-										// now write it in a pass file START...
-										if(ProcessQuestionnaireAssignment_PassFlag1FINALREPORT==false){
-											try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Final Report ", "Pass");
-											}catch(Exception e){}
-											ProcessQuestionnaireAssignment_PassFlag1FINALREPORT=true;
-										}
-										// now write it in a pass file ENDS...
+										}else{
+											ProcessQuestionnaireAssignment_passTestCaseCounter++;
+											
+											utilfunc.TestngReportPass(obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status);
+											// now write it in a pass file START...
+											if(ProcessQuestionnaireAssignment_PassFlag1FINALREPORT==false){
+												try {	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName+" - Final ", "Pass");
+												}catch(Exception e){}
+												ProcessQuestionnaireAssignment_PassFlag1FINALREPORT=true;
+											}// now write it in a pass file ENDS...
 
-										//Write Positive Pass dashboard report 
-										try {
-											obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer);
+											//Write Positive Pass dashboard report 
+											try {
+												obj_Report_Dashboard.writeDashBoardPassReport(SuiteName, Employee_namecheck, obj_CIMS_Processandquestionnaire_ProcessType.testcaseid, utilfunc.Actualbrw, obj_CIMS_Processandquestionnaire_ProcessType.scenerio, ActionName, obj_CIMS_Processandquestionnaire_ProcessType.description, status, timer);
+											}catch(Exception e){
+												System.out.println("unable to write dasboard pass report for : "+SuiteName+" - Process");}
+											
+										}
+										
+										
+										///////////////////////Final Report END//////////////////////
+
+									}//ProcessQuestionnaireAssignmentIsAssignOrNot==true ENDS here
+									else
+									{//means ProcessQuestionnaireAssignmentIsAssignOrNot==false
+										try{
+											Thread.sleep(3000);
+											timer = utilfunc.getTimeTakenByModule(startTime);
+											status="PASS";
+											String ProcessQuestionnaireAssignment_Errormessage="";
+											String ProcessQuestionnaireAssignment_NotAssignTestCaseID="";
+											String ProcessQuestionnaireAssignment_NotAssignScenerio="";
+											String ProcessQuestionnaireAssignment_NotAssignTestCaseDescription="";
+											int ProcessQuestionnaireAssignment_columnNumber_TCID;
+											int ProcessQuestionnaireAssignment_columnNumber_Scenario;
+											int ProcessQuestionnaireAssignment_columnNumber_TestCaseDescription;
+
+											utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+											ProcessQuestionnaireAssignment_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
+											System.out.println(ProcessQuestionnaireAssignment_Errormessage);
+
+											ProcessQuestionnaireAssignment_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
+											ProcessQuestionnaireAssignment_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "SCENARIO");
+											ProcessQuestionnaireAssignment_columnNumber_TestCaseDescription		=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
+
+											ProcessQuestionnaireAssignment_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, ProcessQuestionnaireAssignment_columnNumber_TCID, count);
+											ProcessQuestionnaireAssignment_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, ProcessQuestionnaireAssignment_columnNumber_Scenario, count);
+											ProcessQuestionnaireAssignment_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, ProcessQuestionnaireAssignment_columnNumber_TestCaseDescription, count);
+
+											utilfunc.TestngReportFail(ProcessQuestionnaireAssignment_NotAssignTestCaseID, utilfunc.Actualbrw, ProcessQuestionnaireAssignment_NotAssignScenerio,ActionName,ProcessQuestionnaireAssignment_NotAssignTestCaseDescription,status,ProcessQuestionnaireAssignment_Errormessage);
+											//now write it in a notAssign file START...
+											if(ProcessQuestionnaireAssignment_NotassignFlag==false){
+												try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
+												}catch(Exception e){}
+												ProcessQuestionnaireAssignment_NotassignFlag=true;
+											}//now write it in a notAssign file ENDS...
+											ProcessQuestionnaireAssignment_NotAssignedModuleCounter=1;	
+											try {
+												obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, ProcessQuestionnaireAssignment_NotAssignTestCaseID, utilfunc.Actualbrw, ProcessQuestionnaireAssignment_NotAssignScenerio, ActionName, ProcessQuestionnaireAssignment_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
+											} catch (InterruptedException e) {
+												System.out.println("unable to write Not Assign report");
+											}
+
 										}catch(Exception e){
-											System.out.println("unable to write dasboard pass report for : "+SuiteName+" - Final Report");}
-										
-									}
-									
-									
-									///////////////////////Final Report END//////////////////////
-
-								}//ProcessQuestionnaireAssignmentIsAssignOrNot==true ENDS here
-								else
-								{//means ProcessQuestionnaireAssignmentIsAssignOrNot==false
-									try{
-										Thread.sleep(3000);
-										timer = utilfunc.getTimeTakenByModule(startTime);
-										status="PASS";
-										String ProcessQuestionnaireAssignment_Errormessage="";
-										String ProcessQuestionnaireAssignment_NotAssignTestCaseID="";
-										String ProcessQuestionnaireAssignment_NotAssignScenerio="";
-										String ProcessQuestionnaireAssignment_NotAssignTestCaseDescription="";
-										int ProcessQuestionnaireAssignment_columnNumber_TCID;
-										int ProcessQuestionnaireAssignment_columnNumber_Scenario;
-										int ProcessQuestionnaireAssignment_columnNumber_TestCaseDescription;
-
-										utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
-										ProcessQuestionnaireAssignment_Errormessage=""+SuiteName+" is not assigned to "+Employee_namecheck+" User";
-										System.out.println(ProcessQuestionnaireAssignment_Errormessage);
-
-										ProcessQuestionnaireAssignment_columnNumber_TCID						=		UtilFunction.getColumnWithCellData(fileName, sheetName, "TCID");
-										ProcessQuestionnaireAssignment_columnNumber_Scenario					=		UtilFunction.getColumnWithCellData(fileName, sheetName, "SCENARIO");
-										ProcessQuestionnaireAssignment_columnNumber_TestCaseDescription		=		UtilFunction.getColumnWithCellData(fileName, sheetName, "Test Case Description");
-
-										ProcessQuestionnaireAssignment_NotAssignTestCaseID=UtilFunction.getCellData(fileName, sheetName, ProcessQuestionnaireAssignment_columnNumber_TCID, count);
-										ProcessQuestionnaireAssignment_NotAssignScenerio=UtilFunction.getCellData(fileName, sheetName, ProcessQuestionnaireAssignment_columnNumber_Scenario, count);
-										ProcessQuestionnaireAssignment_NotAssignTestCaseDescription=UtilFunction.getCellData(fileName, sheetName, ProcessQuestionnaireAssignment_columnNumber_TestCaseDescription, count);
-
-										utilfunc.TestngReportFail(ProcessQuestionnaireAssignment_NotAssignTestCaseID, utilfunc.Actualbrw, ProcessQuestionnaireAssignment_NotAssignScenerio,ActionName,ProcessQuestionnaireAssignment_NotAssignTestCaseDescription,status,ProcessQuestionnaireAssignment_Errormessage);
-										//now write it in a notAssign file START...
-										if(ProcessQuestionnaireAssignment_NotassignFlag==false){
-											try{	obj_Report_Dashboard.writeReportHeader(SuiteName, SuiteName,"Not Assigned");
-											}catch(Exception e){}
-											ProcessQuestionnaireAssignment_NotassignFlag=true;
-										}//now write it in a notAssign file ENDS...
-										ProcessQuestionnaireAssignment_NotAssignedModuleCounter=1;	
-										try {
-											obj_Report_Dashboard.writeDashBoardNotAssignedReport(SuiteName, Employee_namecheck, ProcessQuestionnaireAssignment_NotAssignTestCaseID, utilfunc.Actualbrw, ProcessQuestionnaireAssignment_NotAssignScenerio, ActionName, ProcessQuestionnaireAssignment_NotAssignTestCaseDescription, "Not Assigned", utilfunc.timer);
-										} catch (InterruptedException e) {
-											System.out.println("unable to write Not Assign report");
+											System.out.println("");
 										}
-
-									}catch(Exception e){
-										System.out.println("");
 									}
-								}
 
-								//code end here 
+									//code end here 
+
 								}
 								// code end here for process and questionnaire 
 
@@ -3961,19 +5070,10 @@ public class CIMS_Regression_Suite {
 										System.out.println("");
 									}
 
-								 */}
+								*/}
 
 							}
 						}
-
-
-
-						//////////////////////
-
-						//////////////////////
-
-
-
 
 					}
 				}catch(Exception e){
@@ -4070,215 +5170,295 @@ public class CIMS_Regression_Suite {
 			try{	FinalNegativeCount				=	Integer.toString(failTestCaseCounter);	}catch(Exception error){}
 			try{	NotAssignedModuleCount			=	Integer.toString(NotAssignedModuleCounter);	}catch(Exception error){}
 
-
-			//////////////////////////////////////////////////////////////
-			//	Dashboard Report Generation code Start Here				//
-			/////////////////////////////////////////////////////////////
-
-			//for print suite name on consol which have runmode "Y" 
-			Iterator itr=al.iterator();
-			try{
-				System.out.println("\n\n===============\n\t\tSuite Name(s) which have runmode \"Y\" are :");
-				while(itr.hasNext()){System.out.println("\t\t"+itr.next());}
-			}catch(Exception Error){}
-
-			System.out.println("===============\n");
-
-
-			hs.addAll(al);Thread.sleep(2000);
-			al.clear();Thread.sleep(2000);
-			al.addAll(hs);Thread.sleep(2000);
-			Iterator itr1=al.iterator();
-			String Resressionsuitname="";
-			try{
-				while(itr1.hasNext()){
-					Resressionsuitname=itr1.next().toString();
-					System.out.println("Suite Name is :"+Resressionsuitname);
-
-
-					if(Resressionsuitname.equals("News"))
-					{//for News
-						String NewsFileTime			= "00";
-						try{
-							NewsFileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"news_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-
-						try{
-							obj_Report_Dashboard.generateReportForSuite("News","1",Integer.toString(News_TotalTestCaseCounter),
-									Integer.toString(News_PositiveScenarioCounter),Integer.toString(News_NegativeScenarioCounter),
-									Integer.toString(News_passTestCaseCounter),Integer.toString(News_failTestCaseCounter),
-									NewsFileTime,Integer.toString(News_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - News\"");}
-					}
-					else if(Resressionsuitname.equals("Advanced Search Project"))
-					{//Advanced Search Project
-						String AdvanceSearchProject_FileTime			= "00";
-						try{
-							AdvanceSearchProject_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"advanced_search_project_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+moduleName);
-						}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Advanced Search Project","1",Integer.toString(AdvanceSearchProject_TotalTestCaseCounter),
-									Integer.toString(AdvanceSearchProject_PositiveScenarioCounter),Integer.toString(AdvanceSearchProject_NegativeScenarioCounter),
-									Integer.toString(AdvanceSearchProject_passTestCaseCounter),Integer.toString(AdvanceSearchProject_failTestCaseCounter),
-									AdvanceSearchProject_FileTime,Integer.toString(AdvanceSearchProject_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Advanced Search Project\"");}	
-					}
-					else if(Resressionsuitname.equals("Advanced Search Employee"))
-					{//Advanced Search Employee
+			//	utilfunc.TestngDashBoardReport("Left Navigation",ModuleCount,TotalTestCaseCount,PositiveScenarioCount,NegativeScenarioCount,FinalPositiveCount,FinalNegativeCount,NotAssignedModuleCount);
+//			TotalTime = utilfunc.getTimeTakenByModule(startTotalTime);
+			
+			/////////////////////////////// code for Advanced Search Employee...
+			// get total time to execuite the Advanced Search Employee module
 						String AdvanceSearchEmployee_FileTime			= "00";
 						try{
 							AdvanceSearchEmployee_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"advanced_search_employee_time");
+							AdvanceSearchEmployee_FileTime		=	obj_Report_Dashboard.convertSecondsInHourMinuteSeconds(AdvanceSearchEmployee_FileTime);
 						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
+							System.out.println("unable to write for module: "+moduleName);
+						}
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Advanced Search Employee",
+						"1",
+						Integer.toString(AdvanceSearchEmployee_TotalTestCaseCounter),
+						Integer.toString(AdvanceSearchEmployee_PositiveScenarioCounter),
+						Integer.toString(AdvanceSearchEmployee_NegativeScenarioCounter),
+						Integer.toString(AdvanceSearchEmployee_passTestCaseCounter),
+						Integer.toString(AdvanceSearchEmployee_failTestCaseCounter),
+						AdvanceSearchEmployee_FileTime,
+						Integer.toString(AdvanceSearchEmployee_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Advanced Search Employee\"");
+			}
+
+
+			////////////////////// code for Advanced Search Project...
+			// get total time to execuite the Advanced Search Project module
+			String AdvanceSearchProject_FileTime			= "00";
+			try{
+				AdvanceSearchProject_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"advanced_search_project_time");
+				AdvanceSearchProject_FileTime		=	obj_Report_Dashboard.convertSecondsInHourMinuteSeconds(AdvanceSearchProject_FileTime);
+			}catch(Exception e){
+				System.out.println("unable to write for module: "+moduleName);
+			}
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Advanced Search Project",
+						"1",
+						Integer.toString(AdvanceSearchProject_TotalTestCaseCounter),
+						Integer.toString(AdvanceSearchProject_PositiveScenarioCounter),
+						Integer.toString(AdvanceSearchProject_NegativeScenarioCounter),
+						Integer.toString(AdvanceSearchProject_passTestCaseCounter),
+						Integer.toString(AdvanceSearchProject_failTestCaseCounter),
+						AdvanceSearchProject_FileTime,
+						Integer.toString(AdvanceSearchProject_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Advanced Search Project\"");
+			}
+
+			// code for Travel History...
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Travel History",
+						"1",
+						Integer.toString(GCP_TravelHistory_TotalTestCaseCounter),
+						Integer.toString(GCP_TravelHistory_PositiveScenarioCounter),
+						Integer.toString(GCP_TravelHistory_NegativeScenarioCounter),
+						Integer.toString(GCP_TravelHistory_passTestCaseCounter),
+						Integer.toString(GCP_TravelHistory_failTestCaseCounter),
+						TotalTime,
+						Integer.toString(GCP_TravelHistory_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Travel History\"");
+			}
+
+			// code for Secure Messaging...
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Secure Messaging",
+						"1",
+						Integer.toString(SecureMessaging_TotalTestCaseCounter),
+						Integer.toString(SecureMessaging_PositiveScenarioCounter),
+						Integer.toString(SecureMessaging_NegativeScenarioCounter),
+						Integer.toString(SecureMessaging_passTestCaseCounter),
+						Integer.toString(SecureMessaging_failTestCaseCounter),
+						TotalTime,
+						Integer.toString(SecureMessaging_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Secure Messaging\"");
+			}
+
+			/////////////// code for News...////////////////////			
+			// get total time to execuite the news module
+			String NewsFileTime			= "00";
+			try{
+				NewsFileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"news_time");
+				System.out.println("\n\n\t\tNEwsFileTime :"+NewsFileTime+"\n\n");
+				NewsFileTime		=	obj_Report_Dashboard.convertSecondsInHourMinuteSeconds(NewsFileTime);
+				System.out.println("\n\n\t\tNewsFileTime:"+NewsFileTime);
+			}catch(Exception e){
+				System.out.println("unable to write for module: "+moduleName);
+			}
+			
+			try{
+				obj_Report_Dashboard.generateReportForSuite("News",
+						"1",
+						Integer.toString(News_TotalTestCaseCounter),
+						Integer.toString(News_PositiveScenarioCounter),
+						Integer.toString(News_NegativeScenarioCounter),
+						Integer.toString(News_passTestCaseCounter),
+						Integer.toString(News_failTestCaseCounter),
+						NewsFileTime,
+						Integer.toString(News_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - News\"");
+			}
+
+			// code for GlobalChekPlus-NewQuery...
+			try{
+				obj_Report_Dashboard.generateReportForSuite("GlobalChekPlus - NewQuery",
+						"1",
+						Integer.toString(GCP_NewQuery_TotalTestCaseCounter),
+						Integer.toString(GCP_NewQuery_PositiveScenarioCounter),
+						Integer.toString(GCP_NewQuery_NegativeScenarioCounter),
+						Integer.toString(GCP_NewQuery_passTestCaseCounter),
+						Integer.toString(GCP_NewQuery_failTestCaseCounter),
+						TotalTime,
+						Integer.toString(GCP_NewQuery_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - GlobalChekPlus-NewQuery\"");
+			}
+			
+			
+			
+			//code for Project detail 
+			
+			
 						try{
-							obj_Report_Dashboard.generateReportForSuite("Advanced Search Employee","1",Integer.toString(AdvanceSearchEmployee_TotalTestCaseCounter),
-									Integer.toString(AdvanceSearchEmployee_PositiveScenarioCounter),Integer.toString(AdvanceSearchEmployee_NegativeScenarioCounter),
-									Integer.toString(AdvanceSearchEmployee_passTestCaseCounter),Integer.toString(AdvanceSearchEmployee_failTestCaseCounter),
-									AdvanceSearchEmployee_FileTime,Integer.toString(AdvanceSearchEmployee_NotAssignedModuleCounter));
+							obj_Report_Dashboard.generateReportForSuite("Project Detail",
+									"1",
+									Integer.toString(Projectdetail_TotalTestCaseCounter),
+									Integer.toString(Projectdetail_PositiveScenarioCounter),
+									Integer.toString(Projectdetail_NegativeScenarioCounter),
+									Integer.toString(Projectdetail_passTestCaseCounter),
+									Integer.toString(Projectdetail_failTestCaseCounter),
+									TotalTime,
+									Integer.toString(Projectdetail_NotAssignedModuleCounter));
 						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Advanced Search Employee\"");}
-					}
-					else if(Resressionsuitname.equals("Travel History"))
-					{//For Travel History
-						String TravelHistory_FileTime			= "00";
+							System.out.println("unable to call & generate dashboard report for \"Regression - GlobalChekPlus-NewQuery\"");
+						}
+
+
+						// code for most recent project and user 
+						
+						
+						String Mostrecent_FileTime			= "00";
 						try{
-							TravelHistory_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"travel_history_time");
+							Mostrecent_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"Mostrecent");
+							System.out.println("\n\n\t\tMostrecent_FileTime :"+Mostrecent_FileTime+"\n\n");
+							Mostrecent_FileTime		=	obj_Report_Dashboard.convertSecondsInHourMinuteSeconds(Mostrecent_FileTime);
 						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Travel History","1",Integer.toString(GCP_TravelHistory_TotalTestCaseCounter),
-									Integer.toString(GCP_TravelHistory_PositiveScenarioCounter),Integer.toString(GCP_TravelHistory_NegativeScenarioCounter),
-									Integer.toString(GCP_TravelHistory_passTestCaseCounter),Integer.toString(GCP_TravelHistory_failTestCaseCounter),
-									TravelHistory_FileTime,Integer.toString(GCP_TravelHistory_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Travel History\"");}
-					}
-					else if(Resressionsuitname.equals("Secure Messaging"))
-					{//For Secure Messaging
-						String SecureMessaging_FileTime			= "00";
-						try{
-							SecureMessaging_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"secure_messaging_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Secure Messaging","1",Integer.toString(SecureMessaging_TotalTestCaseCounter),
-									Integer.toString(SecureMessaging_PositiveScenarioCounter),Integer.toString(SecureMessaging_NegativeScenarioCounter),
-									Integer.toString(SecureMessaging_passTestCaseCounter),Integer.toString(SecureMessaging_failTestCaseCounter),
-									SecureMessaging_FileTime,Integer.toString(SecureMessaging_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Secure Messaging\"");}
-					}
-					else if(Resressionsuitname.equals("Globalchek Plus"))
-					{//For Globalchek Plus-NewQuery
-						String GlobalChekPlus_FileTime			= "00";
-						try{
-							GlobalChekPlus_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"globalchek_plus_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("GlobalChek Plus","1",Integer.toString(GCP_NewQuery_TotalTestCaseCounter),
-									Integer.toString(GCP_NewQuery_PositiveScenarioCounter),Integer.toString(GCP_NewQuery_NegativeScenarioCounter),
-									Integer.toString(GCP_NewQuery_passTestCaseCounter),Integer.toString(GCP_NewQuery_failTestCaseCounter),
-									GlobalChekPlus_FileTime,Integer.toString(GCP_NewQuery_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - GlobalChekPlus-NewQuery\"");}
-					}
-					else if(Resressionsuitname.equals("ProcessQuestionnaire Assignment"))
-					{//For ProcessQuestionnaire Assignment
+							System.out.println("unable to write for module: "+moduleName);
+						}
+						
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Most recent Project and employee",
+						"1",
+						Integer.toString(Mostrecent_TotalTestCaseCounter),
+						Integer.toString(Mostrecent_PositiveScenarioCounter),
+						Integer.toString(Mostrecent_NegativeScenarioCounter),
+						Integer.toString(Mostrecent_passTestCaseCounter),
+						Integer.toString(Mostrecent_failTestCaseCounter),
+						Mostrecent_FileTime,
+						Integer.toString(Mostrecent_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - ProcessQuestionnaire Assignment\"");
+			}
+
+			//////////////////////// code for Process Questionnaire Assignment...
+			// get total time to execuite the Process Questionnaire Assignment module
 						String ProcessQuestionnaireAssignment_FileTime			= "00";
 						try{
-							ProcessQuestionnaireAssignment_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+ProcessQuestionnaireAssignmentExecutionTime+"_time");
+							ProcessQuestionnaireAssignment_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"processquestionnaire_assignment_time");
+							System.out.println("\n\n\t\tProcessQuestionnaireAssignment_FileTime :"+ProcessQuestionnaireAssignment_FileTime+"\n\n");
+							ProcessQuestionnaireAssignment_FileTime		=	obj_Report_Dashboard.convertSecondsInHourMinuteSeconds(ProcessQuestionnaireAssignment_FileTime);
 						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("ProcessQuestionnaire Assignment","1",Integer.toString(ProcessQuestionnaireAssignment_TotalTestCaseCounter),
-									Integer.toString(ProcessQuestionnaireAssignment_PositiveScenarioCounter),Integer.toString(ProcessQuestionnaireAssignment_NegativeScenarioCounter),
-									Integer.toString(ProcessQuestionnaireAssignment_passTestCaseCounter),Integer.toString(ProcessQuestionnaireAssignment_failTestCaseCounter),
-									ProcessQuestionnaireAssignment_FileTime,Integer.toString(ProcessQuestionnaireAssignment_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - ProcessQuestionnaire Assignment\"");}	
-					}
-					else if(Resressionsuitname.equals("Initiate a single project"))
-					{//For Initiate a single project
-						String Initiateasingleproject_FileTime			= "00";
-						try{
-							Initiateasingleproject_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"initiate_a_single_project_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
+							System.out.println("unable to write for module: "+moduleName);
+						}
+						
+			try{
+				obj_Report_Dashboard.generateReportForSuite("ProcessQuestionnaire Assignment",
+						"1",
+						Integer.toString(ProcessQuestionnaireAssignment_TotalTestCaseCounter),
+						Integer.toString(ProcessQuestionnaireAssignment_PositiveScenarioCounter),
+						Integer.toString(ProcessQuestionnaireAssignment_NegativeScenarioCounter),
+						Integer.toString(ProcessQuestionnaireAssignment_passTestCaseCounter),
+						Integer.toString(ProcessQuestionnaireAssignment_failTestCaseCounter),
+						ProcessQuestionnaireAssignment_FileTime,
+						Integer.toString(ProcessQuestionnaireAssignment_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - ProcessQuestionnaire Assignment\"");
+			}
 
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Initiate a single project","1",Integer.toString(InitiateSingleproject_TotalTestCaseCounter),
-									Integer.toString(InitiateSingleproject_PositiveScenarioCounter),Integer.toString(InitiateSingleproject_NegativeScenarioCounter),
-									Integer.toString(InitiateSingleproject_passTestCaseCounter),Integer.toString(InitiateSingleproject_failTestCaseCounter),
-									Initiateasingleproject_FileTime,Integer.toString(InitiateSingleproject_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Initiate a single project\"");}
-					}
-					else if(Resressionsuitname.equals("Initiate multiple projects"))
-					{//For Initiate multiple projects
-						String Initiatemultipleprojects_FileTime			= "00";
-						try{
-							Initiatemultipleprojects_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"initiate_multiple_projects_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Initiate multiple projects","1",Integer.toString(InitiateMultipleProjects_TotalTestCaseCounter),
-									Integer.toString(InitiateMultipleProjects_PositiveScenarioCounter),Integer.toString(InitiateMultipleProjects_NegativeScenarioCounter),
-									Integer.toString(InitiateMultipleProjects_passTestCaseCounter),Integer.toString(InitiateMultipleProjects_failTestCaseCounter),
-									Initiatemultipleprojects_FileTime,Integer.toString(InitiateMultipleProjects_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Initiate multiple projects\"");}
-					}
-					else if(Resressionsuitname.equals("Employee Profile"))
-					{//for Employee Profile
-						String EmployeeProfile_FileTime			= "00";
-						try{
-							EmployeeProfile_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"employee_profile_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Employee Profile","1",Integer.toString(CIMS_Regression_Suite_Employee_Profile.TotalTestCaseCounter),
-									Integer.toString(CIMS_Regression_Suite_Employee_Profile.PositiveScenarioCounter),Integer.toString(CIMS_Regression_Suite_Employee_Profile.NegativeScenarioCounter),
-									Integer.toString(CIMS_Regression_Suite_Employee_Profile.passTestCaseCounter),Integer.toString(CIMS_Regression_Suite_Employee_Profile.failTestCaseCounter),
-									EmployeeProfile_FileTime,Integer.toString(CIMS_Regression_Suite_Employee_Profile.NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Initiate multiple projects\"");}
+			// code for Initiate a Single Project...
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Initiate a single project",
+						"1",
+						Integer.toString(InitiateSingleproject_TotalTestCaseCounter),
+						Integer.toString(InitiateSingleproject_PositiveScenarioCounter),
+						Integer.toString(InitiateSingleproject_NegativeScenarioCounter),
+						Integer.toString(InitiateSingleproject_passTestCaseCounter),
+						Integer.toString(InitiateSingleproject_failTestCaseCounter),
+						TotalTime,
+						Integer.toString(InitiateSingleproject_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Initiate a single project\"");
+			}
 
-					}
-					else if(Resressionsuitname.equals("Old Initiation"))
-					{//for Employee Profile
-
-					}
-					else if((Resressionsuitname.equals("Immigration Status"))||(Resressionsuitname.equals("Document")))
-					{//for Immigration Status And Document
-						String ImmigrationStatusandDoc_FileTime			= "00";
-						try{
-							ImmigrationStatusandDoc_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "regression_time"+File.separator+"immigration_status_and_document_time");
-						}catch(Exception e){
-							System.out.println("unable to write for module: "+Resressionsuitname);}
-						try{
-							obj_Report_Dashboard.generateReportForSuite("Immigration Status And Document","1",Integer.toString(ImmigrationStatusAndDoc_TotalTestCaseCounter),
-									Integer.toString(ImmigrationStatusAndDoc_PositiveScenarioCounter),Integer.toString(ImmigrationStatusAndDoc_NegativeScenarioCounter),
-									Integer.toString(ImmigrationStatusAndDoc_passTestCaseCounter),Integer.toString(ImmigrationStatusAndDoc_failTestCaseCounter),
-									ImmigrationStatusandDoc_FileTime,Integer.toString(ImmigrationStatusAndDoc_NotAssignedModuleCounter));
-						}catch(Exception e){
-							System.out.println("unable to call & generate dashboard report for \"Regression - Initiate multiple projects\"");}
-					}
-					Employee_namecheck=null;
-
-
-				}//while loop ends here
-			}catch(Exception e){}
-
-			//////////////////////////////////////////////////////////////
-			//	Dashboard Report Generation code ENDS Here			   //
-			/////////////////////////////////////////////////////////////
-
+			// code for Initiate multiple projects...
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Initiate multiple projects",
+						"1",
+						Integer.toString(InitiateMultipleProjects_TotalTestCaseCounter),
+						Integer.toString(InitiateMultipleProjects_PositiveScenarioCounter),
+						Integer.toString(InitiateMultipleProjects_NegativeScenarioCounter),
+						Integer.toString(InitiateMultipleProjects_passTestCaseCounter),
+						Integer.toString(InitiateMultipleProjects_failTestCaseCounter),
+						TotalTime,
+						Integer.toString(InitiateMultipleProjects_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Initiate multiple projects\"");
+			}
+			
+			// code for Immigration Status and Document...
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Immigration Status and Document",
+						"1",
+						Integer.toString(ImmigrationStatusAndDoc_TotalTestCaseCounter),
+						Integer.toString(ImmigrationStatusAndDoc_PositiveScenarioCounter),
+						Integer.toString(ImmigrationStatusAndDoc_NegativeScenarioCounter),
+						Integer.toString(ImmigrationStatusAndDoc_passTestCaseCounter),
+						Integer.toString(ImmigrationStatusAndDoc_failTestCaseCounter),
+						TotalTime,
+						"1"/*Integer.toString(/*InitiateMultipleProjects_NotAssignedModuleCounter)*/);
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - Immigration Status and Document\"");
+			}
+			
+			// code for project summary 
+		
+			
+			
+			try{
+				obj_Report_Dashboard.generateReportForSuite("Project Summary",
+						"1",
+						Integer.toString(Projectsummary_TotalTestCaseCounter),
+						Integer.toString(Projectsummary_PositiveScenarioCounter),
+						Integer.toString(Projectsummary_NegativeScenarioCounter),
+						Integer.toString(Projectsummary_passTestCaseCounter),
+						Integer.toString(Projectsummary_failTestCaseCounter),
+						TotalTime,
+						Integer.toString(Projectsummary_NotAssignedModuleCounter));
+			}catch(Exception e){
+				System.out.println("unable to call & generate dashboard report for \"Regression - GlobalChekPlus-NewQuery\"");
+			}
+			
+			// code for project summary 
+			
+			
+			
+				try{
+					obj_Report_Dashboard.generateReportForSuite("Assessment Summary",
+							"1",
+							Integer.toString(Assessmentsummary_TotalTestCaseCounter),
+							Integer.toString(Assessmentsummary_PositiveScenarioCounter),
+							Integer.toString(Assessmentsummary_NegativeScenarioCounter),
+							Integer.toString(Assessmentsummary_passTestCaseCounter),
+							Integer.toString(Assessmentsummary_failTestCaseCounter),
+							TotalTime,
+							Integer.toString(Assessmentsummary_NotAssignedModuleCounter));
+				}catch(Exception e){
+					System.out.println("unable to call & generate dashboard report for \"Regression - GlobalChekPlus-NewQuery\"");
+				}
+				// code for project list
+			
+				try{
+					obj_Report_Dashboard.generateReportForSuite("Project List",
+							"1",
+							Integer.toString(ProjectList_TotalTestCaseCounter),
+							Integer.toString(ProjectList_PositiveScenarioCounter),
+							Integer.toString(ProjectList_NegativeScenarioCounter),
+							Integer.toString(ProjectList_passTestCaseCounter),
+							Integer.toString(ProjectList_failTestCaseCounter),
+							TotalTime,
+							Integer.toString(ProjectList_NotAssignedModuleCounter));
+				}catch(Exception e){
+					System.out.println("unable to call & generate dashboard report for \"Regression - GlobalChekPlus-NewQuery\"");
+				}
+			
+		
 		}
 		catch(Exception e){
 			ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
@@ -4380,6 +5560,30 @@ public class CIMS_Regression_Suite {
 	public void setobj_CIMS_Secure_Messaging(CIMS_Secure_Messaging setobj_CIMS_Secure_Messaging) {
 		this.obj_CIMS_Secure_Messaging = setobj_CIMS_Secure_Messaging;
 	}
+	
+
+	public void setobj_CIMS_Project_Detail(CIMS_Project_Detail setobj_CIMS_Project_Detail) {
+		this.obj_CIMS_Project_Detail = setobj_CIMS_Project_Detail;
+	}
+	
+
+	public void setobj_CIMS_MostRecent_project(CIMS_MostRecent_project setobj_CIMS_MostRecent_project) {
+		this.obj_CIMS_MostRecent_project = setobj_CIMS_MostRecent_project;
+	}
+	
+	public void setobj_CIMS_MostRecentTopTen_project(CIMS_MostRecentTopTen_project setobj_CIMS_MostRecentTopTen_project) {
+		this.obj_CIMS_MostRecentTopTen_project = setobj_CIMS_MostRecentTopTen_project;
+	}
+	
+	public void setobj_CIMS_Project_Summary(CIMS_Project_Summary setobj_CIMS_Project_Summary) {
+		this.obj_CIMS_Project_Summary = setobj_CIMS_Project_Summary;
+	}
+	public void setobj_CIMS_Assessment_Summary(CIMS_Assessment_Summary setobj_CIMS_Assessment_Summary) {
+		this.obj_CIMS_Assessment_Summary = setobj_CIMS_Assessment_Summary;
+	}
+	
+	
+	
 
 
 
@@ -4402,6 +5606,10 @@ public class CIMS_Regression_Suite {
 	public void setobj_CIMS_Travel_History(CIMS_Travel_History setobj_CIMS_Travel_History) {
 		this.obj_CIMS_Travel_History=setobj_CIMS_Travel_History;
 	}
+	public void setobj_CIMS_Project_List(CIMS_Project_List setobj_CIMS_Project_List) {
+		this.obj_CIMS_Project_List=setobj_CIMS_Project_List;
+	}
+	//
 	// Dharam Code End here CIMS_Regression_Suite_Emp_Questionnaire_Assignment
 
 

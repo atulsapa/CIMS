@@ -126,7 +126,9 @@ public class CIMS_Immigration_Document {
 							Thread.sleep(1000);
 							utilfunc.MakeElement(DocEditXpath).click();
 							Thread.sleep(1000);
-							} catch (Exception e) {
+						
+
+						} catch (Exception e) {
 						
 							System.out.println("Unable to Edit the record");
 						}
@@ -351,12 +353,11 @@ public class CIMS_Immigration_Document {
 	    	        	try{
 	    	        		Thread.sleep(500);
 						utilfunc.MakeElement(saveBtn).click();
-						Thread.sleep(500);
 						}
 	    	        	catch(Exception error){
 	    	        		System.out.println("some error during click save button" + error);
 	    	        		}
-						//System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
+						System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
 						String error_flag=utilfunc.ErrorMessagehandlerExperiment();
 						 if (error_flag.equals(ExpectedErrorMessage)){
 							 Flag=true;

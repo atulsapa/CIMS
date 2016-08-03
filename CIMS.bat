@@ -6,4 +6,6 @@ call TestResult.bat
 cd ..
 cscript sleep.vbs 20
 cscript copyResults.vbs
-cscript sleep.vbs 30
+cscript sleep.vbs 20
+Command >> texxt.txt  
+cscript sleep.vbs 5

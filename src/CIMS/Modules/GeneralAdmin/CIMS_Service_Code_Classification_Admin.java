@@ -297,7 +297,7 @@ public class CIMS_Service_Code_Classification_Admin {
 				catch(Exception e){}
 				try{
 					System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
-					String error_flag=utilfunc.ErrorMessagehandlerExperiment();
+					String error_flag=utilfunc.PoclassificationErrorMessageHandler();
 					ExpectedErrorMessage=ExpectedErrorMessage.trim();
 					System.out.println("==="+ExpectedErrorMessage+"===");
 					System.out.println("==="+error_flag+"===+SSSS");

@@ -122,7 +122,6 @@ public class CIMS_MainProject
 	private String columnName="RUNMODE";
 	private String columnName5="ACTION";
 	public static String  questionarie_name1=null;
-	public static String Main_questionarie_name_temp="";
 
 	//Employee search declaration
 	private String fileNameemployee="Test Data.xls";
@@ -338,7 +337,7 @@ public class CIMS_MainProject
 
 			}
 
-			System.out.println(Employee_namecheck+"\n"+"Questionnaire");
+
 			int rowCountemployeesearch	=	UtilFunction.usedRowCount(fileNameemployee,sheetNameemployee);
 			int RUNMODEemployeesearch=UtilFunction.getColumnWithCellData(fileNameemployee, sheetNameemployee, columnNameemployeeRUNMODE);
 			String columnNameEN="EMPLOYEE NAME";
@@ -397,7 +396,7 @@ public class CIMS_MainProject
 					Reporter.log("<img class='image1' style='width:100%;height:30px;' src='"+System.getProperty("user.dir")+"/CIMS/img.png'/>");
 
 
-					System.out.println("\n\n---"+Employee_namecheck+"---\n\n");
+
 					int counter=0;
 					for(int i = 1;i<rowCount;i++){
 
@@ -424,9 +423,8 @@ public class CIMS_MainProject
 							//String columnName5="ACTION";
 							int columnNumber_RUNMODE1=UtilFunction.getColumnWithCellData(fileName, sheetName1, columnName);
 							int rowCount1	=	UtilFunction.usedRowCount(fileName,sheetName1);
-							Main_questionarie_name_temp	=	SelectQuestionnairetype;
-							
-							
+
+
 							// executing approx half modules
 							firstHalfModulesOfQuestionnaire(QUESTIONNAIR_ACTION,rowCount1,sheetName1,columnNumber_RUNMODE1,counter,NumberOfNotAssignModule);
 
@@ -2040,7 +2038,6 @@ public class CIMS_MainProject
 								}
 							}
 								///////////////////////END OF Assessment MODULES//////////////////
-							Main_questionarie_name_temp="";
 						}
 					}
 					}
@@ -2112,8 +2109,7 @@ public class CIMS_MainProject
 		}catch(Exception e){
 			System.out.println("unable to call & generate dashboard report..");
 		}
-		Employee_namecheck=null;
-		Employee_search=null;
+
 
 	}
 
@@ -3936,7 +3932,7 @@ public class CIMS_MainProject
 										}catch(Exception e){}
 										passCounter=true;
 									}// now write it in a pass file ENDS...
-									utilfunc.TestngReportPass(obj_CIMS_Addional_Questionnaire_Module.testcaseid, utilfunc.Actualbrw, obj_CIMS_Addional_Questionnaire_Module.scenerio,QUESTIONNAIR_ACTION, obj_CIMS_Addional_Questionnaire_Module.description, status);
+									utilfunc.TestngReportPass(obj_CIMS_AWARDS_MODULES.testcaseid, utilfunc.Actualbrw, obj_CIMS_AWARDS_MODULES.scenerio,QUESTIONNAIR_ACTION, obj_CIMS_AWARDS_MODULES.description, status);
 								}else{
 									// now write it in a negative pass dashboard file START...
 									if(negativePassCounter==false){
@@ -3944,7 +3940,7 @@ public class CIMS_MainProject
 										}catch(Exception e){}
 										negativePassCounter=true;
 									}// now write it in a negative pass dashboard file ENDS...
-									utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Addional_Questionnaire_Module.testcaseid, utilfunc.Actualbrw, obj_CIMS_Addional_Questionnaire_Module.scenerio,QUESTIONNAIR_ACTION, obj_CIMS_Addional_Questionnaire_Module.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+									utilfunc.TestngReportNegativePassTestcase(obj_CIMS_AWARDS_MODULES.testcaseid, utilfunc.Actualbrw, obj_CIMS_AWARDS_MODULES.scenerio,QUESTIONNAIR_ACTION, obj_CIMS_AWARDS_MODULES.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
 								}
 								System.out.println("User is Sucessfully Saved the Additional Questions Information");	
 							}

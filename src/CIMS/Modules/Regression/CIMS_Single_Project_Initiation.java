@@ -861,7 +861,7 @@ public class CIMS_Single_Project_Initiation {
 											String fileuploadbutton			=			".//*[@id='docUploadModal']//*[contains(@class,'btn') and text()='Upload']";
 											String WebAccessXPath			=			"//*[@type='checkbox' and @ng-model='EnableLogin']";
 											String LoginTypeXPath			=			"//*[@ng-model='LoginType']";
-											
+
 											try{
 												// wait for a while
 												Thread.sleep(1000);
@@ -928,8 +928,8 @@ public class CIMS_Single_Project_Initiation {
 								//					convert family member count into integer from string..
 													int TotalNoOfFamilyMembers	=	Integer.parseInt(NoOfFamilyMembers);
 												if(TotalNoOfFamilyMembers>=1){
-													
-													
+
+
 													String[] FMFirstNames		=	{};
 													String[] FMMiddleNames		=	{};
 													String[] FMLastNames		=	{};
@@ -954,7 +954,8 @@ public class CIMS_Single_Project_Initiation {
 								
 													
 													for(int nmbrOfMem	=	1;nmbrOfMem<=TotalNoOfFamilyMembers;nmbrOfMem++){
-								
+
+														Thread.sleep(1500);
 														//  click on add new member button to add new member
 														try {
 															utilfunc.MakeElement(AddNewFamilyMemberButtonXPath).click();
@@ -968,7 +969,7 @@ public class CIMS_Single_Project_Initiation {
 								
 														// family member first name
 														String NewFMFirstName		=	FMFirstNameXPath.replace("www", Integer.toString(nmbrOfMem-1));
-														
+
 														try {
 															utilfunc.MakeElement(NewFMFirstName).clear();
 															utilfunc.MakeElement(NewFMFirstName).sendKeys(FMFirstNames[nmbrOfMem-1]);

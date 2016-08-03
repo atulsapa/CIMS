@@ -15,7 +15,7 @@ public class CIMS_Company_PurposeCategories {
 
 	public static String testcaseid="";
 	public static String scenerio="";
-	public static String testcasedescription="";
+	public static String description="";
 
 	public CIMS_Company_PurposeCategories(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -44,7 +44,7 @@ public class CIMS_Company_PurposeCategories {
 
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 
 			// xpath variables
 			String Element_xpath							=	"//*[@id='form1']//*[@class='control-group'][xx]//*[@name]";

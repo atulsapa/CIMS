@@ -14,7 +14,6 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 
-import CIMS.CIMS_EmployeeProfile;
 import CIMS.CIMS_MainProject;
 import CIMS.CIMS_Regression_Suite;
 import util.UtilFunction;
@@ -180,8 +179,6 @@ public class CIMS_Login
 		try{
 
 			utilfunc.LinkText(Employeebuttonlinktext).click();
-			Thread.sleep(2000);
-			
 			if(CIMS_Regression_Suite.SelectQuestionnairetype.equalsIgnoreCase("Project")){
 				utilfunc.MakeElement(projectbutton).click();
 				utilfunc.MakeElement(projectreference).sendKeys(Employeesearchname);
@@ -205,24 +202,12 @@ public class CIMS_Login
 				utilfunc.MakeElement(Employeesearch).click();
 				Thread.sleep(5000);
 			}
-			else if(CIMS_EmployeeProfile.SelectQuestionnairetype.equalsIgnoreCase("Profile")){
-				utilfunc.MakeElement(EmployeeNamexpath).sendKeys(Employeenamecheck);
-				Thread.sleep(1000);
-				utilfunc.MakeElement(Employeesearch).click();
-				Thread.sleep(5000);
-			}
 
 			
 			try {
 				if(CIMS_Regression_Suite.SelectQuestionnairetype.equalsIgnoreCase("Project")||CIMS_MainProject.SelectQuestionnairetype.equalsIgnoreCase("Project"))
 				{
 					utilfunc.MakeElement(employeexpath).click();
-					Thread.sleep(3000);
-				}
-				if(CIMS_EmployeeProfile.SelectQuestionnairetype.equalsIgnoreCase("Profile"))
-				{
-					utilfunc.MakeElement(employeexpath).click();
-					
 					Thread.sleep(3000);
 				}
 			} catch (Exception e) {
@@ -267,60 +252,6 @@ public class CIMS_Login
 					System.out.println("unable to find project search link");
 				}
 				
-			}catch(Exception f){
-				ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
-				System.out.println("NOT ABLE TO FOUND THE USER");
-				utilfunc.assertion();			
-				utilfunc.TakeScreenshot();
-			}
-
-		}
-
-
-	}
-	
-	
-	public void EmployeeProfileSearchEmployee(String Employeenamecheck,String Employeesearchname){
-		System.out.println("");
-		System.out.println("-------------------------------EMPLOYEE SEARCHING FOR EMPLOYEE PROFILE---------------------------");
-		try{
-			utilfunc.LinkText(Employeebuttonlinktext).click();
-			Thread.sleep(2000);
-
-			if(CIMS_EmployeeProfile.SelectQuestionnairetype.equalsIgnoreCase("Profile")){
-				utilfunc.MakeElement(EmployeeNamexpath).sendKeys(Employeenamecheck);
-				Thread.sleep(1000);
-				utilfunc.MakeElement(Employeesearch).click();
-				Thread.sleep(5000);
-			}			
-			utilfunc.MakeElement(profileQuestionaireEmployeeerecord).click();
-			Thread.sleep(3000);
-			/////DEV///
-			/* utilfunc.LinkText(Employeebuttonlinktext1).click();
-			 utilfunc.MakeElement(projectreference).sendKeys(Employeesearchname);
-			 utilfunc.MakeElement(buttonprojectsearch1).click();
-			 Thread.sleep(5000);
-			 utilfunc.MakeElement(employeexpath).click();*/
-		}catch(Exception e){
-
-			try{
-				String Menuxpath=".//*[@class='gn-icon gn-icon-menu']";
-				utilfunc.MakeElement(Menuxpath).click();
-
-				try {
-					String SubMenuProfilexpath=".//*[@class='gn-submenu']/li[2]/a";
-					utilfunc.MakeElement(SubMenuProfilexpath).click();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					System.out.println("unable to find & click on project search sub menu of main menu");
-				}
-
-				try {
-					utilfunc.MakeElement(".//*[@class='gn-submenu']//*/a[contains(text(),'Project Search')]").click();
-				} catch (Exception e1) {
-					System.out.println("unable to find project search link");
-				}
-
 			}catch(Exception f){
 				ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
 				System.out.println("NOT ABLE TO FOUND THE USER");

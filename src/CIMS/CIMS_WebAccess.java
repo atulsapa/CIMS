@@ -23,6 +23,7 @@ import CIMS.Modules.Advanced.Employee_Search;
 import CIMS.Modules.Advanced.Project_Search;
 import CIMS.Modules.Questionnaires.CIMS_Login;
 import CIMS.Modules.Regression.CIMS_Regression_Suite_Employee_Profile;
+import CIMS.Modules.WebAccess.CIMS_AcountUnlocked;
 import CIMS.Modules.WebAccess.CIMS_Acountlocked;
 import CIMS.Modules.WebAccess.CIMS_ForgotPassword;
 import CIMS.Modules.WebAccess.CIMS_RestPassword_Module;
@@ -45,6 +46,7 @@ public class CIMS_WebAccess {
 //	private CIMS_Regression_Suite_Employee_Profile		obj_CIMS_Regression_Suite_Employee_Profile;
 	
 	
+	private CIMS_AcountUnlocked obj_CIMS_AcountUnlocked;
 	private CIMS_Acountlocked obj_CIMS_Acountlocked;
 	private CIMS_RestPassword_Module obj_CIMS_RestPassword_Module;
 	private CIMS_WebAccessModule obj_CIMS_WebAccessModule;
@@ -54,6 +56,7 @@ public class CIMS_WebAccess {
 	
 	//file name that takes dynamically in all modules.
 		public static String ExcelFileName="WebAccess.xls";
+		public static String suiteName="Web Access";
 		public String sheetName="URLANDNAME";
 		public static String os=System.getProperty("os.name");
 		public static String osbit=System.getProperty("sun.arch.data.model");
@@ -101,8 +104,9 @@ public class CIMS_WebAccess {
 				setobj_CIMS_Login(new CIMS_Login(webdriver, utilfunc));
 				setobj_dashboard((new dashboard()));
 				setobj_Project_Search(new Project_Search(webdriver,utilfunc));
-				setobj_CIMS_Acountlocked(new CIMS_Acountlocked(webdriver,utilfunc));
+				setobj_CIMS_AcountUnlocked(new CIMS_AcountUnlocked(webdriver,utilfunc));
 				setobj_CIMS_ForgotPassword(new CIMS_ForgotPassword(webdriver,utilfunc));
+				setobj_CIMS_Acountlocked(new CIMS_Acountlocked(webdriver,utilfunc));
 				
 				
 				
@@ -456,7 +460,10 @@ public void CIMSWebAccess() throws InterruptedException, IOException, AWTExcepti
 											
 												
 												}
+												
 												else if(SuiteName.equals("Account Locked")){
+													
+
 													
 													try{
 														startTime = System.currentTimeMillis();
@@ -505,6 +512,80 @@ public void CIMSWebAccess() throws InterruptedException, IOException, AWTExcepti
 									    						failCounter	= true;
 								    						}
 															try {obj_Report_Dashboard.writeDashBoardFailReport(WebAccessmodule, Employee_namecheck, obj_CIMS_Acountlocked.testcaseid, utilfunc.Actualbrw, obj_CIMS_Acountlocked.scenerio, ActionName, obj_CIMS_Acountlocked.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+														}
+													}catch(Exception s){
+														System.out.println("some error occured in : "+ SuiteName);
+														
+													}
+												
+												
+													
+											
+												
+												
+													
+													
+												}
+												else if(SuiteName.equals("Account UnLocked")){
+													
+													try {
+														webdriver.navigate().to("http://cobaltqa.daxima.com");
+													} catch (Exception e) {
+														System.out.println("unable to navigate to Url");
+													}
+													 try {
+															webdriver.navigate().to("https://cims3-staging.balglobal.com");
+														} catch (Exception e) {
+															System.out.println("unable to navigate to Url");
+														}
+													
+													try{
+														startTime = System.currentTimeMillis();
+														Page_flag	=	obj_CIMS_AcountUnlocked.unLockedAccount(fileName,SuiteName,count,ActionName);
+														timer = utilfunc.getTimeTakenByModule(startTime);
+														utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+														if (Page_flag)
+														{
+															status="PASS";passTestCaseCounter++;
+															if(utilfunc.globalerrormessage.equals(""))
+															{
+																utilfunc.TestngReportPass(obj_CIMS_AcountUnlocked.testcaseid, utilfunc.Actualbrw,obj_CIMS_AcountUnlocked.scenerio, ActionName,obj_CIMS_AcountUnlocked.description, status);
+																
+																// now write it in a pass file..
+																if(passCounter==false){
+																	 try {	obj_Report_Dashboard.writeReportHeader(WebAccessmodule, sheetName,"Pass");} catch (Exception e) {}
+																	 passCounter=true;
+																 }
+																try {obj_Report_Dashboard.writeDashBoardPassReport(WebAccessmodule, Employee_namecheck, obj_CIMS_AcountUnlocked.testcaseid, utilfunc.Actualbrw, obj_CIMS_AcountUnlocked.scenerio, ActionName, obj_CIMS_AcountUnlocked.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+
+															}
+															else
+															{
+																utilfunc.TestngReportNegativePassTestcase(obj_CIMS_AcountUnlocked.testcaseid, utilfunc.Actualbrw,obj_CIMS_AcountUnlocked.scenerio,ActionName,obj_CIMS_AcountUnlocked.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+																// now write it in a negative pass dashboard file..
+																if(negativePassCounter==false){
+																	 try {	obj_Report_Dashboard.writeReportHeader(WebAccessmodule, sheetName,"Negative Pass");} catch (Exception e) {}
+																	 negativePassCounter=true;
+																 }
+																try {obj_Report_Dashboard.writeDashBoardNegativePassReport(WebAccessmodule, Employee_namecheck, obj_CIMS_AcountUnlocked.testcaseid, utilfunc.Actualbrw,obj_CIMS_AcountUnlocked.scenerio,ActionName,obj_CIMS_AcountUnlocked.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+																catch (Exception e) {System.out.println("unable to write dasboard negative pass report for : "+SuiteName);}
+
+															}
+															
+															
+														}
+														else
+														{
+															status="FAIL";failTestCaseCounter++;
+															//													utilfunc.TakeScreenshot();
+															utilfunc.TestngReportFail1(obj_CIMS_AcountUnlocked.testcaseid, utilfunc.Actualbrw,obj_CIMS_AcountUnlocked.scenerio,ActionName,obj_CIMS_AcountUnlocked.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+														
+															// now write it in a fail dashboard file..
+															if(failCounter==false){
+									    						obj_Report_Dashboard.writeReportHeader(WebAccessmodule, sheetName,"Fail");
+									    						failCounter	= true;
+								    						}
+															try {obj_Report_Dashboard.writeDashBoardFailReport(WebAccessmodule, Employee_namecheck, obj_CIMS_AcountUnlocked.testcaseid, utilfunc.Actualbrw, obj_CIMS_AcountUnlocked.scenerio, ActionName, obj_CIMS_AcountUnlocked.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
 														}
 													}catch(Exception s){
 														System.out.println("some error occured in : "+ SuiteName);
@@ -642,7 +723,7 @@ public void CIMSWebAccess() throws InterruptedException, IOException, AWTExcepti
 								System.out.println("unable to call & generate dashboard report for regression..");
 							}
 
-							Employee_namecheck=null;
+
 							
 							
 						} catch (Exception e) {
@@ -695,6 +776,11 @@ public void CIMSWebAccess() throws InterruptedException, IOException, AWTExcepti
 			this.obj_CIMS_WebAccessModule	=	setobj_CIMS_WebAccessModule;
 			
 			}
+		public void setobj_CIMS_AcountUnlocked(CIMS_AcountUnlocked setobj_CIMS_AcountUnlocked){
+			this.obj_CIMS_AcountUnlocked	=	setobj_CIMS_AcountUnlocked;
+			
+			}
+		
 		public void setobj_CIMS_Acountlocked(CIMS_Acountlocked setobj_CIMS_Acountlocked){
 			this.obj_CIMS_Acountlocked	=	setobj_CIMS_Acountlocked;
 			

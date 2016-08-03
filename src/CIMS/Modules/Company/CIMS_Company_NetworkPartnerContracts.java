@@ -41,7 +41,7 @@ public class CIMS_Company_NetworkPartnerContracts {
 	
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	private String filename	=	"Test Company Data.xls";
 	private String sheetName	=	"Contracts";
@@ -87,7 +87,7 @@ public class CIMS_Company_NetworkPartnerContracts {
 		{	
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 
 			if(mode.equalsIgnoreCase("New"))
 			{

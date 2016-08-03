@@ -70,7 +70,6 @@ public class CIMS_Processandquestionnaire_ProcessType {
 			try {
 				Thread.sleep(1500);
 				utilfunc.Selectdropdownvaluebytext(ProcessDropDownXpath, ProcessType);
-				Thread.sleep(1500);
 			} catch (Exception e1) {
 				System.out.println("Clicked on the process drop down");
 			}
@@ -80,7 +79,6 @@ public class CIMS_Processandquestionnaire_ProcessType {
 			try{
 				 // save button after saving all data..
 				//String saveBtn	=	".//a[contains(@class,'btn') and text()='Save']";
-				Thread.sleep(3000);
 	        	utilfunc.MakeElement(saveBtn).click();
 	        	Thread.sleep(3000);
 			}

@@ -45,7 +45,7 @@ public class CIMS_Company_Contacts{
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	public CIMS_Company_Contacts(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -56,7 +56,7 @@ public class CIMS_Company_Contacts{
 	public boolean Company_Contacts(String filename, String sheetName,int ColumnCounter,String mode) throws AWTException, InterruptedException
 	{
 		//Lokesh code this
-		
+
 		System.out.println("User is on "+sheetName+" Module with "+mode+" Mode.");
 		boolean Flag	=	false;
 		System.out.println("Start getting values form excel sheet. Please wait...");
@@ -109,18 +109,18 @@ public class CIMS_Company_Contacts{
 				numberOfEmailsToAdd = Integer.parseInt(numberOfEmails);
 				numberOfRolesToAdd = Integer.parseInt(numberOfRoles);
 			}
-			
+
 		}
 		catch(Exception e){}
 
 		testcaseid			=	TestcaseID;
 		scenerio			=	Scenario;
-		testcasedescription = Company_Description;
+		description = Company_Description;
 		String error_msg="";
-		
+
 		if(TestcaseRunMode.equals("Y"))
 		{
-			
+
 			if(mode.equalsIgnoreCase("New"))
 			{
 				System.out.println("========================\nReady to set values in "+sheetName+" in "+mode+" mode.\n========================");
@@ -370,133 +370,134 @@ public class CIMS_Company_Contacts{
 					 * first of all let us find out how many Roles we have to add
 					 */
 					if(numberOfRolesToAdd>=1){
+						try{
+							String AddMoreBtn				=	"//*[@id='lnk-addroles' and text()='Add More']";
+							//String RoleRowCounter			=	".//*[@id="form_modal"]//*[@class='control-group'][2]//*[@class='controls']";
+							String RoleRowXPath				=	".//*[@id='form_modal']//*[@class='control-group']//*[@class='controls']";
+							String mynewxpath				=	".//*[@id='form_modal']//*[@class='control-group'][xx]//*[@class='controls']//*[@name]";
 
-						String AddMoreBtn				=	"//*[@id='lnk-addroles' and text()='Add More']";
-						//String RoleRowCounter			=	".//*[@id="form_modal"]//*[@class='control-group'][2]//*[@class='controls']";
-						String RoleRowXPath				=	".//*[@id='form_modal']//*[@class='control-group']//*[@class='controls']";
-						String mynewxpath				=	".//*[@id='form_modal']//*[@class='control-group'][xx]//*[@class='controls']//*[@name]";
+							String[]	Company_Roles1			=	Company_Roles.trim().split(",");
+							String[]    Company_Scope1			=	Company_Scope.trim().split(",");
+							String[]	Company_BusinessUnit1	=	Company_BusinessUnit.trim().split(",");
+							String[]    Company_Country1		=	Company_Country.trim().split(",");
+							String[]    Company_CountryGroup1	=	Company_CountryGroup.trim().split(",");
+							String[]    Company_Entity1			=	Company_Entity.trim().split(",");
 
-						String[]	Company_Roles1			=	Company_Roles.trim().split(",");
-						String[]    Company_Scope1			=	Company_Scope.trim().split(",");
-						String[]	Company_BusinessUnit1	=	Company_BusinessUnit.trim().split(",");
-						String[]    Company_Country1		=	Company_Country.trim().split(",");
-						String[]    Company_CountryGroup1	=	Company_CountryGroup.trim().split(",");
-						String[]    Company_Entity1			=	Company_Entity.trim().split(",");
+							utilfunc.MakeElement(AddMoreBtn).click();
 
-						utilfunc.MakeElement(AddMoreBtn).click();
+							for(int n=1;n<=numberOfRolesToAdd;n++){
+								Thread.sleep(300);
+								System.out.println("  ===> values for "+n+" record.");
+								if(n>=2){
+									// in case we need to click on add more
+									utilfunc.MakeElement(AddMoreBtn).click();
+								}
+								Thread.sleep(100);
 
-						for(int n=1;n<=numberOfRolesToAdd;n++){
-							Thread.sleep(300);
-							System.out.println("  ===> values for "+n+" record.");
-							if(n>=2){
-								// in case we need to click on add more
-								utilfunc.MakeElement(AddMoreBtn).click();
+								// now set data for phone numbers and before that let us find out the number of fields in current table
+								//String NewRoleRowCounterXPath		=		RoleRowXPath.replace("xx",Integer.toString(n));
+								//System.out.println("\n"+NewRoleRowCounterXPath+"\n");
+								int s	=	utilfunc.GetObjectCount(RoleRowXPath);
+								String Company_Scope2="";
+								for(int m=1;m<=s;m++){
+									//Thread.sleep(500);
+									String RoleRowCounterXPath1= mynewxpath.replace("xx", Integer.toString(m));
+									//String RoleRowCounterXPath2= RoleRowCounterXPath1.replace("yy", Integer.toString(m));
+									//System.out.println(RoleRowCounterXPath1);
+
+									//							String NewPhoneFieldXPath		=		utilfunc.MakeElement(NewPhoneRowCounterXPath);
+									String myattributename		=		utilfunc.MakeElement(RoleRowCounterXPath1).getAttribute("name");
+
+									if(myattributename.equalsIgnoreCase("mRole"))
+									{
+										if(StringUtils.isEmpty(Company_Roles1[(n-1)])==false)
+										{
+											System.out.println("  ---"+Company_Roles1[(n-1)]+"---");
+											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Roles1[(n-1)]);
+										}
+										else
+										{
+											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+											System.out.println("\nValue -"+Company_Roles1[(n-1)]+"- is not exists inside the drop down.");
+										}
+									}
+									else if(myattributename.equalsIgnoreCase("mRoleScope"))
+									{
+										if(StringUtils.isEmpty(Company_Scope1[(n-1)])==false)
+										{
+											System.out.println("  ---"+Company_Scope1[(n-1)]+"---");
+											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Scope1[(n-1)]);
+											Company_Scope2=Company_Scope1[(n-1)];
+											//System.out.println("+"+Company_Scope2+"+");
+										}
+										else
+										{
+											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+											System.out.println("\nValue -"+Company_Scope1[(n-1)]+"- is not exists inside the drop down.");
+										}
+									}
+									else if((myattributename.equalsIgnoreCase("mEntity"))&&(Company_Scope2.equalsIgnoreCase("Entity")))
+									{
+										String enTiTy=Company_Entity1[(n-1)];
+										System.out.println("---"+enTiTy+"---");
+										if(StringUtils.isEmpty(enTiTy)==false)
+										{
+											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, enTiTy);
+										}
+										else
+										{
+											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+											System.out.println("\nValue -"+enTiTy+"- is not exists inside the drop down.");
+										}
+									}
+									else if((myattributename.equalsIgnoreCase("mBusinessUnit"))&&(Company_Scope2.equalsIgnoreCase("Business Unit")))
+									{
+										String businessunit=Company_BusinessUnit1[(n-1)]; 
+										System.out.println("---"+businessunit+"---");
+										if(StringUtils.isEmpty(businessunit)==false)
+										{
+											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, businessunit);
+										}
+										else
+										{
+											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+											System.out.println("\nValue -"+businessunit+"- is not exists inside the drop down.");
+										}
+									}
+									else if((myattributename.equalsIgnoreCase("mCountry"))&&(Company_Scope2.equalsIgnoreCase("Country")))
+									{
+										String coUnTrY=Company_Country1[(n-1)]; 
+										System.out.println("---"+coUnTrY+"---");
+										if(StringUtils.isEmpty(coUnTrY)==false)
+										{
+											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, coUnTrY);
+										}
+										else
+										{
+											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+											System.out.println("\nValue -"+coUnTrY+"- is not exists inside the drop down.");
+										}
+									}
+									else if((myattributename.equalsIgnoreCase("mCountryGroup"))&&(Company_Scope2.equalsIgnoreCase("Country Group")))
+									{
+										String countryGrOuP=Company_CountryGroup1[(n-1)]; 
+										System.out.println("---"+countryGrOuP+"---");
+										if(StringUtils.isEmpty(countryGrOuP)==false)
+										{
+											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, countryGrOuP);
+										}
+										else
+										{
+											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+											System.out.println("\nValue -"+countryGrOuP+"- is not exists inside the drop down.");
+										}
+									}
+									else{continue;}
+								}
+								utilfunc.MakeElement(".//*[@class='icon-plus icon-white']").click();
+								Thread.sleep(1000);
 							}
-							Thread.sleep(100);
-
-							// now set data for phone numbers and before that let us find out the number of fields in current table
-							//String NewRoleRowCounterXPath		=		RoleRowXPath.replace("xx",Integer.toString(n));
-							//System.out.println("\n"+NewRoleRowCounterXPath+"\n");
-							int s	=	utilfunc.GetObjectCount(RoleRowXPath);
-							String Company_Scope2="";
-							for(int m=1;m<=s;m++){
-								//Thread.sleep(500);
-								String RoleRowCounterXPath1= mynewxpath.replace("xx", Integer.toString(m));
-								//String RoleRowCounterXPath2= RoleRowCounterXPath1.replace("yy", Integer.toString(m));
-								//System.out.println(RoleRowCounterXPath1);
-
-								//							String NewPhoneFieldXPath		=		utilfunc.MakeElement(NewPhoneRowCounterXPath);
-								String myattributename		=		utilfunc.MakeElement(RoleRowCounterXPath1).getAttribute("name");
-
-								if(myattributename.equalsIgnoreCase("mRole"))
-								{
-									if(StringUtils.isEmpty(Company_Roles1[(n-1)])==false)
-									{
-										System.out.println("  ---"+Company_Roles1[(n-1)]+"---");
-										utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Roles1[(n-1)]);
-									}
-									else
-									{
-										utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-										System.out.println("\nValue -"+Company_Roles1[(n-1)]+"- is not exists inside the drop down.");
-									}
-								}
-								else if(myattributename.equalsIgnoreCase("mRoleScope"))
-								{
-									if(StringUtils.isEmpty(Company_Scope1[(n-1)])==false)
-									{
-										System.out.println("  ---"+Company_Scope1[(n-1)]+"---");
-										utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Scope1[(n-1)]);
-										Company_Scope2=Company_Scope1[(n-1)];
-										//System.out.println("+"+Company_Scope2+"+");
-									}
-									else
-									{
-										utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-										System.out.println("\nValue -"+Company_Scope1[(n-1)]+"- is not exists inside the drop down.");
-									}
-								}
-								else if((myattributename.equalsIgnoreCase("mEntity"))&&(Company_Scope2.equalsIgnoreCase("Entity")))
-								{
-									String enTiTy=Company_Entity1[(n-1)];
-									System.out.println("---"+enTiTy+"---");
-									if(StringUtils.isEmpty(enTiTy)==false)
-									{
-										utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, enTiTy);
-									}
-									else
-									{
-										utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-										System.out.println("\nValue -"+enTiTy+"- is not exists inside the drop down.");
-									}
-								}
-								else if((myattributename.equalsIgnoreCase("mBusinessUnit"))&&(Company_Scope2.equalsIgnoreCase("Business Unit")))
-								{
-									String businessunit=Company_BusinessUnit1[(n-1)]; 
-									System.out.println("---"+businessunit+"---");
-									if(StringUtils.isEmpty(businessunit)==false)
-									{
-										utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, businessunit);
-									}
-									else
-									{
-										utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-										System.out.println("\nValue -"+businessunit+"- is not exists inside the drop down.");
-									}
-								}
-								else if((myattributename.equalsIgnoreCase("mCountry"))&&(Company_Scope2.equalsIgnoreCase("Country")))
-								{
-									String coUnTrY=Company_Country1[(n-1)]; 
-									System.out.println("---"+coUnTrY+"---");
-									if(StringUtils.isEmpty(coUnTrY)==false)
-									{
-										utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, coUnTrY);
-									}
-									else
-									{
-										utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-										System.out.println("\nValue -"+coUnTrY+"- is not exists inside the drop down.");
-									}
-								}
-								else if((myattributename.equalsIgnoreCase("mCountryGroup"))&&(Company_Scope2.equalsIgnoreCase("Country Group")))
-								{
-									String countryGrOuP=Company_CountryGroup1[(n-1)]; 
-									System.out.println("---"+countryGrOuP+"---");
-									if(StringUtils.isEmpty(countryGrOuP)==false)
-									{
-										utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, countryGrOuP);
-									}
-									else
-									{
-										utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-										System.out.println("\nValue -"+countryGrOuP+"- is not exists inside the drop down.");
-									}
-								}
-								else{continue;}
-							}
-							utilfunc.MakeElement(".//*[@class='icon-plus icon-white']").click();
-							Thread.sleep(1000);
-						}
+						}catch(Exception ee){}
 					}
 
 
@@ -594,7 +595,7 @@ public class CIMS_Company_Contacts{
 					utilfunc.TakeScreenshot();
 					Flag=false;
 					return Flag;
-					}
+				}
 
 				try{
 					Thread.sleep(1000);
@@ -626,7 +627,26 @@ public class CIMS_Company_Contacts{
 			{
 				System.out.println("========================\nReady to set values in "+sheetName+" in "+mode+" mode.\n========================");
 				System.out.println("search ....");
-				String search_name=lastname+","+firstname+" "+middlename;
+				String search_name="";
+				if((!firstname.isEmpty())&&(!middlename.isEmpty())&&(!lastname.isEmpty()))
+				{search_name=lastname+","+firstname+" "+middlename;}
+				
+				if((firstname.isEmpty())&&(!lastname.isEmpty()))
+				{
+					search_name=lastname;
+				}
+				else if((lastname.isEmpty())&&(!firstname.isEmpty()))
+				{
+					search_name=firstname;
+				}
+				else if((lastname.isEmpty())&&(firstname.isEmpty())&&(!middlename.isEmpty()))
+				{
+					search_name=middlename;
+				}
+				else if((firstname.isEmpty())&&(middlename.isEmpty())&&(lastname.isEmpty()))
+				{search_name="";}
+				
+				
 				utilfunc.MakeElement(".//*[@id='SearchText']").sendKeys(search_name);
 				Thread.sleep(500);
 				utilfunc.MakeElement(".//*[@id='btnSearch']").click();
@@ -924,147 +944,148 @@ public class CIMS_Company_Contacts{
 						 * first of all let us find out how many Roles we have to add
 						 */
 						if(numberOfRolesToAdd>=1){
+							try{
+								String AddMoreBtn				=	"//*[@id='lnk-addroles' and text()='Add More']";
+								String RoleRowCounter			=	".//*[@id='roleassignment_div']/tbody/tr";
+								String RoleRowXPath				=	".//*[@id='form_modal']//*[@class='control-group']//*[@class='controls']";
+								String mynewxpath				=	".//*[@id='form_modal']//*[@class='control-group'][xx]//*[@class='controls']//*[@name]";
 
-							String AddMoreBtn				=	"//*[@id='lnk-addroles' and text()='Add More']";
-							String RoleRowCounter			=	".//*[@id='roleassignment_div']/tbody/tr";
-							String RoleRowXPath				=	".//*[@id='form_modal']//*[@class='control-group']//*[@class='controls']";
-							String mynewxpath				=	".//*[@id='form_modal']//*[@class='control-group'][xx]//*[@class='controls']//*[@name]";
+								String[]	Company_Roles1			=	Company_Roles.trim().split(",");
+								String[]    Company_Scope1			=	Company_Scope.trim().split(",");
+								String[]	Company_BusinessUnit1	=	Company_BusinessUnit.trim().split(",");
+								String[]    Company_Country1		=	Company_Country.trim().split(",");
+								String[]    Company_CountryGroup1	=	Company_CountryGroup.trim().split(",");
+								String[]    Company_Entity1			=	Company_Entity.trim().split(",");
 
-							String[]	Company_Roles1			=	Company_Roles.trim().split(",");
-							String[]    Company_Scope1			=	Company_Scope.trim().split(",");
-							String[]	Company_BusinessUnit1	=	Company_BusinessUnit.trim().split(",");
-							String[]    Company_Country1		=	Company_Country.trim().split(",");
-							String[]    Company_CountryGroup1	=	Company_CountryGroup.trim().split(",");
-							String[]    Company_Entity1			=	Company_Entity.trim().split(",");
-
-							//before edit(add New values) delete last added values
-							System.out.println("We are going to delete all previous added roles. Please wait... ... ...");
-							int del_pre_value=utilfunc.GetObjectCount(RoleRowCounter);
-							String del_pre_icon=".//*[@id='roleassignment_div']/tbody/tr[2]//*[@class='icon-trash icon-muted']";
-							for(int del_i=2;del_i<=del_pre_value;del_i++)
-							{
-								//Thread.sleep(600);
-								utilfunc.MakeElement(del_pre_icon).click();
-								Thread.sleep(300);
-								Alert alt= webdriver.switchTo().alert();
-								alt.accept();
-							}
-							System.out.println("All previous added roles are delete!!!");
-
-							utilfunc.MakeElement(AddMoreBtn).click();
-
-							for(int n=1;n<=numberOfRolesToAdd;n++){
-								Thread.sleep(300);
-								System.out.println("  ===> values for "+n+" record.");
-								if(n>=2){
-									// in case we need to click on add more
-									utilfunc.MakeElement(AddMoreBtn).click();
+								//before edit(add New values) delete last added values
+								System.out.println("We are going to delete all previous added roles. Please wait... ... ...");
+								int del_pre_value=utilfunc.GetObjectCount(RoleRowCounter);
+								String del_pre_icon=".//*[@id='roleassignment_div']/tbody/tr[2]//*[@class='icon-trash icon-muted']";
+								for(int del_i=2;del_i<=del_pre_value;del_i++)
+								{
+									//Thread.sleep(600);
+									utilfunc.MakeElement(del_pre_icon).click();
+									Thread.sleep(300);
+									Alert alt= webdriver.switchTo().alert();
+									alt.accept();
 								}
-								Thread.sleep(100);
+								System.out.println("All previous added roles are delete!!!");
 
-								// now set data for phone numbers and before that let us find out the number of fields in current table
-								//String NewRoleRowCounterXPath		=		RoleRowXPath.replace("xx",Integer.toString(n));
-								//System.out.println("\n"+NewRoleRowCounterXPath+"\n");
-								int s	=	utilfunc.GetObjectCount(RoleRowXPath);
-								String Company_Scope2="";
-								for(int m=1;m<=s;m++){
-									//Thread.sleep(500);
-									String RoleRowCounterXPath1= mynewxpath.replace("xx", Integer.toString(m));
-									//String RoleRowCounterXPath2= RoleRowCounterXPath1.replace("yy", Integer.toString(m));
-									//System.out.println(RoleRowCounterXPath1);
+								utilfunc.MakeElement(AddMoreBtn).click();
 
-									//							String NewPhoneFieldXPath		=		utilfunc.MakeElement(NewPhoneRowCounterXPath);
-									String myattributename		=		utilfunc.MakeElement(RoleRowCounterXPath1).getAttribute("name");
+								for(int n=1;n<=numberOfRolesToAdd;n++){
+									Thread.sleep(300);
+									System.out.println("  ===> values for "+n+" record.");
+									if(n>=2){
+										// in case we need to click on add more
+										utilfunc.MakeElement(AddMoreBtn).click();
+									}
+									Thread.sleep(100);
 
-									if(myattributename.equalsIgnoreCase("mRole"))
-									{
-										if(StringUtils.isEmpty(Company_Roles1[(n-1)])==false)
+									// now set data for phone numbers and before that let us find out the number of fields in current table
+									//String NewRoleRowCounterXPath		=		RoleRowXPath.replace("xx",Integer.toString(n));
+									//System.out.println("\n"+NewRoleRowCounterXPath+"\n");
+									int s	=	utilfunc.GetObjectCount(RoleRowXPath);
+									String Company_Scope2="";
+									for(int m=1;m<=s;m++){
+										//Thread.sleep(500);
+										String RoleRowCounterXPath1= mynewxpath.replace("xx", Integer.toString(m));
+										//String RoleRowCounterXPath2= RoleRowCounterXPath1.replace("yy", Integer.toString(m));
+										//System.out.println(RoleRowCounterXPath1);
+
+										//							String NewPhoneFieldXPath		=		utilfunc.MakeElement(NewPhoneRowCounterXPath);
+										String myattributename		=		utilfunc.MakeElement(RoleRowCounterXPath1).getAttribute("name");
+
+										if(myattributename.equalsIgnoreCase("mRole"))
 										{
-											System.out.println("  ---"+Company_Roles1[(n-1)]+"---");
-											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Roles1[(n-1)]);
+											if(StringUtils.isEmpty(Company_Roles1[(n-1)])==false)
+											{
+												System.out.println("  ---"+Company_Roles1[(n-1)]+"---");
+												utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Roles1[(n-1)]);
+											}
+											else
+											{
+												utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+												System.out.println("\nValue -"+Company_Roles1[(n-1)]+"- is not exists inside the drop down.");
+											}
 										}
-										else
+										else if(myattributename.equalsIgnoreCase("mRoleScope"))
 										{
-											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-											System.out.println("\nValue -"+Company_Roles1[(n-1)]+"- is not exists inside the drop down.");
+											if(StringUtils.isEmpty(Company_Scope1[(n-1)])==false)
+											{
+												System.out.println("  ---"+Company_Scope1[(n-1)]+"---");
+												utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Scope1[(n-1)]);
+												Company_Scope2=Company_Scope1[(n-1)];
+												System.out.println("+"+Company_Scope2+"+");
+											}
+											else
+											{
+												utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+												System.out.println("\nValue -"+Company_Scope1[(n-1)]+"- is not exists inside the drop down.");
+											}
 										}
+										else if((myattributename.equalsIgnoreCase("mEntity"))&&(Company_Scope2.equalsIgnoreCase("Entity")))
+										{
+											String enTiTy=Company_Entity1[(n-1)];
+											System.out.println("---"+enTiTy+"---");
+											if(StringUtils.isEmpty(enTiTy)==false)
+											{
+												utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, enTiTy);
+											}
+											else
+											{
+												utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+												System.out.println("\nValue -"+enTiTy+"- is not exists inside the drop down.");
+											}
+										}
+										else if((myattributename.equalsIgnoreCase("mBusinessUnit"))&&(Company_Scope2.equalsIgnoreCase("Business Unit")))
+										{
+											String businessunit=Company_BusinessUnit1[(n-1)]; 
+											System.out.println("---"+businessunit+"---");
+											if(StringUtils.isEmpty(businessunit)==false)
+											{
+												utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, businessunit);
+											}
+											else
+											{
+												utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+												System.out.println("\nValue -"+businessunit+"- is not exists inside the drop down.");
+											}
+										}
+										else if((myattributename.equalsIgnoreCase("mCountry"))&&(Company_Scope2.equalsIgnoreCase("Country")))
+										{
+											String coUnTrY=Company_Country1[(n-1)]; 
+											System.out.println("---"+coUnTrY+"---");
+											if(StringUtils.isEmpty(coUnTrY)==false)
+											{
+												utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, coUnTrY);
+											}
+											else
+											{
+												utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+												System.out.println("\nValue -"+coUnTrY+"- is not exists inside the drop down.");
+											}
+										}
+										else if((myattributename.equalsIgnoreCase("mCountryGroup"))&&(Company_Scope2.equalsIgnoreCase("Country Group")))
+										{
+											String countryGrOuP=Company_CountryGroup1[(n-1)]; 
+											System.out.println("---"+countryGrOuP+"---");
+											if(StringUtils.isEmpty(countryGrOuP)==false)
+											{
+												utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, countryGrOuP);
+											}
+											else
+											{
+												utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
+												System.out.println("\nValue -"+countryGrOuP+"- is not exists inside the drop down.");
+											}
+										}
+										else{continue;}
 									}
-									else if(myattributename.equalsIgnoreCase("mRoleScope"))
-									{
-										if(StringUtils.isEmpty(Company_Scope1[(n-1)])==false)
-										{
-											System.out.println("  ---"+Company_Scope1[(n-1)]+"---");
-											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, Company_Scope1[(n-1)]);
-											Company_Scope2=Company_Scope1[(n-1)];
-											System.out.println("+"+Company_Scope2+"+");
-										}
-										else
-										{
-											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-											System.out.println("\nValue -"+Company_Scope1[(n-1)]+"- is not exists inside the drop down.");
-										}
-									}
-									else if((myattributename.equalsIgnoreCase("mEntity"))&&(Company_Scope2.equalsIgnoreCase("Entity")))
-									{
-										String enTiTy=Company_Entity1[(n-1)];
-										System.out.println("---"+enTiTy+"---");
-										if(StringUtils.isEmpty(enTiTy)==false)
-										{
-											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, enTiTy);
-										}
-										else
-										{
-											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-											System.out.println("\nValue -"+enTiTy+"- is not exists inside the drop down.");
-										}
-									}
-									else if((myattributename.equalsIgnoreCase("mBusinessUnit"))&&(Company_Scope2.equalsIgnoreCase("Business Unit")))
-									{
-										String businessunit=Company_BusinessUnit1[(n-1)]; 
-										System.out.println("---"+businessunit+"---");
-										if(StringUtils.isEmpty(businessunit)==false)
-										{
-											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, businessunit);
-										}
-										else
-										{
-											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-											System.out.println("\nValue -"+businessunit+"- is not exists inside the drop down.");
-										}
-									}
-									else if((myattributename.equalsIgnoreCase("mCountry"))&&(Company_Scope2.equalsIgnoreCase("Country")))
-									{
-										String coUnTrY=Company_Country1[(n-1)]; 
-										System.out.println("---"+coUnTrY+"---");
-										if(StringUtils.isEmpty(coUnTrY)==false)
-										{
-											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, coUnTrY);
-										}
-										else
-										{
-											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-											System.out.println("\nValue -"+coUnTrY+"- is not exists inside the drop down.");
-										}
-									}
-									else if((myattributename.equalsIgnoreCase("mCountryGroup"))&&(Company_Scope2.equalsIgnoreCase("Country Group")))
-									{
-										String countryGrOuP=Company_CountryGroup1[(n-1)]; 
-										System.out.println("---"+countryGrOuP+"---");
-										if(StringUtils.isEmpty(countryGrOuP)==false)
-										{
-											utilfunc.Selectdropdownvaluebytext(RoleRowCounterXPath1, countryGrOuP);
-										}
-										else
-										{
-											utilfunc.DeSelectdropdownvalue(RoleRowCounterXPath1);
-											System.out.println("\nValue -"+countryGrOuP+"- is not exists inside the drop down.");
-										}
-									}
-									else{continue;}
+									utilfunc.MakeElement(".//*[@class='icon-plus icon-white']").click();
+									Thread.sleep(1000);
 								}
-								utilfunc.MakeElement(".//*[@class='icon-plus icon-white']").click();
-								Thread.sleep(1000);
-							}
+							}catch(Exception e){}
 						}
 
 
@@ -1162,7 +1183,7 @@ public class CIMS_Company_Contacts{
 						utilfunc.TakeScreenshot();
 						Flag=false;
 						return Flag;
-						}
+					}
 
 					try{
 						Thread.sleep(1000);
@@ -1213,7 +1234,7 @@ public class CIMS_Company_Contacts{
 					utilfunc.TakeScreenshot();
 					Flag=false;
 					return Flag;
-					
+
 				}
 				else
 				{
@@ -1236,11 +1257,11 @@ public class CIMS_Company_Contacts{
 						System.out.println("===utilfunc.ErrorMessage4 is :"+utilfunc.ErrorMessage4);
 						System.out.println("===utilfunc.ErrorMessage5 is :"+utilfunc.ErrorMessage5);
 						Thread.sleep(1000);
-						
+
 						if(mode.equals("Delete")){
 							String GotUnexceptedErrorMessage=utilfunc.MakeElement(".//*[contains(@class,'alert-error')]").getText();
 							if(GotUnexceptedErrorMessage!=""||(utilfunc.ErrorMessage5!="")){utilfunc.ErrorMessage4=utilfunc.ErrorMessage4+GotUnexceptedErrorMessage;error_flag=utilfunc.ErrorMessagehandlerExperiment();}
-							}
+						}
 						System.out.println("error_flag is :"+error_flag);
 						if (error_flag.equals(ExpectedErrorMessage)){
 							Flag=true;
@@ -1265,13 +1286,13 @@ public class CIMS_Company_Contacts{
 
 
 		}
-		
+
 		try{
 			String popupclose_xpath=".//*[@id='Modal_RoleAssignment']//*[contains(@type,'button') and contains(@class,'close')]";
 			utilfunc.MakeElement(popupclose_xpath).click();
 			Thread.sleep(2000);
 		}catch(Exception error){}
-		
+
 		return Flag;
 	}
 

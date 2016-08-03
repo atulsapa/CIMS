@@ -2,7 +2,12 @@ package CIMS.Modules.Advanced;
 
 import java.awt.AWTException;
 
+import listner.ErrorUtil;
+
 import org.openqa.selenium.WebDriver;
+
+import CIMS.Modules.Company.CIMS_Company_Contacts;
+import CIMS.Reports.dashboard;
 
 import util.UtilFunction;
 
@@ -10,10 +15,14 @@ public class Employee_Search {
 
 	private WebDriver webdriver;	// Will be Provide by Calling Class.	
 	private UtilFunction utilfunc;	// Will be Provide by Calling Class.
+	private CIMS_Company_Contacts obj_CIMS_Company_Contacts;
+	private dashboard 									obj_Report_Dashboard;
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
 	public String description	=	null;
+	private String ActionName;
+	
 
 	public Employee_Search(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -21,9 +30,10 @@ public class Employee_Search {
 		this.utilfunc=utilfunc;
 	}
 
-	public boolean advanced_Employee_Search(String filename, String sheetName,int ColumnCounter,String mode) throws AWTException, InterruptedException
+	public boolean advanced_Employee_Search(String filename, String sheetName, int ColumnCounter, String mode) throws AWTException, InterruptedException
 	{
-
+		setobj_CIMS_Company_Contacts(new CIMS_Company_Contacts(webdriver, utilfunc));
+		setobj_dashboard((new dashboard()));
 		boolean flag=false;
 
 		System.out.println("User is on "+sheetName+" Module with "+mode+" Mode.");
@@ -50,7 +60,12 @@ public class Employee_Search {
 			String SearchRoster									=			UtilFunction.getCellData(filename, sheetName, 16, ColumnCounter);
 
 			String ExpectedErrorMessage							=			UtilFunction.getCellData(filename, sheetName, 17, ColumnCounter);
-
+			String status;
+			
+			boolean passCounter			=	false;
+			boolean failCounter			=	false;
+			boolean notAssignedCounter	=	false;
+			
 
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
@@ -67,6 +82,14 @@ public class Employee_Search {
 				int numberOfAdvFieldCounter					=	0;
 				int innerFieldCounter						=	0;
 				String AttributeId;
+				
+				long startTime 								= 0;
+				int count									= 0;	
+				String AttributeName						=	"";
+				String timer								=	"";
+				
+				
+				
 
 				//*[@id='panel-body-container']//*[contains(@class,'employeeSearchFields')]//*[contains(@class,'searchFields')][2]//*[@name and not(@type='hidden')]
 
@@ -375,9 +398,70 @@ public class Employee_Search {
 					System.out.println("unable to get row xpath");
 				}
 				
+				String Add_ContactXpath =".//a[contains(@class,'btn')]//.[(text()='Add Contact ')]";
+				
+				try {
+					Thread.sleep(1000);
+					utilfunc.MakeElement(Add_ContactXpath).click();
+					Thread.sleep(1000);
+				} catch (Exception e) {
+					System.out.println("Unable to click on the Add contact button.");
+				}
+				
+                try{
+				startTime = System.currentTimeMillis();
+				//utilfunc.updateModuleDataForReportGeneration(TabName, Employee_namecheck, timer);
+				flag	=	obj_CIMS_Company_Contacts.Company_Contacts("Test Company Data.xls","Contacts",1,"New");
+				timer = utilfunc.getTimeTakenByModule(startTime);
+			//	utilfunc.updateModuleDataForReportGeneration(filename, Employee_namecheck, timer);
+
+				if (flag)
+				{
+					status="PASS";
+					//passTestCaseCounter++;
+					if(utilfunc.globalerrormessage.equals(""))
+					{
+						utilfunc.TestngReportPass(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.testcaseid, status);
+					}else{
+						utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw,obj_CIMS_Company_Contacts.scenerio,ActionName,obj_CIMS_Company_Contacts.testcaseid, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+					}
+					
+					// pass dashboard report..
+					if(passCounter==false){
+						 try {	obj_Report_Dashboard.writeReportHeader("Test Company Data.xls","Contacts","Pass");} catch (Exception e) {}
+						 passCounter=true;
+					 }
+					try {obj_Report_Dashboard.writeDashBoardPassReport("Test Company Data.xls","Contacts", obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio, ActionName, obj_CIMS_Company_Contacts.testcaseid, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+sheetName);}
+				}else{
+				status="FAIL";
+					//;failTestCaseCounter++;
+					//utilfunc.TakeScreenshot();
+					utilfunc.TestngReportFail1(obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio,ActionName, obj_CIMS_Company_Contacts.testcaseid, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+				
+					// fail dashboard report..
+					if(failCounter==false){
+					obj_Report_Dashboard.writeReportHeader("Test Company Data.xls","Contacts","Fail");
+					failCounter	= true;
+					}
+					try {obj_Report_Dashboard.writeDashBoardFailReport("Test Company Data.xls","Contacts", obj_CIMS_Company_Contacts.testcaseid, utilfunc.Actualbrw, obj_CIMS_Company_Contacts.scenerio,ActionName, obj_CIMS_Company_Contacts.testcaseid, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+sheetName);}
+				}	
+			}catch(Exception s){
+				System.out.println("some error occured in : "+ sheetName);
+				ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+				utilfunc.assertion();			
+				utilfunc.TakeScreenshot();
+			}
+				
 //			}
 
 		}
 		return flag;
+	}
+	public void setobj_CIMS_Company_Contacts(CIMS_Company_Contacts setobj_CIMS_Company_Contacts)
+	{
+		this.obj_CIMS_Company_Contacts=setobj_CIMS_Company_Contacts;
+	}
+	public void setobj_dashboard(dashboard setobj_Report_Dashboard) {
+		this.obj_Report_Dashboard = setobj_Report_Dashboard;
 	}
 }

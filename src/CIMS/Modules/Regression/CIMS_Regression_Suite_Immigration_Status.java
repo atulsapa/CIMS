@@ -460,7 +460,7 @@ if(mode.equals("Edit")){
 				{
 					System.out.println("some error during click save button");
 				}
-				//System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
+				System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
                       
 				String error_flag=utilfunc.ErrorMessagehandlerExperiment();
 				ExpectedErrorMessage=ExpectedErrorMessage.trim();

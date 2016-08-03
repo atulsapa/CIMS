@@ -24,6 +24,7 @@ import org.testng.Reporter;
 import com.gargoylesoftware.htmlunit.javascript.host.Element;
 import com.sun.corba.se.spi.orbutil.fsm.Action;
 import com.sun.org.apache.bcel.internal.classfile.Attribute;
+import com.sun.org.apache.xml.internal.serialize.Printer;
 
 import util.UtilFunction;
 
@@ -74,6 +75,10 @@ public class CIMS_Company_Subscribed_Services {
 				String TwoFactorsAuthentication						=			UtilFunction.getCellData(filename, sheetName, 22, ColumnCounter);
 				String ExpectedErrorMessage							=			UtilFunction.getCellData(filename, sheetName, 23, ColumnCounter);
 				
+				String FAQCountrySummaries_linkCountry					=			UtilFunction.getCellData(filename, sheetName, 24, ColumnCounter);
+				String FAQDecisionTreesCountry					=			UtilFunction.getCellData(filename, sheetName, 25, ColumnCounter);
+				String FAQProcessOutlinesCountry					=			UtilFunction.getCellData(filename, sheetName, 26, ColumnCounter);
+				String FAQRecruiterResourcesCountry					=			UtilFunction.getCellData(filename, sheetName, 27, ColumnCounter);
 				testcaseid=TestcaseID;
 				scenerio=Scenario;
 				description=TestCaseDescription;
@@ -84,7 +89,12 @@ public class CIMS_Company_Subscribed_Services {
 					// pull data from 
 					String SubscribedService_attributeFiledXpath=".//*[@id='company-subscribed-service']/tbody/tr[xx]//*[@name]";
 					String SubscribedServiceCounterXpath=".//*[@id='company-subscribed-service']/tbody/tr";
-
+					
+					String Countrysummaries_link_xpath=".//*[@id='FAQ.CountrySummaries_link']";
+					String DecisionTrees_link_xpath=".//*[@id='FAQ.DecisionTrees_link']";
+					String ProcessOutlines_link_xpath=".//*[@id='FAQ.ProcessOutlines_link']";
+					String RecruiterResources_link_xpath=".//*[@id='FAQ.RecruiterResources_link']";
+					
 					int ObjCount=utilfunc.GetObjectCount(SubscribedServiceCounterXpath);
 
 					if(mode.equalsIgnoreCase("Delete")){
@@ -160,6 +170,28 @@ public class CIMS_Company_Subscribed_Services {
 									}catch(Exception e){
 										System.out.println("unable to work on "+ AttributeName +" inner HTML ");
 									}
+									//for FAQ-CountrySummaries linkCountry
+									try{
+									countries(FAQCountrySummaries_linkCountry,Countrysummaries_link_xpath);
+									}catch(Exception e){}
+
+									
+									//for FAQ-DecisionTrees country
+									try{
+										countries(FAQDecisionTreesCountry,DecisionTrees_link_xpath);
+										}catch(Exception e){}
+									
+									
+									//for FAQ-ProcessOutlines Country
+									try{
+										countries(FAQProcessOutlinesCountry,ProcessOutlines_link_xpath);
+										}catch(Exception e){}
+									//for FAQ-RecruiterResources Country
+									
+									try{
+										countries(FAQRecruiterResourcesCountry,RecruiterResources_link_xpath);
+										}catch(Exception e){}
+										
 								}
 								else if(AttributeName.equalsIgnoreCase("GlobalCheck")){
 									// some issue with code it is redirecting to 
@@ -301,6 +333,129 @@ public class CIMS_Company_Subscribed_Services {
 
 		return Flag;
 	}
+	
+	
+	public void SelectDeselectall() throws InterruptedException
+	{ Thread.sleep(2000);
+	 int totalcheckboxcount=utilfunc.GetObjectCount(".//*[@id='Modal_SCountry']//table/tbody/tr/td//*[@name]");
+	 String alreadycheckedcount=utilfunc.MakeElement(".//*[@id='lblCountryCount']").getText();
+	 int int_alreadycheckedcount=Integer.parseInt(alreadycheckedcount);
+
+	 
+	String SelectDeselectAll_xpath= ".//*[@id='selectall']";
+if(totalcheckboxcount==int_alreadycheckedcount)
+{//all check box already selected so we have to unselect them
+Thread.sleep(2000);
+utilfunc.MakeElement(SelectDeselectAll_xpath).click();
+}
+if(int_alreadycheckedcount<totalcheckboxcount)
+{
+Thread.sleep(2000);
+utilfunc.MakeElement(SelectDeselectAll_xpath).click();
+Thread.sleep(2000);
+utilfunc.MakeElement(SelectDeselectAll_xpath).click();
+Thread.sleep(2000);
+}
+}
+
+	
+	public void countries(String Countrylist, String CountryPopUPlink_xpath)
+	{
+		String user_countrystring=Countrylist;
+		String saveBtnPopUp_xpath=".//*[@id='btnSaveCountry']";
+		String popupCloseBtn=".//*[@class='close' and @type='button']";
+		try{
+			
+			String countrytd_xpath=".//*[@id='Modal_SCountry']//table/tbody/tr[2]/td[1]";
+			String popuprowcounter=".//*[@id='Modal_SCountry']//table/tbody/tr";
+			String popupcolcounter=".//*[@id='Modal_SCountry']//table/tbody/tr[2]/td";
+			String country_checbox_xpath=".//*[@id='Modal_SCountry']//table/tbody/tr[xxyy]/td[xxzz]";
+			
+//			String country_checbox_xpath=".//*[@id='Modal_SCountry']//table/tbody/tr[xxyy]/td[xxzz]//*[@type='checkbox']";
+			
+			utilfunc.MakeElement(CountryPopUPlink_xpath).click();
+			Thread.sleep(1000);
+			SelectDeselectall();
+			int rowcount=utilfunc.GetObjectCount(popuprowcounter);
+			int colcount=utilfunc.GetObjectCount(popupcolcounter);
+			String[] countryarray=null;
+			if((!user_countrystring.equals(null))||(!user_countrystring.equals("null"))||(!user_countrystring.isEmpty()))
+			{
+				try{
+					countryarray=user_countrystring.split(",");
+				}catch(Exception e){}
+				
+				int countryarraylength=countryarray.length;
+				
+				int countryaddedcounter=0;
+				boolean loopflag=false;
+				try{
+					
+				for(int rowloop=1;rowloop<=rowcount;rowloop++)
+				{
+					if(!loopflag)
+					{
+						String Row_xpath=country_checbox_xpath.replace("xxyy", Integer.toString(rowloop)); 
+					try{
+					for(int colloop=1;colloop<=colcount;colloop++)
+					{
+						if(!loopflag)
+						{
+						String element_xpath=Row_xpath.replace("xxzz",Integer.toString(colloop));
+						String attribute=null;
+						try{attribute=utilfunc.MakeElement(element_xpath).getText();}catch(Exception e){}
+						
+						
+						//loop for get and match values from provided country list by testcase
+						try{
+						for(int arr=0;arr<=countryarraylength;arr++)
+						{
+							String arratycoun="";
+							try{arratycoun=countryarray[arr];
+								}catch(Exception error){System.out.println(error);}
+							
+							if(countryarray[arr].equalsIgnoreCase(attribute))
+							{
+								try{
+									Thread.sleep(800);
+									utilfunc.MakeElement(element_xpath+"//*[@type='checkbox']").click();
+									countryaddedcounter++;
+								}catch(Exception e){}
+							}
+							if(countryaddedcounter==countryarraylength)
+							{
+								loopflag=true;
+								break;
+							}
+							
+						}
+						}catch(Exception e){System.out.println(e);}
+						
+					}
+					}
+					}catch(Exception e){System.out.println(e);}
+				}
+				}
+				}catch(Exception e){System.out.println(e);}
+			
+			}
+			
+			try{
+				Thread.sleep(1000);
+				utilfunc.MakeElement(saveBtnPopUp_xpath).click();
+				Thread.sleep(1000);
+			}catch(Exception p){}
+			
+		}catch(Exception e){}
+		
+		
+		try{
+			utilfunc.MakeElement(popupCloseBtn).click();
+			Thread.sleep(1000);			
+		}
+		catch(Exception e){}
+	}
+	
 	
 	
 }

@@ -123,31 +123,6 @@ public void ClearTempFiles() throws InterruptedException, IOException, AWTExcept
 			System.out.println("unable to clear temp of suites");
 		}
 
-		//code for clear regressiom time folder and it's inner file
-		System.out.println("Now clearing Regression Time files...");
-
-		File RegressionTimeFilePath = new File(dashboard.projectReportTempPath  + "regression_time");
-
-		try {
-			File[] RegressionTimefiles = RegressionTimeFilePath.listFiles();
-			for (File file : RegressionTimefiles) {
-				// skip in case of directory..
-				if(!file.isDirectory()){
-				Thread.sleep(100);
-//				System.out.println("fff "+file.getCanonicalPath());
-				try {
-					obj_Report_Dashboard.WriteToFile("", file.getCanonicalPath());
-					System.out.println("file : "+file.getCanonicalPath() + " is now clean");
-				} catch (Exception e) {
-					System.out.println("error occured for "+file.getCanonicalPath());
-				}
-				}
-			}
-			System.out.println("suite's temp file is clear");
-		} catch (IOException e) {
-			System.out.println("unable to clear temp of suites");
-		}
-
 		String CurrentDateAndTime	=	getCurrentDateAndTime("MM/dd/yyyy HH:mm:ss");
 
 		try {

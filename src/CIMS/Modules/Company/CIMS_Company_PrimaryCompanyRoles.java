@@ -41,7 +41,7 @@ public class CIMS_Company_PrimaryCompanyRoles {
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 	public String Primary_Company_Roles=null;
 	
 	private Company_Role obj_Company_Role;
@@ -74,7 +74,7 @@ public class CIMS_Company_PrimaryCompanyRoles {
 		{
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 			Primary_Company_Roles=PCR_Primary_Company_Roles;
 
 			Thread.sleep(1000);

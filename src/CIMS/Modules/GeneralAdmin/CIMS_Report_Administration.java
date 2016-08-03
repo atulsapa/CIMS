@@ -327,7 +327,7 @@ public class CIMS_Report_Administration {
 				}
 				catch(Exception e){}
 				
-				String closeBtnXpath=".//*[contains(@class,'close') and text()='×']";
+				String closeBtnXpath=".//*[contains(@class,'btn') and text()='Cancel']";
 				try{
 					System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
 					String error_flag=utilfunc.PermissionErrorMessagehandlerExperiment();
@@ -338,20 +338,6 @@ public class CIMS_Report_Administration {
 					 if (error_flag.equals(ExpectedErrorMessage)){
 						 Flag=true;
 						 utilfunc.TakeScreenshot();
-						 try {
-							 Thread.sleep(3000);
-							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
-						} catch (Exception e) {
-						System.out.println("Unable to click on the link");
-						}
-						 try {
-							 Thread.sleep(3000);
-							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
-						} catch (Exception e) {
-						System.out.println("Unable to click on the link");
-						}
 					 }else if (error_flag.equals("")){
 						 Flag=true;
 					 }else if (error_flag.contains("Success!")){
@@ -372,9 +358,9 @@ public class CIMS_Report_Administration {
 						 Flag=false;
 						 utilfunc.TakeScreenshot();
 						 try {
-							 Thread.sleep(3000);
+							 Thread.sleep(1000);
 							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
+							Thread.sleep(1000);
 						} catch (Exception e) {
 						System.out.println("Unable to click on the link");
 						}
@@ -385,9 +371,9 @@ public class CIMS_Report_Administration {
 						 Flag=false;
 						 utilfunc.TakeScreenshot();
 						 try {
-							 Thread.sleep(3000);
+							 Thread.sleep(1000);
 							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
+							Thread.sleep(1000);
 						} catch (Exception e) {
 						System.out.println("Unable to click on the link");
 						}

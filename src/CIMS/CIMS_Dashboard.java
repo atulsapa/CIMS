@@ -47,7 +47,6 @@ public class CIMS_Dashboard {
 	private CIMS.Reports.dashboard 		obj_Report_Dashboard;
 	
 	public static ArrayList<String> ModuleList 	= new ArrayList<String>();
-	public static ArrayList<String> ModuleList1 	= new ArrayList<String>();
 
 	//timer
     StopWatch pageLoad = new StopWatch();
@@ -80,8 +79,8 @@ public void CobaltDashboard() throws InterruptedException, IOException, AWTExcep
 	// list of all suites
 //	String[] SuiteLists			=	{"Left Navigation","Regression Suites","Questionnaires","Company","General Admin"};
 	String[] SuiteLists			=	{CIMS_Left_Navigation.suiteName,CIMS_Regression_Suite.suiteName,
-									CIMS_MainProject.suiteName,CIMS_Company.suiteName,CIMS_General_Admin.suiteName,
-									CIMS_EmployeeProfile.suiteName1};
+									CIMS_MainProject.suiteName,CIMS_Company.suiteName,CIMS_General_Admin.suiteName,CIMS_WebAccess.suiteName,
+									CIMS_MyTaskProjectHistory.suiteName};
 
 
 
@@ -116,11 +115,17 @@ public void CobaltDashboard() throws InterruptedException, IOException, AWTExcep
 					SuiteModuleName		=	"Suite Name";
 					SuiteClassName		=	"CIMS_General_Admin";
 				}
-				else if(SuiteName.equals(CIMS_EmployeeProfile.suiteName1)){
-					SuiteFileName		=	CIMS_EmployeeProfile.ExcelFileName;
-					SuiteModuleName		=	"Questionnaire Name";
-					SuiteClassName		=	"CIMS_EmployeeProfile";
-				}
+			else if(SuiteName.equals(CIMS_WebAccess.suiteName)){
+				SuiteFileName		=	CIMS_WebAccess.ExcelFileName;
+				SuiteModuleName		=	"Suite Name";
+				SuiteClassName		=	"CIMS_WebAccess";
+			}
+			else if(SuiteName.equals(CIMS_MyTaskProjectHistory.suiteName)){
+				SuiteFileName		=	CIMS_MyTaskProjectHistory.ExcelFileName;
+				SuiteModuleName		=	"Suite Name";
+				SuiteClassName		=	"CIMS_MyTaskProjectHistory";
+			}
+			
 			} catch (Exception e1) {
 				System.out.println("unable to set suite name, file name and module name");
 			}
@@ -160,12 +165,11 @@ public void CobaltDashboard() throws InterruptedException, IOException, AWTExcep
 
 			        	// loop running for Company suites
 			        	for(int modCounter = 1;modCounter<RowCount;modCounter++){
-
+			        		
 							ArrayList<String> my	=	numberOfModuleCounters(SuiteFileName, SuiteName, columnNumber_RUNMODE, columnNumber_SuiteName, SuiteModuleName, modCounter);
-							if(my.size()>0){
-								Iterator<String> itr = my.iterator();
+							Iterator<String> itr = my.iterator();
 
-								try{
+							try{
 
 								int i=0;
 
@@ -175,8 +179,7 @@ public void CobaltDashboard() throws InterruptedException, IOException, AWTExcep
 									case 0:
 										
 										try {
-											
-							        			ModuleList.add(itr.next());
+											ModuleList.add(itr.next());
 
 										} catch (Exception e) {
 											System.out.println("unable to add module name "+SuiteName);
@@ -221,100 +224,9 @@ public void CobaltDashboard() throws InterruptedException, IOException, AWTExcep
 								}catch(Exception e){
 									System.out.println("exception in "+SuiteName+" array");
 								}
-							}
 			        	}
 
-					}
-					else if(SuiteName.equals(CIMS_EmployeeProfile.suiteName1))//Lokesh
-					{
-						System.out.println("====\nEmployeeProfile\n====\n");
-						ModuleList.add(CIMS_EmployeeProfile.suiteName1);
-
-
-						// in case of regression every module is treated as suite..
-						// get total number of counter for company test data
-						SuiteName	=	"Questionnaires";
-						int RowCount							=		UtilFunction.usedRowCount(SuiteFileName, SuiteName);
-						int columnNumber_RUNMODE				=		UtilFunction.getColumnWithCellData(SuiteFileName, SuiteName, "RUNMODE");
-						int columnNumber_SuiteName				=		UtilFunction.getColumnWithCellData(SuiteFileName, SuiteName, SuiteModuleName);
-
-						// loop running for Company suites
-						for(int modCounter = 1;modCounter<RowCount;modCounter++){
-
-							ArrayList<String> my	=	numberOfModuleCounters(SuiteFileName, "Questionnaires", columnNumber_RUNMODE, columnNumber_SuiteName, SuiteModuleName, modCounter);
-							//System.out.println("\n\n\n---"+my+"---\n\n\n");
-
-							if(my.size()>0){
-								Iterator<String> itr = my.iterator();
-
-								try{
-
-									int i=0;
-
-									while (itr.hasNext()) {
-										switch(i){
-
-										case 0:
-											try {
-												ModuleList1.add(itr.next());
-											} catch (Exception e) {
-												System.out.println("unable to add module name "+SuiteName);
-											}
-											i++;
-											break;
-										case 1:
-
-											try {
-												//System.out.println(SuiteName+" prev total module: " + nmbrOfModule);
-												try{nmbrOfModule	=	nmbrOfModule+ Integer.parseInt(itr.next());
-												}catch(Exception e){
-													System.out.println(e);}
-												//System.out.println(SuiteName+ " new total module: " + nmbrOfModule);
-											} catch (Exception e) {
-												System.out.println("unable to add number of modules for "+SuiteName);
-											}
-											i++;
-											break;
-
-										case 2:
-											try {
-												//System.out.println(SuiteName+" prev positive module: " + nmbrOfPositive);
-												try{nmbrOfPositive	=	nmbrOfPositive+ Integer.parseInt(itr.next());
-												}catch(Exception e){
-													System.out.println(e);}
-												//System.out.println(SuiteName+ " new positive module: " + nmbrOfPositive);
-											} catch (Exception e) {
-												System.out.println("unable to add number of positive for "+SuiteName);
-											}
-											i++;
-											break;
-										case 3:
-											try {
-												//System.out.println(SuiteName+" prev negative module: " + nmbrOfNegative);
-												try{nmbrOfNegative	=	nmbrOfNegative+ Integer.parseInt(itr.next());
-												}catch(Exception e){
-													System.out.println(e);}
-												//System.out.println(SuiteName+ " new negative module: " + nmbrOfNegative);
-											} catch (Exception e) {
-												System.out.println("unable to add number of negative for "+SuiteName);
-											}
-											i++;
-											break;
-										default:
-											System.out.println( "comp: " + itr.next());
-											i++;
-											break;
-										}
-									}
-								}catch(Exception e){
-									System.out.println("exception in "+SuiteName+" array");
-								}
-							}
-							nmbrOfModule=1;
-						}
-
-					}//lokesh
-					else{
+					}else{
 
 						// get total number of counter for company test data
 						ArrayList<String> my	=	numberOfSuiteCounters(SuiteFileName, SuiteName, "RUNMODE", "ACTION", SuiteModuleName);
@@ -381,17 +293,13 @@ public void CobaltDashboard() throws InterruptedException, IOException, AWTExcep
 			}
 	}
 
-System.out.println(ModuleList);
+
 
 
 	numberOfModule					=	Integer.toString(nmbrOfModule);
 	numberOfPositive				=	Integer.toString(nmbrOfPositive);
 	numberOfNegative				=	Integer.toString(nmbrOfNegative);
 	numberOfTotalTestCases			=	Integer.toString(nmbrOfPositive+nmbrOfNegative);
-	System.out.println("\n\n\n===========\n\n"+numberOfModule+" : numberOfModule");
-	System.out.println(numberOfPositive+" : numberOfPositive");
-	System.out.println(numberOfNegative+" : numberOfNegative");
-	System.out.println(numberOfTotalTestCases+" : numberOfTotalTestCases");
 
 
 	System.out.println("now generate report");
@@ -463,43 +371,28 @@ public ArrayList<String> numberOfModuleCounters(String fileName, String CompanyS
 	
 		        	        // counter variables for scenarios..
 		    			if(UtilFunction.getCellData(fileName, CompanySuites, columnNumber_RUNMODE, modCounter).equals("Y")){
-
+	
 		    				totalNumberOfModules++;
-
+	
 		    			// now pick the name of Company suite, action, etc that is set to runmode Y
 	
 		    			String sheetName				=		UtilFunction.getCellData(fileName, CompanySuites, columnNumber_SuiteName, modCounter);
 		    			ModuleName	=	sheetName;
 	//					System.out.println("Sheet selected to pull data is: "	+ SuiteName	+	" and with Action: "	+	ActionName 	 );
+	
+							// now check module run modes with Y.. and call module objects..
 
-						// now check module run modes with Y.. and call module objects..
-
-		    			if(!ModuleName.equals("Document")){
-
-		    				// code for employee profile to call data from Test Data Excel.. 
-		    				if(ModuleName.equals("Employee Profile")){
-//		    					fileName	=	CIMS_MainProject.ExcelFileName;
-		    					sheetName	=	"Questionnaires";
-		    				}
-		    				String TestfileName	=	"Test Data.xls";
-		    					int rowCount						=	UtilFunction.usedRowCount(TestfileName,sheetName);
-		    					int columnNumber_suiteNm_RUNMODE	=	UtilFunction.getColumnWithCellData(TestfileName, sheetName, "RUNMODE");
-		    		        	int columnNumber_Scenario				=		UtilFunction.getColumnWithCellData(TestfileName, sheetName, "SCENARIO");//2;
-//		    		        	int columnNumber_Scenario				=		2;
+		    					int rowCount						=	UtilFunction.usedRowCount(fileName,sheetName);
+		    					int columnNumber_suiteNm_RUNMODE	=	UtilFunction.getColumnWithCellData(fileName, sheetName, "RUNMODE");
+		    		        	int columnNumber_Scenario				=		UtilFunction.getColumnWithCellData(fileName, sheetName, "SCENARIO");//2;
 
 
 				    			for(int count=1; count<rowCount; count++)
 								{
 	
-				    				if(UtilFunction.getCellData(TestfileName, sheetName, columnNumber_suiteNm_RUNMODE, count).equals("Y")){
+				    				if(UtilFunction.getCellData(fileName, sheetName, columnNumber_suiteNm_RUNMODE, count).equals("Y")){
 	
-				    					if(ModuleName.equals("Employee Profile")){
-//					    					fileName	=	CIMS_MainProject.ExcelFileName;
-					    					int sheetName_nmbr	=	UtilFunction.getColumnWithCellData(TestfileName, sheetName, "Questionnaire Name");
-					    					sheetName	=	UtilFunction.getCellData(TestfileName, sheetName, sheetName_nmbr, count);
-					    				}
-				    					
-				    					String Scenario					=		UtilFunction.getCellData(TestfileName, sheetName, columnNumber_Scenario, count);
+				    					String Scenario					=		UtilFunction.getCellData(fileName, sheetName, columnNumber_Scenario, count);
 	//			    					String suiteActionName				=		UtilFunction.getCellData(fileName, sheetName, ActionName, count);
 			    					// check if user is looking for immigration or document then click on Menu>Imiggration Status only after user is searched
 	//			    					System.out.println("Sheet selected to pull data is: "	+ sheetName	+	" and with Action: "	+	ActionName 	+	" and with Scenerio: "	+	Scenerio );
@@ -520,7 +413,6 @@ public ArrayList<String> numberOfModuleCounters(String fileName, String CompanyS
 				    			System.out.println(CompanySuites + "\t" + sheetName + "\t" + positiveScenarioCounter + "\t" + negativeScenarioCounter);
 	
 		    			}
-		    			}
 	
 		    		}catch(Exception e){
 		    			
@@ -530,32 +422,12 @@ public ArrayList<String> numberOfModuleCounters(String fileName, String CompanyS
 	        		if(CompanySuites.equals(CIMS_Regression_Suite.suiteName) && !ModuleName.isEmpty()){
 //	    				System.out.println("chal bhai start ho ja..");
 //	    				al.add(CompanySuites);
-	    	        	if(ModuleName.equals("Immigration Status")){
-	    	        		al.add("Immigration Status and Document");
-	    	        		al.add(Integer.toString(totalNumberOfModules));
-		    	        	al.add(Integer.toString(positiveScenarioCounter));
-		                    al.add(Integer.toString(negativeScenarioCounter));
-	    	        	}
-	    	        	
-	    	        	else if(ModuleName.equals("Document")){
-	    	        		
-	    	        	}
-	    	        	else{
-	    	        		al.add(ModuleName);
-	    	        		al.add(Integer.toString(totalNumberOfModules));
-		    	        	al.add(Integer.toString(positiveScenarioCounter));
-		                    al.add(Integer.toString(negativeScenarioCounter));
-	    	        	}
-	    	        		
+	    	        	al.add(ModuleName);
+	    	        	al.add(Integer.toString(totalNumberOfModules));
+	    	        	  al.add(Integer.toString(positiveScenarioCounter));
+	                      al.add(Integer.toString(negativeScenarioCounter));
 	    			}
 
-	        		
-	        		if(CIMS_EmployeeProfile.suiteName1.equals("Employee Profile")&&CompanySuites.equals("Questionnaires") && !ModuleName.isEmpty()){
-	    	        		al.add("Employee Profile");
-	    	        		al.add(Integer.toString(totalNumberOfModules));
-		    	        	al.add(Integer.toString(positiveScenarioCounter));
-		                    al.add(Integer.toString(negativeScenarioCounter));
-	    			}
 
 			}
 			catch(Exception e){

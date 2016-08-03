@@ -1,0 +1,44 @@
+ Volume in drive C is OS
+ Volume Serial Number is D634-FF8B
+
+ Directory of C:\JavaWorkspace\CIMS
+
+07/22/2016  03:45 PM    <DIR>          .
+07/22/2016  03:45 PM    <DIR>          ..
+07/22/2016  03:45 PM             1,413 .classpath
+07/14/2016  01:23 AM               395 .gitattributes
+07/14/2016  01:23 AM               696 .gitignore
+07/14/2016  01:17 AM               363 .project
+07/14/2016  01:22 AM    <DIR>          .settings
+07/14/2016  01:17 AM         1,265,354 12_july-2016-eveningsrc.zip
+07/22/2016  03:45 PM    <DIR>          bin
+07/14/2016  01:17 AM             1,574 build.xml
+07/14/2016  01:17 AM         5,027,840 chromedriver.exe
+07/22/2016  03:26 PM               227 CIMS.bat
+07/14/2016  01:22 AM    <DIR>          Config
+07/14/2016  01:17 AM             1,267 copyResults.vbs
+07/14/2016  01:22 AM    <DIR>          C_
+07/14/2016  01:22 AM    <DIR>          ext-lib
+07/14/2016  01:17 AM         2,995,712 IEDriverServer.exe
+07/14/2016  01:17 AM         3,034,624 IEDriverServer_32.exe
+07/14/2016  01:17 AM         3,500,544 IEDriverServer_64.exe
+07/14/2016  01:17 AM             5,790 img.png
+07/14/2016  01:22 AM    <DIR>          lib
+07/14/2016  01:17 AM               672 log4j.xml
+07/14/2016  01:22 AM    <DIR>          mail.jar
+07/14/2016  01:17 AM               241 sleep.vbs
+07/14/2016  01:22 AM    <DIR>          src
+07/14/2016  01:17 AM         1,024,437 src-by-brij-11-June.zip
+07/14/2016  01:17 AM         1,134,594 src1.zip
+07/14/2016  01:22 AM    <DIR>          test-output
+07/14/2016  01:17 AM               298 testfile.html
+07/14/2016  01:17 AM               889 testng (copy).xml
+07/14/2016  01:22 AM    <DIR>          testng-xslt
+07/14/2016  01:17 AM               656 testng.xml
+07/14/2016  01:17 AM                24 TestResult.bat
+07/14/2016  01:17 AM                 9 TestRun.bat
+07/14/2016  01:17 AM             7,315 testuploadsheet.xlsx
+07/22/2016  03:58 PM                 0 texxt.txt
+07/14/2016  01:22 AM    <DIR>          user.dirtest-output
+              24 File(s)     18,004,934 bytes
+              13 Dir(s)  174,887,702,528 bytes free

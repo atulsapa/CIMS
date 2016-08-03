@@ -1,6 +1,7 @@
 package CIMS;
 
 import java.awt.AWTException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,11 +41,13 @@ import CIMS.Modules.GeneralAdmin.CIMS_Service_Code_Classification_Admin;
 import CIMS.Modules.GeneralAdmin.CIMS_Survey_Search;
 import CIMS.Modules.GlobalCheck.CIMS_GCP_Assement;
 import CIMS.Modules.GlobalCheck.CIMS_GCP_project_Initiation;
+import CIMS.Modules.GlobalCheck.CIMS_Query_History;
+import CIMS.Modules.GlobalCheck.CIMS_Visa_Audit;
 import CIMS.Modules.Questionnaires.CIMS_Login;
 import CIMS.Modules.Regression.CIMS_GCP_NewQuery;
 import CIMS.Modules.Regression.CIMS_Regression_Suite_Employee_Profile;
 import CIMS.Modules.Regression.CIMS_Travel_History;
-import CIMS.Modules.WebAccess.CIMS_Acountlocked;
+import CIMS.Modules.WebAccess.CIMS_AcountUnlocked;
 import CIMS.Modules.WebAccess.CIMS_ForgotPassword;
 import CIMS.Modules.WebAccess.CIMS_RestPassword_Module;
 import CIMS.Modules.WebAccess.CIMS_WebAccessModule;
@@ -66,6 +69,13 @@ public class CIMS_GlobalCheck_Plus_process {
 	
 	private CIMS_GCP_project_Initiation obj_CIMS_GCP_project_Initiation;
 	private CIMS_GCP_Assement obj_CIMS_GCP_Assement;
+	private CIMS_Query_History obj_CIMS_Query_History;
+	
+	private CIMS_Visa_Audit obj_CIMS_Visa_Audit;
+	
+	
+	
+	
 	
     //file name that takes dynamically in all modules.
     public static String ExcelFileName="Test GlobalCheckplus.xls";
@@ -109,6 +119,11 @@ public class CIMS_GlobalCheck_Plus_process {
                 setobj_CIMS_Travel_History(new CIMS_Travel_History(webdriver,utilfunc));
                 setobj_CIMS_GCP_project_Initiation(new CIMS_GCP_project_Initiation(webdriver,utilfunc));
                 setobj_CIMS_GCP_Assement(new CIMS_GCP_Assement(webdriver,utilfunc));
+                setobj_CIMS_Query_History(new CIMS_Query_History(webdriver,utilfunc));
+                
+                setobj_CIMS_Visa_Audit(new CIMS_Visa_Audit(webdriver,utilfunc));
+                
+                
                 
                 
                 
@@ -626,7 +641,191 @@ public void CIMS_GlobalCheckPlusprocess() throws InterruptedException, IOExcepti
 								
 							} 
 							
-							if(SuiteName.equals("Travel History")){
+							else if(SuiteName.equals("Query History")){
+								
+
+
+								startTime = System.currentTimeMillis();
+							
+								try{
+									Page_flag	=	obj_CIMS_Query_History.Query_History(fileName,SuiteName,count,ActionName);
+									timer = utilfunc.getTimeTakenByModule(startTime);
+									utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									if (Page_flag)
+									{
+										status="PASS";
+										passTestCaseCounter++;
+										if(utilfunc.globalerrormessage.equals(""))
+										{
+											utilfunc.TestngReportPass(obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw, obj_CIMS_Query_History.scenerio, ActionName, obj_CIMS_Query_History.description, status);
+											// now write it in a pass file START...
+											if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(GlobalCheckPlus, sheetName, "Pass");
+												}catch(Exception e){}
+												passCounter=true;
+											}// now write it in a pass file ENDS...
+
+											//Write Positive Pass dashboard report 
+											try {
+												obj_Report_Dashboard.writeDashBoardPassReport(GlobalCheckPlus, Employee_namecheck, obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw, obj_CIMS_Query_History.scenerio, ActionName, obj_CIMS_Query_History.description, status, timer);
+											}catch(Exception e){
+												System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+										}
+										else
+										{
+											utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw,obj_CIMS_Query_History.scenerio,ActionName,obj_CIMS_Query_History.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+											// now write it in a negative pass dashboard file START...
+											if(negativePassCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(GlobalCheckPlus, sheetName,"Negative Pass");
+												}catch(Exception e){}
+												negativePassCounter=true;
+											}// now write it in a negative pass dashboard file ENDS...
+
+											//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+											try {
+												obj_Report_Dashboard.writeDashBoardNegativePassReport(GlobalCheckPlus,Employee_namecheck,obj_CIMS_Query_History.testcaseid,utilfunc.Actualbrw,obj_CIMS_Query_History.scenerio,ActionName,obj_CIMS_Query_History.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+											} catch (Exception e) {
+												System.out.println("unable to write dasboard negative pass report for : "+ GlobalCheckPlus);}
+										}
+										/*if(passCounter==false){
+										 try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+										 passCounter=true;
+									 }
+									try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw, obj_CIMS_Query_History.scenerio, ActionName, obj_CIMS_Query_History.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+										 */
+									}
+									else
+									{
+										status="FAIL";
+										failTestCaseCounter++;
+										utilfunc.TakeScreenshot();
+										utilfunc.TestngReportFail1(obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw, obj_CIMS_Query_History.scenerio,ActionName, obj_CIMS_Query_History.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+										// now write it in a fail dashboard file START...
+										if(negativePassCounter==false){
+											try{ obj_Report_Dashboard.writeReportHeader(GlobalCheckPlus, sheetName,"Fail");
+											}catch(Exception e){}
+											negativePassCounter	= true;
+										}// now write it in a fail dashboard file ENDS...
+										try {
+											obj_Report_Dashboard.writeDashBoardFailReport(GlobalCheckPlus, Employee_namecheck, obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw, obj_CIMS_Query_History.scenerio,ActionName, obj_CIMS_Query_History.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+										} catch (Exception e) {
+											System.out.println("unable to write dasboard fail report for : "+GlobalCheckPlus);}
+										/*if(failCounter==false){
+			    						obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+			    						failCounter	= true;
+		    						}
+									try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Query_History.testcaseid, utilfunc.Actualbrw, obj_CIMS_Query_History.scenerio,ActionName, obj_CIMS_Query_History.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+										 */
+									}
+								}catch(Exception e){
+									ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+									System.out.println("Script Failed");
+									utilfunc.assertion();			
+									utilfunc.TakeScreenshot();
+								}
+							
+						
+							
+						
+								
+								
+							}
+							else if(SuiteName.equals("Visa Audit")){
+								
+								
+
+								
+
+
+								startTime = System.currentTimeMillis();
+							
+								try{
+									Page_flag	=	obj_CIMS_Visa_Audit.Visa_Audit(fileName,SuiteName,count,ActionName);
+									timer = utilfunc.getTimeTakenByModule(startTime);
+									utilfunc.updateModuleDataForReportGeneration(SuiteName, Employee_namecheck, timer);
+									if (Page_flag)
+									{
+										status="PASS";
+										passTestCaseCounter++;
+										if(utilfunc.globalerrormessage.equals(""))
+										{
+											utilfunc.TestngReportPass(obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw, obj_CIMS_Visa_Audit.scenerio, ActionName, obj_CIMS_Visa_Audit.description, status);
+											// now write it in a pass file START...
+											if(passCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(GlobalCheckPlus, sheetName, "Pass");
+												}catch(Exception e){}
+												passCounter=true;
+											}// now write it in a pass file ENDS...
+
+											//Write Positive Pass dashboard report 
+											try {
+												obj_Report_Dashboard.writeDashBoardPassReport(GlobalCheckPlus, Employee_namecheck, obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw, obj_CIMS_Visa_Audit.scenerio, ActionName, obj_CIMS_Visa_Audit.description, status, timer);
+											}catch(Exception e){
+												System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+										}
+										else
+										{
+											utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw,obj_CIMS_Visa_Audit.scenerio,ActionName,obj_CIMS_Visa_Audit.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+											// now write it in a negative pass dashboard file START...
+											if(negativePassCounter==false){
+												try {	obj_Report_Dashboard.writeReportHeader(GlobalCheckPlus, sheetName,"Negative Pass");
+												}catch(Exception e){}
+												negativePassCounter=true;
+											}// now write it in a negative pass dashboard file ENDS...
+
+											//Write negative pass dashboard report   obj_Project_Initiation.testcaseId
+											try {
+												obj_Report_Dashboard.writeDashBoardNegativePassReport(GlobalCheckPlus,Employee_namecheck,obj_CIMS_Visa_Audit.testcaseid,utilfunc.Actualbrw,obj_CIMS_Visa_Audit.scenerio,ActionName,obj_CIMS_Visa_Audit.description,status,timer,utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+											} catch (Exception e) {
+												System.out.println("unable to write dasboard negative pass report for : "+ GlobalCheckPlus);}
+										}
+										/*if(passCounter==false){
+										 try {	obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Pass");} catch (Exception e) {}
+										 passCounter=true;
+									 }
+									try {obj_Report_Dashboard.writeDashBoardPassReport(RegressionSuites, Employee_namecheck, obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw, obj_CIMS_Visa_Audit.scenerio, ActionName, obj_CIMS_Visa_Audit.description, status, timer);} catch (Exception e) {System.out.println("unable to write dasboard pass report for : "+SuiteName);}
+										 */
+									}
+									else
+									{
+										status="FAIL";
+										failTestCaseCounter++;
+										utilfunc.TakeScreenshot();
+										utilfunc.TestngReportFail1(obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw, obj_CIMS_Visa_Audit.scenerio,ActionName, obj_CIMS_Visa_Audit.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+										// now write it in a fail dashboard file START...
+										if(negativePassCounter==false){
+											try{ obj_Report_Dashboard.writeReportHeader(GlobalCheckPlus, sheetName,"Fail");
+											}catch(Exception e){}
+											negativePassCounter	= true;
+										}// now write it in a fail dashboard file ENDS...
+										try {
+											obj_Report_Dashboard.writeDashBoardFailReport(GlobalCheckPlus, Employee_namecheck, obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw, obj_CIMS_Visa_Audit.scenerio,ActionName, obj_CIMS_Visa_Audit.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+										} catch (Exception e) {
+											System.out.println("unable to write dasboard fail report for : "+GlobalCheckPlus);}
+										/*if(failCounter==false){
+			    						obj_Report_Dashboard.writeReportHeader(RegressionSuites, sheetName,"Fail");
+			    						failCounter	= true;
+		    						}
+									try {obj_Report_Dashboard.writeDashBoardFailReport(RegressionSuites, Employee_namecheck, obj_CIMS_Visa_Audit.testcaseid, utilfunc.Actualbrw, obj_CIMS_Visa_Audit.scenerio,ActionName, obj_CIMS_Visa_Audit.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+										 */
+									}
+								}catch(Exception e){
+									ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
+									System.out.println("Script Failed");
+									utilfunc.assertion();			
+									utilfunc.TakeScreenshot();
+								}
+							
+						
+							
+						
+								
+								
+							
+								
+							}
+							
+							else if(SuiteName.equals("Travel History")){
 
 									startTime = System.currentTimeMillis();
 								
@@ -811,6 +1010,32 @@ public void CIMS_GlobalCheckPlusprocess() throws InterruptedException, IOExcepti
 		try{	FinalNegativeCount				=	Integer.toString(failTestCaseCounter);		}catch(Exception error){}
 		try{	NotAssignedModuleCount			=	Integer.toString(NotAssignedModuleCounter);	}catch(Exception error){}
 		
+		//code for gcp new query 
+		
+		String GCP_New_Query_FileTime			= "00";
+		try{
+			GCP_New_Query_FileTime		=	obj_Report_Dashboard.ReadFromFile(dashboard.projectReportTempPath + "new_query_time"+File.separator+"GCP_New_query_time");
+			GCP_New_Query_FileTime		=	obj_Report_Dashboard.convertSecondsInHourMinuteSeconds(GCP_New_Query_FileTime);
+		}catch(Exception e){
+			System.out.println("unable to write for module: "+moduleName);
+		}
+try{
+obj_Report_Dashboard.generateReportForSuite("GCP New query",
+		"1",
+		Integer.toString(GCP_Newquery_TotalTestCaseCounter),
+		Integer.toString(GCP_Newquery_PositiveScenarioCounter),
+		Integer.toString(GCP_Newquery_NegativeScenarioCounter),
+		Integer.toString(GCP_Newquery_passTestCaseCounter),
+		Integer.toString(GCP_Newquery_failTestCaseCounter),
+		GCP_New_Query_FileTime,
+		Integer.toString(GCP_Newquery_NotAssignedModuleCounter));
+}catch(Exception e){
+System.out.println("unable to call & generate dashboard report for \"GCP New query\"");
+}
+		
+		
+		
+		
 		//utilfunc.TestngDashBoardReport("Left Navigation",ModuleCount,TotalTestCaseCount,PositiveScenarioCount,NegativeScenarioCount,FinalPositiveCount,FinalNegativeCount,NotAssignedModuleCount);
 		// before generating final report let us check the time taken by the script..
 		TotalTime = utilfunc.getTimeTakenByModule(startTotalTime);
@@ -822,7 +1047,7 @@ public void CIMS_GlobalCheckPlusprocess() throws InterruptedException, IOExcepti
 		}
 
 
-		Employee_namecheck=null;
+
 	}
 	catch(Exception e){
 		ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));
@@ -875,6 +1100,14 @@ public void setobj_CIMS_GCP_project_Initiation(CIMS_GCP_project_Initiation setob
 public void setobj_CIMS_GCP_Assement(CIMS_GCP_Assement setobj_CIMS_GCP_Assement) {
 	this.obj_CIMS_GCP_Assement=setobj_CIMS_GCP_Assement;
 }
+public void setobj_CIMS_Query_History(CIMS_Query_History setobj_CIMS_Query_History) {
+	this.obj_CIMS_Query_History=setobj_CIMS_Query_History;
+}
+
+public void setobj_CIMS_Visa_Audit(CIMS_Visa_Audit setobj_CIMS_Visa_Audit) {
+	this.obj_CIMS_Visa_Audit=setobj_CIMS_Visa_Audit;
+}
+
 
 
 

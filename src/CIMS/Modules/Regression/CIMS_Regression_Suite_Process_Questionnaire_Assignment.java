@@ -48,7 +48,7 @@ public class CIMS_Regression_Suite_Process_Questionnaire_Assignment {
 		
 		boolean Flag	=	false;
 		
-		System.out.println("==================\nReady to work with "+sheetName+" module in "+mode+" mode...\n========================");
+		System.out.println("======================\nReady to work with "+sheetName+" module in "+mode+" mode...\n========================");
 		
 		
 		
@@ -124,17 +124,14 @@ public class CIMS_Regression_Suite_Process_Questionnaire_Assignment {
 			  try {
 				Thread.sleep(1000);
 				utilfunc.Selectdropdownvaluebytext(EmployeeDropDownXpath, QuestionnaireEmployeeContactId);
-				Thread.sleep(3000);
-				utilfunc.MakeElement(AssignEmpBtnXpath).click();
-				Thread.sleep(3000);
+				Thread.sleep(1000);
+				//utilfunc.MakeElement(AssignEmpBtnXpath).click();
 				
 				System.out.println("User has been assign");
 				try {
-					
+					Thread.sleep(1000);
 					try {
-						Thread.sleep(3000);
 						utilfunc.MakeElement(QuesEmployeeAddmoreBtnXpath).click();
-						Thread.sleep(3000);
 					} catch (Exception e1) {
 					}
 					
@@ -197,8 +194,7 @@ public class CIMS_Regression_Suite_Process_Questionnaire_Assignment {
 					    String QuestionaireNameXpath="//*[@class='table-rec-container']/table/tbody/tr[xx]/td[2]";
 					    
 					    int ResultCount= utilfunc.GetObjectCount(CheckboxcounterXpath);
-					   
-					    utilfunc.scrollToBottom();
+
 					    for(int i=1;i<=ResultCount;i++){
 
 					    	Thread.sleep(1000);
@@ -208,17 +204,14 @@ public class CIMS_Regression_Suite_Process_Questionnaire_Assignment {
 
 					        String QuestionnaireText=utilfunc.MakeElement(NewTextXpath).getText();
 					        
-					        
 					        // now match the title questionnaire with provided questionnaire 
 					        if(QuestionnaireName.equals(QuestionnaireText)){
 					        
 					        	// now click on check against questionnaire title matched
 						    	String NewChkXpath=CheckboxXpath.replace("xx",Integer.toString(i));
 						        try {
-						        	Thread.sleep(3000);
 									utilfunc.MakeElement(NewChkXpath).click();;
-									Thread.sleep(3000);
-						        } catch (Exception e) {
+								} catch (Exception e) {
 									System.out.println("issue occured while clicking on checkbox..");
 								}
 						        
@@ -244,13 +237,10 @@ public class CIMS_Regression_Suite_Process_Questionnaire_Assignment {
 				}
 			
 			  }
-			//utilfunc.scrollToBottom();
 			try{
 				 // save button after saving all data..
 				String saveBtn	=	".//a[contains(@class,'btn')]//*[contains(@class,'icon-white')]";
-				Thread.sleep(3000);
 	        	utilfunc.MakeElement(saveBtn).click();
-	        	//utilfunc.isAlertPresent();
 	        	Thread.sleep(3000);
 			}
 			catch(Exception e){}

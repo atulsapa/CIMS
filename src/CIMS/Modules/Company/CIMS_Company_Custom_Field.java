@@ -43,7 +43,7 @@ public class CIMS_Company_Custom_Field {
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	public CIMS_Company_Custom_Field(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -101,7 +101,7 @@ public class CIMS_Company_Custom_Field {
 		{
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 			String error_msg="";
 
 			if(mode.equalsIgnoreCase("New"))

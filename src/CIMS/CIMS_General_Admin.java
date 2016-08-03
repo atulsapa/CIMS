@@ -273,7 +273,7 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
     	   
     	  
     	   try{
-    		    boolean passCounter	=	false;
+    		   boolean passCounter	=	false;
 				boolean failCounter	=	false;
 				boolean negativePassCounter=false;
 				boolean notAssignedCounter	=	false;
@@ -1391,13 +1391,13 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
     										}
     										else
     										{
-    											utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw,obj_CIMS_Role_Admin.scenerio,ActionName,obj_CIMS_Role_Admin.description, status, utilfunc.ErrorMessage5,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+    											utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw,obj_CIMS_Role_Admin.scenerio,ActionName,obj_CIMS_Role_Admin.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
     											// now write it in a negative pass dashboard file..
     											if(negativePassCounter==false){
     												 try {	obj_Report_Dashboard.writeReportHeader(GeneralAdmin, sheetName,"Negative Pass");} catch (Exception e) {}
     												 negativePassCounter=true;
     											 }
-    											try {obj_Report_Dashboard.writeDashBoardNegativePassReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw,obj_CIMS_Role_Admin.scenerio,ActionName,obj_CIMS_Role_Admin.description, status, timer, utilfunc.ErrorMessage5,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
+    											try {obj_Report_Dashboard.writeDashBoardNegativePassReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw,obj_CIMS_Role_Admin.scenerio,ActionName,obj_CIMS_Role_Admin.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
     											catch (Exception e) {System.out.println("unable to write dasboard negative pass report for : "+SuiteName);}
 
     										}
@@ -1408,14 +1408,14 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
     									{
     										status="FAIL";failTestCaseCounter++;
     										//													utilfunc.TakeScreenshot();
-    										utilfunc.TestngReportFail1(obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw,obj_CIMS_Role_Admin.scenerio,ActionName,obj_CIMS_Role_Admin.description, status, utilfunc.ErrorMessage5,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
+    										utilfunc.TestngReportFail1(obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw,obj_CIMS_Role_Admin.scenerio,ActionName,obj_CIMS_Role_Admin.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
     									
     										// now write it in a fail dashboard file..
     										if(failCounter==false){
     				    						obj_Report_Dashboard.writeReportHeader(GeneralAdmin, sheetName,"Fail");
     				    						failCounter	= true;
     			    						}
-    										try {obj_Report_Dashboard.writeDashBoardFailReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw, obj_CIMS_Role_Admin.scenerio, ActionName, obj_CIMS_Role_Admin.description, status, timer, utilfunc.ErrorMessage5,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+    										try {obj_Report_Dashboard.writeDashBoardFailReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Role_Admin.testcaseid, utilfunc.Actualbrw, obj_CIMS_Role_Admin.scenerio, ActionName, obj_CIMS_Role_Admin.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
     									}
     								}catch(Exception s){
     									System.out.println("some error occured in : "+ SuiteName);
@@ -1820,13 +1820,13 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
        										}
        										else
        										{
-       											utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+       											utilfunc.TestngReportNegativePassTestcase(obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
        											// now write it in a negative pass dashboard file..
        											if(negativePassCounter==false){
        												 try {	obj_Report_Dashboard.writeReportHeader(GeneralAdmin, sheetName,"Negative Pass");} catch (Exception e) {}
        												 negativePassCounter=true;
        											 }
-       											try {obj_Report_Dashboard.writeDashBoardNegativePassReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);}
+       											try {obj_Report_Dashboard.writeDashBoardNegativePassReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
        											catch (Exception e) {System.out.println("unable to write dasboard negative pass report for : "+SuiteName);}
 
        										}
@@ -1837,14 +1837,14 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
        									{
        										status="FAIL";failTestCaseCounter++;
        										//													utilfunc.TakeScreenshot();
-       										utilfunc.TestngReportFail1(obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+       										utilfunc.TestngReportFail1(obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
        									
        										// now write it in a fail dashboard file..
        										if(failCounter==false){
        				    						obj_Report_Dashboard.writeReportHeader(GeneralAdmin, sheetName,"Fail");
        				    						failCounter	= true;
        			    						}
-       										try {obj_Report_Dashboard.writeDashBoardFailReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio, ActionName, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
+       										try {obj_Report_Dashboard.writeDashBoardFailReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.testcaseid, utilfunc.Actualbrw, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.scenerio, ActionName, obj_CIMS_Questionnaire_Admin_Edit_Custom_Label.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);} catch (Exception e) {System.out.println("unable to write dasboard fail report for : "+SuiteName);}
        									}
        								}catch(Exception s){
        									System.out.println("some error occured in : "+ SuiteName);
@@ -1889,7 +1889,7 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
        												 try {	obj_Report_Dashboard.writeReportHeader(GeneralAdmin, sheetName,"Negative Pass");} catch (Exception e) {}
        												 negativePassCounter=true;
        											 }
-       											try {obj_Report_Dashboard.writeDashBoardNegativePassReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);}
+       											try {obj_Report_Dashboard.writeDashBoardNegativePassReport(GeneralAdmin, Employee_namecheck, obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.description, status, timer, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);}
        											catch (Exception e) {System.out.println("unable to write dasboard negative pass report for : "+SuiteName);}
 
        										}
@@ -1900,7 +1900,7 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
        									{
        										status="FAIL";failTestCaseCounter++;
        										//													utilfunc.TakeScreenshot();
-       										utilfunc.TestngReportFail1(obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage5);
+       										utilfunc.TestngReportFail1(obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.testcaseid, utilfunc.Actualbrw,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.scenerio,ActionName,obj_CIMS_Questionnaire_Admin_Edit_Document_Checklist.description, status, utilfunc.ErrorMessage2,utilfunc.ErrorMessage1,utilfunc.ErrorMessage4);
        									
        										// now write it in a fail dashboard file..
        										if(failCounter==false){
@@ -2089,7 +2089,7 @@ public void CIMS_GeneralAdmin() throws InterruptedException, IOException, AWTExc
 		}
 
 
-		Employee_namecheck=null;
+
 	}
 	catch(Exception e){
 		ErrorUtil.addVerificationFailure(new Throwable("Error Occured !!"));

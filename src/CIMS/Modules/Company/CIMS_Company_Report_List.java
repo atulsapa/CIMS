@@ -40,7 +40,7 @@ public class CIMS_Company_Report_List{
 
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	public CIMS_Company_Report_List(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -72,7 +72,7 @@ public class CIMS_Company_Report_List{
 		if(TestcaseRunMode.equals("Y")){
 			testcaseid			=	TestcaseID;
 			scenerio			=	Scenario;
-			testcasedescription = Company_Description;
+			description = Company_Description;
 			/**
 			 * New Report code START HERE
 			 */

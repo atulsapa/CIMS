@@ -266,41 +266,42 @@ public class CIMS_Permission_Admin {
 					System.out.println("Test case id: "+ TestcaseID + " with  "+Scenario + " scenario succeed ");
 					String error_flag=utilfunc.PermissionErrorMessagehandlerExperiment();
 		//			ExpectedErrorMessage=ExpectedErrorMessage.trim();
-					System.out.println("==="+ExpectedErrorMessage+"====");
+					System.out.println("==="+ExpectedErrorMessage+"===");
 					System.out.println("==="+error_flag+"===");
 					
-					String closeBtnXpath=".//*[contains(@class,'close') and text()='×']";
+					String closeBtnXpath=".//*[contains(@class,'btn') and text()='Cancel']";
 					
 					 if (error_flag.equals(ExpectedErrorMessage)){
 						 Flag=true;
 						 utilfunc.TakeScreenshot();
-						 try {
-							 Thread.sleep(3000);
-							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
-						} catch (Exception e) {
-						System.out.println("Unable to click on the link");
-						}
 					 }else if (error_flag.equals("")){
 						 Flag=true;
 					 }else if (error_flag.contains("Success!")){
 						 Flag=true;
 					 }else if(error_flag.equals("Server Error in '/' Application.")){
 						 Flag=false;
-						 webdriver.navigate().back();
-					 }else if(error_flag.contains("Error! These Permission and Role are duplicated.")){
 						 
-						 Flag=false;
-						 utilfunc.TakeScreenshot();
+						 
 						 try {
-							 Thread.sleep(3000);
+							 Thread.sleep(1000);
 							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
+							Thread.sleep(1000);
 						} catch (Exception e) {
 						System.out.println("Unable to click on the link");
 						}
 						 
-					
+					 }else if(error_flag.contains("Error! These Permission and Role are duplicated.")){
+						 
+						 Flag=false;
+						 utilfunc.TakeScreenshot();
+						 
+						 try {
+							 Thread.sleep(1000);
+							utilfunc.MakeElement(closeBtnXpath).click();
+							Thread.sleep(1000);
+						} catch (Exception e) {
+						System.out.println("Unable to click on the link");
+						}
 						 
 						// webdriver.navigate().back();
 						 
@@ -309,13 +310,15 @@ public class CIMS_Permission_Admin {
 					 else{
 						 Flag=false;
 						 utilfunc.TakeScreenshot();
+						 
 						 try {
-							 Thread.sleep(3000);
+							 Thread.sleep(1000);
 							utilfunc.MakeElement(closeBtnXpath).click();
-							Thread.sleep(3000);
+							Thread.sleep(1000);
 						} catch (Exception e) {
 						System.out.println("Unable to click on the link");
 						}
+						 
 					 }
 				}catch(Exception e){
 					Flag	=	false;

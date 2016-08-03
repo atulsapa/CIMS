@@ -65,12 +65,10 @@ import org.testng.asserts.Assertion;
 
 import bsh.This;
 import CIMS.CIMS_Company;
-import CIMS.CIMS_EmployeeProfile;
 import CIMS.CIMS_MainProject;
 import CIMS.CIMS_Regression_Suite;
 import CIMS.Modules.*;
 import CIMS.Modules.GeneralAdmin.thread;
-import CIMS.Modules.Regression.CIMS_Regression_Suite_Employee_Profile;
 import CIMS.Reports.dashboard;
 
 
@@ -2314,13 +2312,6 @@ System.out.println("hello");
 		} catch (Exception e) {
 			
 		}
-		
-		try {
-			if (!this.Employee_namecheck.isEmpty()) {
-				EmployeeName	=	this.Employee_namecheck;
-			}
-		} catch (Exception e1) {
-		}
 			
 		try {
 			if(!CIMS_MainProject.Employee_namecheck.isEmpty()){
@@ -2329,46 +2320,13 @@ System.out.println("hello");
 		} catch (Exception e) {
 
 		}
-		
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
 		try {
-			if(!CIMS_Regression_Suite.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_Regression_Suite.Employee_namecheck;
+			if (!this.Employee_namecheck.isEmpty()) {
+				EmployeeName	=	this.Employee_namecheck;
 			}
-		} catch (Exception e) {
-
+		} catch (Exception e1) {
 		}
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */	
 		
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *AS Now Employee profile is separate. In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
-		try {
-			if(!CIMS_EmployeeProfile.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_EmployeeProfile.Employee_namecheck;
-			}
-		} catch (Exception e) {
-
-		}
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *AS Now Employee profile is separate. In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */	
-
-		
-		
-
 
 		try {
 			if (!CIMS_MainProject.timer.isEmpty()) {
@@ -2400,11 +2358,10 @@ System.out.println("hello");
 
 		testcasedescription+"</td><td>"+EmployeeName+"</td><td>"+excecutionstatus+"</td><td>"+errormessage+"</td><td>"+Time+" seconds</td>" +
 				"</tr></tbody></table>");
-
+		
 		// to generate not assigned dashboard report for questionnaire
 		try{
-			if(!CIMS_MainProject.questionarie_name1.isEmpty() && CIMS_MainProject.Main_questionarie_name_temp.equals("PROJECT")
-					&& CIMS_MainProject.sheetName.equals("Questionnaires") &&(!CIMS_MainProject.Main_questionarie_name_temp.isEmpty())){
+		if(!CIMS_MainProject.questionarie_name1.isEmpty()){
 			try {
 				obj_Report_Dashboard.writeDashBoardNotAssignedReport(CIMS_MainProject.sheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Not Assigned", Time);
 			} catch (InterruptedException e) {
@@ -2413,36 +2370,6 @@ System.out.println("hello");
 		}
 		}catch(Exception w){
 			System.out.println("unable to write questionnaire not assigned report for dashboard");
-		}
-
-		// to generate not assigned dashboard report for employee profile..
-//		try{
-//			if(!CIMS_Regression_Suite.SelectQuestionnairetype.isEmpty() && CIMS_Regression_Suite.SelectQuestionnairetype.equals("PROFILE") && 
-//					CIMS_Regression_Suite.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-//				try {
-//					obj_Report_Dashboard.writeDashBoardNotAssignedReport(CIMS_Regression_Suite.empSheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Not Assigned", Time);
-//				} catch (InterruptedException e) {
-//					System.out.println("unable to write pass report for : "+  CIMS_Regression_Suite.empSheetName + " > " +PageTitle);
-//				}
-//			}
-//		}catch(Exception w){
-//			System.out.println("unable to write employee profile not assigned report for dashboard");
-//		}
-		
-		//Lokesh - add this code on 13-July-2016.
-		//As it is separate now
-		//to generate not assigned dashboard report for employee profile..
-		try{
-			if(!CIMS_EmployeeProfile.SelectQuestionnairetype.isEmpty() && CIMS_EmployeeProfile.SelectQuestionnairetype.equals("PROFILE") && 
-					CIMS_EmployeeProfile.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-				try {
-					obj_Report_Dashboard.writeDashBoardNotAssignedReport(CIMS_EmployeeProfile.empSheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Not Assigned", Time);
-				} catch (InterruptedException e) {
-					System.out.println("unable to write pass report for : "+  CIMS_EmployeeProfile.empSheetName + " > " +PageTitle);
-				}
-			}
-		}catch(Exception w){
-			System.out.println("unable to write employee profile not assigned report for dashboard");
 		}
 
 	}
@@ -2474,15 +2401,6 @@ System.out.println("hello");
 			
 		}
 			
-		
-		try {
-			if (!this.Employee_namecheck.isEmpty()) {
-				EmployeeName	=	this.Employee_namecheck;
-			}
-		} catch (Exception e1) {
-		}
-		
-		
 		try {
 			if(!CIMS_MainProject.Employee_namecheck.isEmpty()){
 				EmployeeName	=	CIMS_MainProject.Employee_namecheck;
@@ -2490,47 +2408,12 @@ System.out.println("hello");
 		} catch (Exception e) {
 
 		}
-		
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
 		try {
-			if(!CIMS_Regression_Suite.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_Regression_Suite.Employee_namecheck;
+			if (!this.Employee_namecheck.isEmpty()) {
+				EmployeeName	=	this.Employee_namecheck;
 			}
-		} catch (Exception e) {
-
+		} catch (Exception e1) {
 		}
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */
-		
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *As Employee Profile is Separate Now 
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
-		try {
-			if(!CIMS_EmployeeProfile.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_EmployeeProfile.Employee_namecheck;
-			}
-		} catch (Exception e) {
-
-		}
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *As Employee Profile is Separate Now 
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */
-		
-		
-		
 		
 
 		try {
@@ -2579,8 +2462,7 @@ System.out.println("hello");
 
 		// to generate pass dashboard report for questionnaire
 		try{
-			if(!CIMS_MainProject.questionarie_name1.isEmpty() && CIMS_MainProject.Main_questionarie_name_temp.equals("PROJECT")
-					&& CIMS_MainProject.sheetName.equals("Questionnaires") &&(!CIMS_MainProject.Main_questionarie_name_temp.isEmpty())){
+		if(!CIMS_MainProject.questionarie_name1.isEmpty()){
 			try {
 				obj_Report_Dashboard.writeDashBoardPassReport(CIMS_MainProject.sheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Pass", Time);
 			} catch (InterruptedException e) {
@@ -2590,37 +2472,6 @@ System.out.println("hello");
 		}catch(Exception w){
 			System.out.println("unable to write questionnaire pass report for dashboard");
 		}
-		
-		
-//		//For Employee Profile
-//		try{
-////			System.out.println("CIMS_Regression_Suite.SelectQuestionnairetype: "+CIMS_Regression_Suite.SelectQuestionnairetype);
-////			System.out.println("CIMS_Regression_Suite.empSheetName: "+CIMS_Regression_Suite.empSheetName);
-//			if(!CIMS_Regression_Suite.SelectQuestionnairetype.isEmpty() && CIMS_Regression_Suite.SelectQuestionnairetype.equals("PROFILE") && 
-//					CIMS_Regression_Suite.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-//				try {
-//					obj_Report_Dashboard.writeDashBoardPassReport(CIMS_Regression_Suite.empSheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Pass", Time);
-//				} catch (InterruptedException e) {
-//					System.out.println("unable to write pass report for : "+  CIMS_Regression_Suite.empSheetName + " > " +PageTitle);
-//				}
-//			}
-//			}catch(Exception w){
-//				System.out.println("unable to write employee profile pass report for dashboard");
-//			}
-		
-		//For Employee Profile
-		try{
-			if(!CIMS_EmployeeProfile.SelectQuestionnairetype.isEmpty() && CIMS_EmployeeProfile.SelectQuestionnairetype.equals("PROFILE") && 
-					CIMS_EmployeeProfile.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-				try {
-					obj_Report_Dashboard.writeDashBoardPassReport(CIMS_EmployeeProfile.empSheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Pass", Time);
-				} catch (InterruptedException e) {
-					System.out.println("unable to write pass report for : "+  CIMS_EmployeeProfile.empSheetName + " > " +PageTitle);
-				}
-			}
-			}catch(Exception w){
-				System.out.println("unable to write employee profile pass report for dashboard");
-			}
 
 	}
 
@@ -2650,14 +2501,6 @@ System.out.println("hello");
 		} catch (Exception e) {
 			
 		}
-		
-		try {
-			if (!this.Employee_namecheck.isEmpty()) {
-				EmployeeName	=	this.Employee_namecheck;
-			}
-		} catch (Exception e1) {
-		}
-		
 			
 		try {
 			if(!CIMS_MainProject.Employee_namecheck.isEmpty()){
@@ -2666,7 +2509,12 @@ System.out.println("hello");
 		} catch (Exception e) {
 
 		}
-		
+		try {
+			if (!this.Employee_namecheck.isEmpty()) {
+				EmployeeName	=	this.Employee_namecheck;
+			}
+		} catch (Exception e1) {
+		}
 		
 
 		try {
@@ -2678,46 +2526,6 @@ System.out.println("hello");
 		} catch (Exception e) {
 
 		} 
-		
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
-		try {
-			if(!CIMS_Regression_Suite.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_Regression_Suite.Employee_namecheck;
-			}
-		} catch (Exception e) {
-
-		}
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */
-		
-		
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *As Employee Profile is saparate Now
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
-		try {
-			if(!CIMS_EmployeeProfile.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_EmployeeProfile.Employee_namecheck;
-			}
-		} catch (Exception e) {
-
-		}
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *As Employee Profile is saparate now
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */
-		
 		try {
 			if (!this.timer.isEmpty()) {
 
@@ -2747,8 +2555,7 @@ System.out.println("hello");
 		
 		// to generate fail dashboard report for questionnaire
 		try{
-			if(!CIMS_MainProject.questionarie_name1.isEmpty() && CIMS_MainProject.Main_questionarie_name_temp.equals("PROJECT")
-					&& CIMS_MainProject.sheetName.equals("Questionnaires") &&(!CIMS_MainProject.Main_questionarie_name_temp.isEmpty())){
+		if(!CIMS_MainProject.questionarie_name1.isEmpty()){
 			try {
 				obj_Report_Dashboard.writeDashBoardFailReport(CIMS_MainProject.sheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Fail", Time,errormessage, errormessage1,ModuleErrorMessage);
 			} catch (InterruptedException e) {
@@ -2758,35 +2565,6 @@ System.out.println("hello");
 		}catch(Exception w){
 			System.out.println("unable to write questionnaire negative pass report for dashboard");
 		}
-//		//For Employee Profile
-//		try{
-//			if(!CIMS_Regression_Suite.SelectQuestionnairetype.isEmpty() && CIMS_Regression_Suite.SelectQuestionnairetype.equals("PROFILE")
-//					&& CIMS_Regression_Suite.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-//
-//				try {
-//					obj_Report_Dashboard.writeDashBoardFailReport(CIMS_Regression_Suite.empSheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Fail", Time,errormessage, errormessage1,ModuleErrorMessage);
-//				} catch (InterruptedException e) {
-//					System.out.println("unable to write negative pass report for : "+  CIMS_Regression_Suite.empSheetName + " > " +PageTitle);
-//				}
-//			}
-//			}catch(Exception w){
-//				System.out.println("unable to write employee profile negative pass report for dashboard");
-//			}
-		
-		//For Employee Profile
-				try{
-					if(!CIMS_EmployeeProfile.SelectQuestionnairetype.isEmpty() && CIMS_EmployeeProfile.SelectQuestionnairetype.equals("PROFILE")
-							&& CIMS_EmployeeProfile.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-
-						try {
-							obj_Report_Dashboard.writeDashBoardFailReport(CIMS_EmployeeProfile.empSheetName, EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Fail", Time,errormessage, errormessage1,ModuleErrorMessage);
-						} catch (InterruptedException e) {
-							System.out.println("unable to write negative pass report for : "+  CIMS_EmployeeProfile.empSheetName + " > " +PageTitle);
-						}
-					}
-					}catch(Exception w){
-						System.out.println("unable to write employee profile negative pass report for dashboard");
-					}
 
 	}
 
@@ -3896,7 +3674,7 @@ try{
 				int ObjCount1 = GetObjectCount(errorMainCounterXPath);
 
 				for (int c = 1; c <= ObjCount1; c++) {
-					
+
 					// now first record is found
 					String errorcounterxpath		=	errorMainfieldxpath.replace("yy", Integer.toString(c));
 					
@@ -4644,136 +4422,7 @@ try{
 
 		// //////////////////////////////////////ERROR HANDLER
 		// END////////////////////////////////////////
-
-		// written by dharam
-		
-		
-					public String GCPQuryHistoryErrorMessageHandler(){
-						
-
-
-						driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-						ErrorMessage4 = "";
-						ErrorMessage1 = "";
-						ErrorMessage2 = "";
-						ErrorMessage5 = "";
-						globalerrormessage = "";
-						// //////////////////ERROR4/////////////////////////////////////////////////
-						try {
-							// String
-							// errorcounterxpath=".//*[@class='control-group']//*[@class='error']";
-							String errorcounterxpath = ".//*[@class='form-horizontal']//table//tbody//tr//*[@class='alert alert-success']";
-							String errorfieldxpath = ".//*[@class='form-horizontal']//table//tbody//tr[xx]//*[@class='alert alert-success']]";
-							int ObjCount2 = GetObjectCount(errorcounterxpath);
-							for (int count = 1; count <= ObjCount2; count++) {
-								Thread.sleep(500);
-								String NewXpath = errorfieldxpath.replace("xx",
-										Integer.toString(count));
-								try {
-									String Error = MakeElement(NewXpath).getText();
-									System.out.println("Error " + count + "is : " + Error);
-									if (!Error.equals(ErrorMessage4)) {
-										ErrorMessage4 = Error + ErrorMessage4;
-									}
-								} catch (Exception e) {
-								}
-							}
-							if (ErrorMessage4.equals("")) {
-								String errorfieldxpath1 = "//*[@id='page-message-popup']";
-								try {
-									String Error1 = "";
-									Error1 = MakeElement(errorfieldxpath1).getText();
-									if (!Error1.equals(ErrorMessage4)) {
-										ErrorMessage4 = Error1 + ErrorMessage4;
-									}
-
-								} catch (Exception e) {
-								}
-							}
-							System.out.println("ErrorMessage4 is:" + ErrorMessage4);
-						} catch (Exception e) {
-						}
-						// //////////////////ERROR4
-						// END/////////////////////////////////////////////////
-						// //////////////////ERROR
-						// 1,2,5////////////////////////////////////////////////
-						try {
-							String compensationErrorMessageXpath = "//*[@id='page-message']";
-							ErrorMessage5 = MakeElement(compensationErrorMessageXpath)
-									.getText();
-							String errormessage = ".//*[@id='validation-summary']";
-							ErrorMessage2 = MakeElement(errormessage).getText();
-							ErrorMessage1 = MakeElement(compensationErrorMessageXpath)
-									.getText();
-							try {
-								String compensationErrorMessageXpath1 = "//*[@id='page-message1']";
-								ErrorMessage5 = MakeElement(compensationErrorMessageXpath1)
-										.getText();
-							} catch (Exception e) {
-							}
-							// Code appended by Lokesh on 13-April-2016 for check if
-							// ErrorMessage1==ErrorMessage5 then make ErrorMessage1="" (Remove
-							// duplicate message in ErrorMessage1 or ErrorMessage5)
-							try {
-								if (ErrorMessage1.equalsIgnoreCase(ErrorMessage5)) {
-									ErrorMessage5 = "";
-								}
-							} catch (Exception error) {
-							}
-							System.out.println("The Error1 is " + ErrorMessage1);
-							System.out.println("The Error2 is " + ErrorMessage2);
-							System.out.println("The Error5 is " + ErrorMessage5);
-						} catch (Exception e) {
-							System.out.println("Exception occured: " + e);
-						}
-						// //////////////////ERROR 1,2,5
-						// END///////////////////////////////////////////
-
-						// ///////////////////server error
-						// handle//////////////////////////////////////
-						try {
-							String servererrorxpath = "html/body/span/h1";
-							ErrorMessage1 = MakeElement(servererrorxpath).getText();
-							if (ErrorMessage1.equals("Server Error in '/' Application.")) {
-								TakeScreenshot();
-								globalerrormessage = ErrorMessage1;
-								return globalerrormessage;
-							}
-						} catch (Exception e) {
-						}
-
-						// ///////////////////server error handle
-						// END//////////////////////////////////////
-						if (!CIMS_Company.ExcelFileName.equals("Test Company Data.xls")) {
-							if (CIMS_MainProject.questionarie_name1.equals("awards")
-									| CIMS_MainProject.questionarie_name1
-											.equals("Commercial_Success")
-									| CIMS_MainProject.questionarie_name1.equals("Citizenship")
-									| CIMS_MainProject.questionarie_name1
-											.equals("Contacts_and_References")) {
-								globalerrormessage = ErrorMessage4 + ErrorMessage2
-										+ ErrorMessage5;
-							} else if (CIMS_MainProject.questionarie_name1
-									.equals("Residence_History")
-									| CIMS_MainProject.questionarie_name1
-											.equals("Travel_Plans")) {
-								globalerrormessage = ErrorMessage1 + ErrorMessage2
-										+ ErrorMessage5;
-							}
-						} else {
-							globalerrormessage = ErrorMessage4 + ErrorMessage1 + ErrorMessage2
-									+ ErrorMessage5;
-							if (globalerrormessage.contains("Success")) {
-								globalerrormessage = "";
-							}
-						}
-						globalerrormessage = globalerrormessage.replaceAll("\n", " ");
-						return globalerrormessage;
-					
-					}
-					
-					
-					// my code end here 
+	
 	public void TestngReportNegativePassTestcase(String TestcaseID,
 			String browser, String scenario, String action,
 			String testcasedescription, String excecutionstatus,
@@ -4798,13 +4447,6 @@ try{
 		} catch (Exception e) {
 			
 		}
-		
-		try {
-			if (!this.Employee_namecheck.isEmpty()) {
-				EmployeeName	=	this.Employee_namecheck;
-			}
-		} catch (Exception e1) {
-		}
 			
 		try {
 			if(!CIMS_MainProject.Employee_namecheck.isEmpty()){
@@ -4813,47 +4455,12 @@ try{
 		} catch (Exception e) {
 
 		}
-		
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
 		try {
-			if(!CIMS_Regression_Suite.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_Regression_Suite.Employee_namecheck;
+			if (!this.Employee_namecheck.isEmpty()) {
+				EmployeeName	=	this.Employee_namecheck;
 			}
-		} catch (Exception e) {
-
+		} catch (Exception e1) {
 		}
-		/*
-		 *Lokesh - add this code on 01-July-2016.
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */
-		
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *As Employee Profile is separate now
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Start here  
-		 */
-		try {
-			if(!CIMS_EmployeeProfile.Employee_namecheck.isEmpty()){
-				EmployeeName	=	CIMS_EmployeeProfile.Employee_namecheck;
-			}
-		} catch (Exception e) {
-
-		}
-		/*
-		 *Lokesh - add this code on 13-July-2016.
-		 *As Employee Profile is separate now
-		 *In case of Employee profile execution EmployeeName is null so we have to provide Employee name.
-		 *Code Ends here  
-		 */
-		
-		
-		
 		
 
 		try {
@@ -4894,8 +4501,7 @@ testcasedescription+"</td><td>"+ EmployeeName+"</td><td>"+excecutionstatus+"</td
 		// to generate negative pass dashboard report for questionnaire
 		try{
 			//System.out.println("\n\n\n\n\nI'm here LOKESH\n\n\n\n\n");
-			if(!CIMS_MainProject.questionarie_name1.isEmpty() && CIMS_MainProject.Main_questionarie_name_temp.equals("PROJECT")
-					&& CIMS_MainProject.sheetName.equals("Questionnaires") &&(!CIMS_MainProject.Main_questionarie_name_temp.isEmpty())){
+		if(!CIMS_MainProject.questionarie_name1.isEmpty()){
 			try {
 			obj_Report_Dashboard.writeDashBoardNegativePassReport(CIMS_MainProject.sheetName ,EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Negative Pass", Time, errormessage, errormessage1, ModuleErrorMessage);	
 			} catch (InterruptedException e) {
@@ -4904,35 +4510,6 @@ testcasedescription+"</td><td>"+ EmployeeName+"</td><td>"+excecutionstatus+"</td
 		}
 		}catch(Exception w){
 			System.out.println("unable to write questionnaire negative pass report for dashboard");
-		}
-		
-		//For Employee Profile
-//		try{
-//			if(!CIMS_Regression_Suite.SelectQuestionnairetype.isEmpty() && CIMS_Regression_Suite.SelectQuestionnairetype.equals("PROFILE")
-//					&& CIMS_Regression_Suite.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-//			try {
-//				obj_Report_Dashboard.writeDashBoardNegativePassReport(CIMS_Regression_Suite.empSheetName ,EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Negative Pass", Time, errormessage, errormessage1, ModuleErrorMessage);	
-//			} catch (InterruptedException e) {
-//				System.out.println("unable to write negative pass report for : "+  CIMS_Regression_Suite.empSheetName + " > " +PageTitle);
-//			}
-//		}
-//		}catch(Exception w){
-//			System.out.println("unable to write employee profile negative pass report for dashboard");
-//		}
-		
-
-		//For Employee Profile
-		try{
-			if(!CIMS_EmployeeProfile.SelectQuestionnairetype.isEmpty() && CIMS_EmployeeProfile.SelectQuestionnairetype.equals("PROFILE")
-					&& CIMS_EmployeeProfile.SuiteNameEmpProfile.equals("Employee Profile") && (!CIMS_Regression_Suite_Employee_Profile.questionarie_name_temp.isEmpty())){
-			try {
-				obj_Report_Dashboard.writeDashBoardNegativePassReport(CIMS_EmployeeProfile.empSheetName ,EmployeeName, TestcaseID, browser, scenario, action, testcasedescription, "Negative Pass", Time, errormessage, errormessage1, ModuleErrorMessage);	
-			} catch (InterruptedException e) {
-				System.out.println("unable to write negative pass report for : "+  CIMS_EmployeeProfile.empSheetName + " > " +PageTitle);
-			}
-		}
-		}catch(Exception w){
-			System.out.println("unable to write employee profile negative pass report for dashboard");
 		}
 		
 	}
@@ -5488,7 +5065,30 @@ testcasedescription+"</td><td>"+ EmployeeName+"</td><td>"+excecutionstatus+"</td
 
 			this.timer = timer;
 			
+			/**
+			 * updated code by Brij in order to generate timer..
+			 */
+			String RegressionModuleTimerPath	=	dashboard.projectReportTempPath + "regression_time"+File.separator+moduleName.toLowerCase().replace(" ", "_")+"_time";
 			
+			// before adding time to file let us read and add it
+			String FileTime			= "00.00";
+			try{
+				System.out.println("\n file name: "+RegressionModuleTimerPath);
+				FileTime		=	obj_Report_Dashboard.ReadFromFile(RegressionModuleTimerPath);
+			}catch(Exception e){
+				System.out.println("unable to read for module: "+moduleName);
+			}
+			
+			
+			// add time into temp file
+
+			try{
+				float IntFileTime  	=  (!FileTime.isEmpty())? Float.parseFloat(FileTime) + Float.parseFloat(timer): Float.parseFloat(timer);
+				System.out.println("\n file name: "+RegressionModuleTimerPath);
+				obj_Report_Dashboard.WriteToFile(Float.toString(IntFileTime), RegressionModuleTimerPath);
+			}catch(Exception e){
+				System.out.println("unable to write for module: "+moduleName);
+			}
 
 			return true;
 
@@ -5498,38 +5098,6 @@ testcasedescription+"</td><td>"+ EmployeeName+"</td><td>"+excecutionstatus+"</td
 
 		}
 
-	}
-	
-	
-	
-	
-	//lokesh code 
-	public void RegressionTotalTimeTakenbyModuleForDashboardReport(String moduleName)
-	{
-		
-		
-		String RegressionModuleTimerPath	=	dashboard.projectReportTempPath + "regression_time"+File.separator+moduleName.toLowerCase().replace(" ", "_")+"_time";
-		
-		// before adding time to file let us read and add it
-		String FileTime			= "00.00";
-		try{
-			System.out.println("\n file name: "+RegressionModuleTimerPath);
-			FileTime		=	obj_Report_Dashboard.ReadFromFile(RegressionModuleTimerPath);
-		}catch(Exception e){
-			System.out.println("unable to read for module: "+moduleName);
-		}
-		System.out.println("\n\n\n\t\ttimer :"+timer);
-		
-		// add time into temp file
-try{
-			float IntFileTime  	=  (!FileTime.isEmpty())? Float.parseFloat(FileTime) + Float.parseFloat(timer): Float.parseFloat(timer);
-			System.out.println("\n file name: "+RegressionModuleTimerPath);
-			obj_Report_Dashboard.WriteToFile(Float.toString(IntFileTime), RegressionModuleTimerPath);
-
-		}catch(Exception e){
-			System.out.println("unable to write for module: "+moduleName);
-		}
-		
 	}
 
 	/**
@@ -7217,137 +6785,332 @@ try{
 			
 			
 			// my code end here 
+	
+			// Web access Error handler start here 
 			
+			
+
+			public String LockedAccountErrorMessageHandler() {
+
+				driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+
+				ErrorMessage4 = "";
+
+				ErrorMessage1 = "";
+
+				ErrorMessage2 = "";
+
+				ErrorMessage5 = "";
+
+				globalerrormessage = "";
+
+				// //////////////////ERROR4/////////////////////////////////////////////////
+
+				try {
+
+					// String
+					// errorcounterxpath=".//*[@class='control-group']//*[@class='error']";
+
+					String errorcounterxpath = ".//*[@class='login-error']//li";
+
+					String errorfieldxpath = ".//*[@class='login-error']//li[xx]";
+
+					int ObjCount2 = GetObjectCount(errorcounterxpath);
+
+					for (int count = 1; count <= ObjCount2; count++) {
+
+						String NewXpath = errorfieldxpath.replace("xx",
+								Integer.toString(count));
+
+						try {
+
+							String Error = MakeElement(NewXpath).getText();
+
+							System.out.println("Error " + count + "is : " + Error);
+
+							ErrorMessage4 = Error + ErrorMessage4;
+
+						} catch (Exception e) {
+
+						}
+
+					}
+
+				} catch (Exception e) {
+
+				}
+
+				// //////////////////ERROR4
+				// END/////////////////////////////////////////////////
+
+				// //////////////////ERROR
+				// 1,2,5////////////////////////////////////////////////
+
+				try {
+
+					String compensationErrorMessageXpath = "//*[@id='page-message']//.[contains(@class,'error') and not(contains(@class,'HelpText'))]";
+					try {
+
+						ErrorMessage5 = MakeElement(compensationErrorMessageXpath).getText();
+					} catch (Exception e1) {
+					}
+
+					String errormessage = ".//*[@id='validation-summary']";
+
+					try {
+						ErrorMessage2 = MakeElement(errormessage).getText();
+
+						ErrorMessage1 = MakeElement(compensationErrorMessageXpath).getText();
+					} catch (Exception e1) {
+
+					}
+
+					try {
+
+						String compensationErrorMessageXpath1 = "//*[@id='page-message1']";
+
+						ErrorMessage5 = MakeElement(compensationErrorMessageXpath1)
+								.getText();
+
+					} catch (Exception e) {
+
+					}
+
+					// Code appended by Lokesh on 13-April-2016 for check if
+					// ErrorMessage1==ErrorMessage5 then make ErrorMessage1="" (Remove
+					// duplicate message in ErrorMessage1 or ErrorMessage5)
+					try {
+						if (ErrorMessage1.equalsIgnoreCase(ErrorMessage5)) {
+							ErrorMessage5 = "";
+						}
+						if (ErrorMessage1.equalsIgnoreCase(ErrorMessage2)) {
+							ErrorMessage2 = "";
+						}
+					} catch (Exception error) {
+					}
+
+					System.out.println("The Error1 is " + ErrorMessage1);
+
+					System.out.println("The Error2 is " + ErrorMessage2);
+
+					System.out.println("The Error5 is " + ErrorMessage5);
+
+				} catch (Exception e) {
+
+					System.out.println("Exception occured: " + e);
+
+				}
+
+				// //////////////////ERROR 1,2,5
+				// END///////////////////////////////////////////
+
+				// ///////////////////server error
+				// handle//////////////////////////////////////
+
+				try {
+
+					String servererrorxpath = "html/body/span/h1";
+
+					ErrorMessage1 = MakeElement(servererrorxpath).getText();
+
+					if (ErrorMessage1.equals("Server Error in '/' Application.")) {
+
+						TakeScreenshot();
+
+						globalerrormessage = ErrorMessage1;
+
+						return globalerrormessage;
+
+					}
+
+				} catch (Exception e) {
+
+				}
+
+				// ///////////////////server error handle
+				// END//////////////////////////////////////
+
+				if (!CIMS_Company.ExcelFileName.equals("Test Company Data.xls"))
+
+				{
+
+					if (CIMS_MainProject.questionarie_name1.equals("awards")
+							| CIMS_MainProject.questionarie_name1
+									.equals("Commercial_Success")
+							| CIMS_MainProject.questionarie_name1.equals("Citizenship")
+							| CIMS_MainProject.questionarie_name1
+									.equals("Contacts_and_References")) {
+
+						globalerrormessage = ErrorMessage4 + ErrorMessage2
+								+ ErrorMessage5;
+
+					} else if (CIMS_MainProject.questionarie_name1
+							.equals("Residence_History")
+							| CIMS_MainProject.questionarie_name1
+									.equals("Travel_Plans")) {
+
+						globalerrormessage = ErrorMessage1 + ErrorMessage2
+								+ ErrorMessage5;
+
+					}
+
+				}
+
+				else {
+
+					globalerrormessage = ErrorMessage4 + ErrorMessage1 + ErrorMessage2
+							+ ErrorMessage5;
+
+					if (globalerrormessage.contains("Success"))
+
+					{
+
+						globalerrormessage = "";
+
+					}
+
+				}
+
+				globalerrormessage = globalerrormessage.replaceAll("\n", " ");
+
+				return globalerrormessage;
+
+			}
+
+			
+			// Web access Error handler end here 
+			
+			// written by dharam
 			// written by dharam
 			
 			
-						public String RoleAdminErrorMessageHandler(){
-							
+			public String GCPQuryHistoryErrorMessageHandler(){
+				
 
 
-							driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-							ErrorMessage4 = "";
-							ErrorMessage1 = "";
-							ErrorMessage2 = "";
-							ErrorMessage5 = "";
-							globalerrormessage = "";
-							// //////////////////ERROR4/////////////////////////////////////////////////
-							try {
-								// String
-								// errorcounterxpath=".//*[@class='control-group']//*[@class='error']";
-								String errorcounterxpath = "//*[@id='form1']//*[@id='panel-body']//tr";
-								String errorfieldxpath = "//*[@id='form1']//*[@id='panel-body']//tr[xx]//.[contains(@class,'validation')]//*[contains(@class,'error') and not (self::select) and not(self::input)]";
-								int ObjCount2 = GetObjectCount(errorcounterxpath);
-								for (int count = 1; count <= ObjCount2; count++) {
-									Thread.sleep(500);
-									String NewXpath = errorfieldxpath.replace("xx",
-											Integer.toString(count));
-									try {
-										String Error = MakeElement(NewXpath).getText();
-										System.out.println("Error " + count + "is : " + Error);
-										if (!Error.equals(ErrorMessage4)) {
-											ErrorMessage4 = Error + ErrorMessage4;
-										}
-									} catch (Exception e) {
-									}
-								}
-								if (ErrorMessage4.equals("")) {
-									String errorfieldxpath1 = "//*[@id='page-message-popup']";
-									try {
-										String Error1 = "";
-										Error1 = MakeElement(errorfieldxpath1).getText();
-										if (!Error1.equals(ErrorMessage4)) {
-											ErrorMessage4 = Error1 + ErrorMessage4;
-										}
-
-									} catch (Exception e) {
-									}
-								}
-								System.out.println("ErrorMessage4 is:" + ErrorMessage4);
-							} catch (Exception e) {
+				driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+				ErrorMessage4 = "";
+				ErrorMessage1 = "";
+				ErrorMessage2 = "";
+				ErrorMessage5 = "";
+				globalerrormessage = "";
+				// //////////////////ERROR4/////////////////////////////////////////////////
+				try {
+					// String
+					// errorcounterxpath=".//*[@class='control-group']//*[@class='error']";
+					String errorcounterxpath = ".//*[@class='form-horizontal']//table//tbody//tr//*[@class='alert alert-success']";
+					String errorfieldxpath = ".//*[@class='form-horizontal']//table//tbody//tr[xx]//*[@class='alert alert-success']]";
+					int ObjCount2 = GetObjectCount(errorcounterxpath);
+					for (int count = 1; count <= ObjCount2; count++) {
+						Thread.sleep(500);
+						String NewXpath = errorfieldxpath.replace("xx",
+								Integer.toString(count));
+						try {
+							String Error = MakeElement(NewXpath).getText();
+							System.out.println("Error " + count + "is : " + Error);
+							if (!Error.equals(ErrorMessage4)) {
+								ErrorMessage4 = Error + ErrorMessage4;
 							}
-							// //////////////////ERROR4
-							// END/////////////////////////////////////////////////
-							// //////////////////ERROR
-							// 1,2,5////////////////////////////////////////////////
-							try {
-								String compensationErrorMessageXpath = "//*[@id='page-message']";
-								ErrorMessage5 = MakeElement(compensationErrorMessageXpath)
-										.getText();
-								String errormessage = ".//*[@id='validation-summary']";
-								ErrorMessage2 = MakeElement(errormessage).getText();
-								ErrorMessage1 = MakeElement(compensationErrorMessageXpath)
-										.getText();
-								try {
-									String compensationErrorMessageXpath1 = "//*[@id='page-message1']";
-									ErrorMessage5 = MakeElement(compensationErrorMessageXpath1)
-											.getText();
-								} catch (Exception e) {
-								}
-								// Code appended by Lokesh on 13-April-2016 for check if
-								// ErrorMessage1==ErrorMessage5 then make ErrorMessage1="" (Remove
-								// duplicate message in ErrorMessage1 or ErrorMessage5)
-								try {
-									if (ErrorMessage1.equalsIgnoreCase(ErrorMessage5)) {
-										ErrorMessage5 = "";
-									}
-								} catch (Exception error) {
-								}
-								System.out.println("The Error1 is " + ErrorMessage1);
-								System.out.println("The Error2 is " + ErrorMessage2);
-								System.out.println("The Error5 is " + ErrorMessage5);
-							} catch (Exception e) {
-								System.out.println("Exception occured: " + e);
-							}
-							// //////////////////ERROR 1,2,5
-							// END///////////////////////////////////////////
-
-							// ///////////////////server error
-							// handle//////////////////////////////////////
-							try {
-								String servererrorxpath = "html/body/span/h1";
-								ErrorMessage1 = MakeElement(servererrorxpath).getText();
-								if (ErrorMessage1.equals("Server Error in '/' Application.")) {
-									TakeScreenshot();
-									globalerrormessage = ErrorMessage1;
-									return globalerrormessage;
-								}
-							} catch (Exception e) {
-							}
-
-							// ///////////////////server error handle
-							// END//////////////////////////////////////
-							if (!CIMS_Company.ExcelFileName.equals("Test Company Data.xls")) {
-								if (CIMS_MainProject.questionarie_name1.equals("awards")
-										| CIMS_MainProject.questionarie_name1
-												.equals("Commercial_Success")
-										| CIMS_MainProject.questionarie_name1.equals("Citizenship")
-										| CIMS_MainProject.questionarie_name1
-												.equals("Contacts_and_References")) {
-									globalerrormessage = ErrorMessage4 + ErrorMessage2
-											+ ErrorMessage5;
-								} else if (CIMS_MainProject.questionarie_name1
-										.equals("Residence_History")
-										| CIMS_MainProject.questionarie_name1
-												.equals("Travel_Plans")) {
-									globalerrormessage = ErrorMessage1 + ErrorMessage2
-											+ ErrorMessage5;
-								}
-							} else {
-								globalerrormessage = ErrorMessage4 + ErrorMessage1 + ErrorMessage2
-										+ ErrorMessage5;
-								if (globalerrormessage.contains("Success")) {
-									globalerrormessage = "";
-								}
-							}
-							globalerrormessage = globalerrormessage.replaceAll("\n", " ");
-							return globalerrormessage;
-						
+						} catch (Exception e) {
 						}
-						
-						
-						// my code end here
-	
+					}
+					if (ErrorMessage4.equals("")) {
+						String errorfieldxpath1 = "//*[@id='page-message-popup']";
+						try {
+							String Error1 = "";
+							Error1 = MakeElement(errorfieldxpath1).getText();
+							if (!Error1.equals(ErrorMessage4)) {
+								ErrorMessage4 = Error1 + ErrorMessage4;
+							}
+
+						} catch (Exception e) {
+						}
+					}
+					System.out.println("ErrorMessage4 is:" + ErrorMessage4);
+				} catch (Exception e) {
+				}
+				// //////////////////ERROR4
+				// END/////////////////////////////////////////////////
+				// //////////////////ERROR
+				// 1,2,5////////////////////////////////////////////////
+				try {
+					String compensationErrorMessageXpath = "//*[@id='page-message']";
+					ErrorMessage5 = MakeElement(compensationErrorMessageXpath)
+							.getText();
+					String errormessage = ".//*[@id='validation-summary']";
+					ErrorMessage2 = MakeElement(errormessage).getText();
+					ErrorMessage1 = MakeElement(compensationErrorMessageXpath)
+							.getText();
+					try {
+						String compensationErrorMessageXpath1 = "//*[@id='page-message1']";
+						ErrorMessage5 = MakeElement(compensationErrorMessageXpath1)
+								.getText();
+					} catch (Exception e) {
+					}
+					// Code appended by Lokesh on 13-April-2016 for check if
+					// ErrorMessage1==ErrorMessage5 then make ErrorMessage1="" (Remove
+					// duplicate message in ErrorMessage1 or ErrorMessage5)
+					try {
+						if (ErrorMessage1.equalsIgnoreCase(ErrorMessage5)) {
+							ErrorMessage5 = "";
+						}
+					} catch (Exception error) {
+					}
+					System.out.println("The Error1 is " + ErrorMessage1);
+					System.out.println("The Error2 is " + ErrorMessage2);
+					System.out.println("The Error5 is " + ErrorMessage5);
+				} catch (Exception e) {
+					System.out.println("Exception occured: " + e);
+				}
+				// //////////////////ERROR 1,2,5
+				// END///////////////////////////////////////////
+
+				// ///////////////////server error
+				// handle//////////////////////////////////////
+				try {
+					String servererrorxpath = "html/body/span/h1";
+					ErrorMessage1 = MakeElement(servererrorxpath).getText();
+					if (ErrorMessage1.equals("Server Error in '/' Application.")) {
+						TakeScreenshot();
+						globalerrormessage = ErrorMessage1;
+						return globalerrormessage;
+					}
+				} catch (Exception e) {
+				}
+
+				// ///////////////////server error handle
+				// END//////////////////////////////////////
+				if (!CIMS_Company.ExcelFileName.equals("Test Company Data.xls")) {
+					if (CIMS_MainProject.questionarie_name1.equals("awards")
+							| CIMS_MainProject.questionarie_name1
+									.equals("Commercial_Success")
+							| CIMS_MainProject.questionarie_name1.equals("Citizenship")
+							| CIMS_MainProject.questionarie_name1
+									.equals("Contacts_and_References")) {
+						globalerrormessage = ErrorMessage4 + ErrorMessage2
+								+ ErrorMessage5;
+					} else if (CIMS_MainProject.questionarie_name1
+							.equals("Residence_History")
+							| CIMS_MainProject.questionarie_name1
+									.equals("Travel_Plans")) {
+						globalerrormessage = ErrorMessage1 + ErrorMessage2
+								+ ErrorMessage5;
+					}
+				} else {
+					globalerrormessage = ErrorMessage4 + ErrorMessage1 + ErrorMessage2
+							+ ErrorMessage5;
+					if (globalerrormessage.contains("Success")) {
+						globalerrormessage = "";
+					}
+				}
+				globalerrormessage = globalerrormessage.replaceAll("\n", " ");
+				return globalerrormessage;
+			
+			}
+			
+			
+			// my code end here 
+
 	
 	
 	

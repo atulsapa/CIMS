@@ -20,7 +20,7 @@ public class CIMS_Company_CustomLabels {
 	
 	public String testcaseid			=	null;
 	public String scenerio				=	null;
-	public String testcasedescription	=	null;
+	public String description	=	null;
 
 	public CIMS_Company_CustomLabels(WebDriver driver,UtilFunction utilfunc) 
 	{
@@ -57,7 +57,7 @@ public class CIMS_Company_CustomLabels {
 
 					testcaseid			=	TestcaseID;
 					scenerio			=	Scenario;
-					testcasedescription = Description;
+					description = Description;
 //					
 							
 		
